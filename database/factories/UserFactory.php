@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
+use App\Models\Role;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -68,5 +69,37 @@ class UserFactory extends Factory
                 ->when(is_callable($callback), $callback),
             'ownedTeams'
         );
+    }
+
+    /**
+     * Indica que el usuario es un administrador.
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function administrator()
+    {
+        return $this->afterCreating(
+            function (User $user) {
+            $adminRole = Role::firstOrCreate(['name' => 'Administrator']);
+            $adminRole->description = 'Administrator User';
+            $adminRole->save();
+            // Asigna el rol de administrador al usuario
+            $user->roles()->attach($adminRole);
+        });
+    }
+
+        /**
+     * Indica que el usuario es un usuario moderador, es decir, subadministra con funciones limitadas.
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function moderator()
+    {
+        return $this->afterCreating(
+            function (User $user) {
+            $moderatorRole = Role::firstOrCreate(['name' => 'Moderator']);
+            $moderatorRole->description = 'Moderator User';
+            $moderatorRole->save();
+            // Asigna el rol de moderador al usuario
+            $user->roles()->attach($moderatorRole);
+        });
     }
 }
