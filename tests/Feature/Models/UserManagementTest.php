@@ -9,6 +9,7 @@ use App\Models\User;
 use Livewire\Livewire;
 use App\Livewire\User\UserList;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\Livewire\User\CreateUserForm;
 
 class UserManagementTest extends TestCase
 {
@@ -21,7 +22,7 @@ class UserManagementTest extends TestCase
         parent::setUp();
         //verifica los roles basicos en la BD
         Role::firstOrCreate(['name' => 'Administrator', 'description' => 'Administrator']);
-        Role::firstOrCreate(['name' => 'Moderator', 'description' => 'Moderator User']);
+        Role::firstOrCreate(['name' => 'Manager', 'description' => 'Manager inventory']);
         Role::firstOrCreate(['name' => 'Viewer', 'description' => 'Content Viewer']);
     }
 
@@ -45,43 +46,82 @@ class UserManagementTest extends TestCase
         $component->assertSee($admin->name);
     }
 
+    public function test_an_administrator_can_view_the_livewire_user_creation_form(){
+        //GIVEN: usuario admin autenticado
+        $admin = User::factory()->administrator()->create();
 
+        //GIVEN: crear roles necesarios
+        Role::factory()->create(['name' => 'Viewer']);
+        Role::factory()->create(['name' => 'Manager']);
 
-    public function test_an_administrator_can_create_a_new_user(): void
+        //WHEN: usuario autenticado como admin intenta acceder al formulario de creación de usuario
+        Livewire::actingAs($admin)
+                ->test(CreateUserForm::class)
+                ->assertStatus(200) // Verifica que el componente se renderiza sin errores
+                ->assertSee('Crear nuevo usuario')
+                ->assertSee('Nombre')
+                ->assertSee('Email')
+                ->assertSee('Contraseña')
+                ->assertSee('Confirmar Contraseña')
+                ->assertSee('Rol') // Nuevo: Verifica la etiqueta del selector de rol
+                ->assertSee('Activo') // Nuevo: Verifica la etiqueta del checkbox is_active
+                ->assertSee('Guardar')
+                ->assertSeeInOrder(['Viewer', 'Manager']); // Nuevo: Verifica que los nombres de los roles aparecen en el selector
+    }
+
+    public function test_non_administrators_cannot_view_the_livewire_user_creation_form()
+    {
+        //GIVEN: usuario autenticado que no es administrador
+        $user = User::factory()->viewer()->create();
+
+        //WHEN: usuario autenticado intenta acceder al formulario de creación de usuario
+        Livewire::actingAs($user)
+            ->test(CreateUserForm::class)
+            ->assertForbidden() // Verifica que el acceso está prohibido
+            ->assertRedirect(route('/')); // Redirige a la ruta de dashboard o una ruta definida para usuarios no autorizados
+    }
+
+    public function test_an_administrator_can_create_a_new_user_with_livewire_component(): void
     {
         //GIVEN: usuario admin autenticado
         $admin = User::factory()->administrator()->create();
 
         //GIVEN: datos del nuevo usuario
-        $newUserData = [
+        $viewerRole = Role::where('name', 'Viewer')->first();
+
+
+        //WHEN: el admin usa el componente Livewire para crear un nuevo usuario
+        Livewire::actingAs($admin)
+            ->test(CreateUserForm::class)
+            ->set('name', $this->faker->name())
+            ->set('email', $this->faker->unique()->safeEmail())
+            ->set('password', 'password123')
+            ->set('password_confirmation', 'password123')
+            ->set('role_id', $viewerRole->id) // Asignar rol Viewer
+            ->set('is_active', true) // Asignar estado activo
+            ->call('createUser')
+            ->assertRedirect(route('users.index'))
+            ->assertSessionHas('success', 'Usuario creado exitosamente.');
+
+        //THEN: el nuevo usuario debe existir en la base de datos
+        $this->assertDatabaseHas('users', [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'password' => 'password',
-            'password_confirmation' => 'password',
-            'role' => Role::where('name', 'Viewer')->first()->id, // Asignar rol Viewer
-        ];
+            'role_id' => $viewerRole->id,
+            'is_active' => true,
+        ]);
 
-        //WHEN: el admin hace una solicitud POST a la ruta
-        $response = $this->actingAs($admin)->post(route('users.store'), $newUserData);
+        //THEN: validamos que el usuario no tenga errores de validación
+        Livewire::actingAs($admin)
+            ->test(CreateUserForm::class)
+            ->set('name', '') // Nombre vacío
+            ->set('email', 'invalid-email') // Email inválido
+            ->set('password', 'short') // Contraseña demasiado corta
+            ->set('password_confirmation', 'mismatch') // Confirmación de contraseña no coincide
+            ->call('createUser')
+            ->assertHasErrors(['name', 'email', 'password', 'password_confirmation']);
 
-        //THEN: 1. la respuesta debe ser exitosa con una redireccion (HTTP 302) sin errores
-        $response->assertStatus(302);
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect(route('users.index'));
 
-        //THEN: 2. El nuevo usuario debe existir en la base de datos
-        $this->assertDatabaseHas('users',
-            [
-                'name' => $newUserData['name'],
-                'email' => $newUserData['email'],
-            ]
-        );
-
-        //THEN: 3. El nuevo usuario debe tener el rol asignado
-        $createdUser = User::where('email', $newUserData['email'])->first();
-        //comprobamos que fue encontrado
-        $this->assertNotNull($createdUser);
-        $this->assertTrue($createdUser->hasRole('Viewer'));
     }
 
     public function test_user_search_functionality(){
