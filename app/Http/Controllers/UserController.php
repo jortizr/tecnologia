@@ -23,6 +23,14 @@ class UserController extends Controller
         return view('users.show', compact('user'));
     }
 
+    public function create(){
+        //obtener todos los roles
+        $roles = Role::all();
+
+        //retornar la vista de creación de usuario con los roles
+        return view('users.create', compact('roles'));
+    }
+
     public function store(Request $request){
         //validar los datos del frontend
         $request->validate([

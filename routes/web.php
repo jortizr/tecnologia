@@ -8,7 +8,10 @@ use App\Livewire\User\UserList;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+
+Route::get('users/create', \App\Livewire\User\CreateUserForm::class)->middleware('auth')
+->name('users.create');
+
 
 Route::middleware([
     'auth:sanctum',
@@ -30,5 +33,5 @@ Route::post('/users/{user}/role/assign',  [UserRoleController::class, 'assignRol
     //ruta para la crud de los usuarios
 Route::resource('users', UserController::class)
     ->middleware('auth')
-    ->except(['show', 'edit', 'update', 'destroy'])
+    ->except(['create', 'edit', 'update', 'destroy'])
     ->names('users');
