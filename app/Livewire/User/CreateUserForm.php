@@ -10,6 +10,7 @@ class CreateUserForm extends Component
     public $name;
     public $last_name;
     public $email;
+    public $confirm_email;
     public $password;
     public $password_confirmation;
     public $role;
