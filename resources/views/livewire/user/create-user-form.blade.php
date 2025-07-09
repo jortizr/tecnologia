@@ -48,24 +48,68 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[2px] hover:shadow
                             <input placeholder="Email"
                                 class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                                 type="email" wire:model="email"/>
-                            <input placeholder="Confirm Email"
+                            <input placeholder="Confirmar email"
                                 class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                                type="email" />
-                            <input placeholder="Password"
+                                type="email" wire:model="confirm_email" />
+
+<div class="relative w-full">
+    <input
+        placeholder="Contraseña"
+        class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150 pr-10 w-full"
+        type="password"
+        wire:model="password"
+        id="password"
+    />
+
+    <div
+        class="absolute inset-y-0 right-0 pr-3 flex items-center mb-4"
+        style="height: 42px;"
+        x-data="tooltipComponent()" {{-- Usa tu componente Alpine.js --}}
+        data-message="Generar contraseña" {{-- Pasa el mensaje como un data attribute --}}
+        @mouseenter="showTooltip = true"
+        @mouseleave="showTooltip = false"
+        @focusin="showTooltip = true"
+        @focusout="showTooltip = false"
+    >
+        <button
+            type="button"
+            wire:click="generatePassword"
+            class="cursor-pointer h-full flex items-center justify-center group"
+        >
+            <svg class="h-5 w-5 text-gray-400 hover:text-green-500 transition ease-in-out duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+        </button>
+
+        {{-- El Tooltip --}}
+        <div
+            x-show="showTooltip"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-1"
+            class="absolute z-10 top-full right-0 mt-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-md shadow-lg whitespace-nowrap"
+            x-text="message" {{-- Ahora el texto viene de la propiedad 'message' del componente Alpine --}}
+        ></div>
+    </div>
+</div>
+
+                            <input placeholder="confirmar contraseña"
                                 class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                                type="password" />
-                            <input placeholder="Confirm Password"
-                                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                                type="password" />
+                                type="password" wire:model="confirm_password"/>
+
+
+
                             <label class="text-sm mb-2 text-gray-200 cursor-pointer" for="gender">
                                 Rol de Usuario
                             </label>
                             <select
                                 class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                                 id="gender">
-                                <option value="male">Viewer</option>
-                                <option value="female">Manager</option>
-                                <option value="other">Administrator</option>
+
+
                             </select>
                             <button
                                 class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
