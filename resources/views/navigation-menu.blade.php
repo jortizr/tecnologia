@@ -18,6 +18,9 @@
                     <x-nav-link href="{{ route('livewire.user.user-list') }}" :active="request()->routeIs('livewire.user.user-list')">
                         {{ __('Usuarios') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('livewire.user.user-list') }}" :active="request()->routeIs('livewire.user.user-list')">
+                        {{ __('Clausula') }}
+                    </x-nav-link>
                 </div>
             </div>
 
