@@ -93,3 +93,18 @@ Para ver tu proyecto en el navegador, inicia el servidor local de Laravel.
 npm run dev
 ```
 Tu aplicación ahora estará disponible en http://127.0.0.1:8000.
+
+
+### 9. Configuracion de livewire
+Para evitar errores de layouts no found, se requiere cambiar la ubicacion de la vista app.blade.php dentro de la configuracion de livewire, su archivo se ubica en vendor:
+```
+vendor\livewire\livewire\config\livewire.php
+```
+se busca la linea que diga:
+```
+'layout' => 'components.layouts.app',
+```
+la cual debe quedar asi:
+```    
+'layout' => 'layouts.app',
+```

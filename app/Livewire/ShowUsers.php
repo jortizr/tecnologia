@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\User;
 
 class ShowUsers extends Component
 {
