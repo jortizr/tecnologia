@@ -3,8 +3,8 @@
         class="cursor-pointer transition-all
 bg-gray-700 text-white px-6 py-2 rounded-lg
 border-indigo-400
-border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[2px]
-active:border-b-[2px] active:brightness-90 active:translate-y-[2px] hover:shadow-lg hover:shadow-indigo-300 shadow-indigo-300 active:shadow-none">
+border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
+active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow-lg hover:shadow-indigo-300 shadow-indigo-300 active:shadow-none">
         Crear Usuario
     </button>
     <div x-data="{ showModal: @entangle('isOpen') }" x-show="showModal"
@@ -96,9 +96,9 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[2px] hover:shadow
     </div>
 </div>
 
-                            <input placeholder="confirmar contraseña"
+                            <input placeholder="Confirmar contraseña"
                                 class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                                type="password" wire:model="confirm_password"/>
+                                type="password" wire:model="Confirm_password"/>
 
 
 
@@ -108,9 +108,17 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[2px] hover:shadow
                             <select
                                 class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                                 id="gender">
-
-
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                @endforeach
                             </select>
+                            <label class="text-sm mb-2 text-gray-200 cursor-pointer">
+                                Estado usuario
+                            <input type="checkbox" class="sr-only peer" value="is_active" />
+                                <div
+                                    class="group peer bg-gray-700 rounded-full duration-300 w-8 h-4 ring-1 ring-red-500 after:duration-300 after:bg-red-500 peer-checked:after:bg-green-500 peer-checked:ring-green-500 after:rounded-full after:absolute after:h-4 after:w-4 after:left-0.1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-4 peer-hover:after:scale-95"
+                                ></div>
+                            </label>
                             <button
                                 class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
                                 type="submit">

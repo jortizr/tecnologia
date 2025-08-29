@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,16 +11,17 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class RoleFactory extends Factory
 {
     //proteje el modelo que se va a crear con este factory
-    protected $model = \App\Models\Role::class;
+    protected $model = Role::class;
 
     /**
      * se define el estado por defecto del modelo.
      * @return array<string, mixed>
      */
+
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word() . ' Role',
+            'name' => $this->faker->unique()->word(),
             'description' => $this->faker->sentence(),
         ];
     }

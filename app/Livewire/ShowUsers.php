@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Role;
 use Livewire\Component;
 use App\Models\User;
 

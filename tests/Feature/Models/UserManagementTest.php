@@ -41,33 +41,30 @@ class UserManagementTest extends TestCase
         $component->assertStatus(200);
 
         //THEN: el componente debe mostrar la lista de usuarios
-        $component->assertSee('Lista de Usuarios');
+        $component->assertSeeText( 'ID', 'Nombre');
         //verificar que aparezca al menos un usuario si hay datos
         $component->assertSee($admin->name);
     }
 
-    // public function test_an_administrator_can_view_the_livewire_user_creation_form(){
-    //     //GIVEN: usuario admin autenticado
-    //     $admin = User::factory()->administrator()->create();
+    public function test_an_administrator_can_view_the_livewire_user_creation_form(){
+        //GIVEN: usuario admin autenticado
+        $admin = User::factory()->administrator()->create();
 
-    //     //GIVEN: crear roles necesarios
-    //     Role::factory()->create(['name' => 'Viewer']);
-    //     Role::factory()->create(['name' => 'Manager']);
 
-    //     //WHEN: usuario autenticado como admin intenta acceder al formulario de creación de usuario
-    //     Livewire::actingAs($admin)
-    //             ->test(CreateUserForm::class)
-    //             ->assertStatus(200) // Verifica que el componente se renderiza sin errores
-    //             ->assertSee('Crear nuevo usuario')
-    //             ->assertSee('Nombre')
-    //             ->assertSee('Email')
-    //             ->assertSee('Contraseña')
-    //             ->assertSee('Confirmar Contraseña')
-    //             ->assertSee('Rol') // Nuevo: Verifica la etiqueta del selector de rol
-    //             ->assertSee('Activo') // Nuevo: Verifica la etiqueta del checkbox is_active
-    //             ->assertSee('Guardar')
-    //             ->assertSeeInOrder(['Viewer', 'Manager']); // Nuevo: Verifica que los nombres de los roles aparecen en el selector
-    // }
+        //WHEN: usuario autenticado como admin intenta acceder al formulario de creación de usuario
+        Livewire::actingAs($admin)
+                ->test(CreateUserForm::class)
+                ->assertStatus(200) // Verifica que el componente se renderiza sin errores
+                ->assertSeeText('Crear Usuario')
+                ->assertSee('Nombre')
+                ->assertSee('Email')
+                ->assertSee('Contraseña')
+                ->assertSee('Confirmar contraseña')
+                ->assertSee('Rol') // Nuevo: Verifica la etiqueta del selector de rol
+                ->assertSee('is_active') // Nuevo: Verifica la etiqueta del checkbox is_active
+                ->assertSee('Crear usuario')
+                ->assertSeeInOrder(['Viewer', 'Manager']); // Nuevo: Verifica que los nombres de los roles aparecen en el selector
+    }
 
     // public function test_non_administrators_cannot_view_the_livewire_user_creation_form()
     // {

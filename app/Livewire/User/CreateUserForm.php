@@ -4,6 +4,7 @@ namespace App\Livewire\User;
 
 use Livewire\Component;
 use App\Models\User;
+use App\Models\Role;
 
 class CreateUserForm extends Component
 {
@@ -15,6 +16,18 @@ class CreateUserForm extends Component
     public $password;
     public $confirm_password;
     public $role;
+
+    public $roles= [];
+
+    public function mount()
+    {
+
+    }
+
+    public function loadRoles()
+    {
+
+    }
 
     public function openModal()
     {
@@ -30,7 +43,7 @@ class CreateUserForm extends Component
 
     public function resetForm()
     {
-        $this->reset(['name', 'last_name', 'email', 'password', 'confirm_password', 'role']);
+        $this->reset(['name', 'last_name', 'email', 'password', 'confirm_password', 'roles']);
 
 
     }
@@ -60,7 +73,10 @@ class CreateUserForm extends Component
 
     public function render()
     {
-        return view('livewire.user.create-user-form');
+        $roles = Role::all();
+        return view('livewire.user.create-user-form', [
+            'roles' => $roles,
+        ]);
     }
 
 
