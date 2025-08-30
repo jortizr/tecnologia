@@ -91,14 +91,14 @@ class UserFactory extends Factory
      * Indica que el usuario es un usuario moderador, es decir, subadministra con funciones limitadas.
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function moderator()
+    public function manager()
     {
         return $this->afterCreating(
             function (User $user) {
-            $moderatorRole = Role::firstOrCreate(['name' => 'Moderator']);
-            $moderatorRole->description = 'Moderator User';
+            $moderatorRole = Role::firstOrCreate(['name' => 'Manager']);
+            $moderatorRole->description = 'Manager User';
             $moderatorRole->save();
-            // Asigna el rol de moderador al usuario
+            // Asigna el rol de supervisor al usuario
             $user->roles()->attach($moderatorRole);
         });
     }

@@ -73,9 +73,9 @@ class CreateUserForm extends Component
 
     public function render()
     {
-        $roles = Role::all();
+        $this->roles = Role::all();
         return view('livewire.user.create-user-form', [
-            'roles' => $roles,
+            'roles' => $this->roles,
         ]);
     }
 

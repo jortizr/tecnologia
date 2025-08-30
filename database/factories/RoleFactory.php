@@ -21,8 +21,32 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word(),
+            'name' => $this->faker->unique(),
             'description' => $this->faker->sentence(),
         ];
+    }
+
+    public function administrator(): Factory
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'Administrator',
+            'description' => 'Administrator de la plataforma',
+        ]);
+    }
+
+    public function manager(): Factory
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'Manager',
+            'description' => 'Supervisor de la plataforma',
+        ]);
+    }
+
+    public function Viewer(): Factory
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'Viewer',
+            'description' => 'Lector de la plataforma',
+        ]);
     }
 }

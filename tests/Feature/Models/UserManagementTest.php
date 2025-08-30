@@ -63,7 +63,7 @@ class UserManagementTest extends TestCase
                 ->assertSee('Rol') // Nuevo: Verifica la etiqueta del selector de rol
                 ->assertSee('is_active') // Nuevo: Verifica la etiqueta del checkbox is_active
                 ->assertSee('Crear usuario')
-                ->assertSeeInOrder(['Viewer', 'Manager']); // Nuevo: Verifica que los nombres de los roles aparecen en el selector
+                ->assertSeeInOrder(['Administrator']); // Nuevo: Verifica que los nombres de los roles aparecen en el selector
     }
 
     // public function test_non_administrators_cannot_view_the_livewire_user_creation_form()

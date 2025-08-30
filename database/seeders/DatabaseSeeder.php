@@ -3,8 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Role;
+use Carbon\Factory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,5 +23,20 @@ class DatabaseSeeder extends Seeder
             'email' => 'sisibague@envia.co',
             'password' => bcrypt('apj12345'),
         ]);
+
+        $this->createRoles();
     }
+
+    /**
+     * funcion que crea los roles basicos en la BD atraves del factory RoleFactory que se creo en el archivo RoleFactory.php
+     * @return void
+     */
+    protected function createRoles()
+    {
+        Role::factory()->administrator()->create();
+        Role::factory()->manager()->create();
+        Role::factory()->Viewer()->create();
+    }
+
+
 }

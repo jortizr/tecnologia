@@ -108,9 +108,10 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow
                             <select
                                 class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                                 id="gender">
-                                @foreach($roles as $role)
+                                <option value="" disabled selected>Seleccione un rol</option>
+                                 @foreach($roles as $role)
                                     <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                @endforeach
+                                 @endforeach
                             </select>
                             <label class="text-sm mb-2 text-gray-200 cursor-pointer">
                                 Estado usuario
