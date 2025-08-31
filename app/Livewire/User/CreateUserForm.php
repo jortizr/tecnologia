@@ -57,12 +57,17 @@ class CreateUserForm extends Component
 
     public function store()
     {
-        User::create([
+        $user = User::create([
             'name' => $this->name,
             'last_name' => $this->last_name,
             'email' => $this->email,
             'password' => bcrypt($this->password),
+            'role' => $this->role,
         ]);
+        //agrega el id del usuario creado y el rol seleccionado
+        $user->roles()->attach($this->role);
+
+
 
         session()->flash('message', 'Usuario creado exitosamente');
         $this->closeModal();

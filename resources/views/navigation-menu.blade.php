@@ -18,8 +18,26 @@
                     <x-nav-link href="{{ route('livewire.user.user-list') }}" :active="request()->routeIs('livewire.user.user-list')">
                         {{ __('Usuarios') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('livewire.user.user-list') }}" :active="request()->routeIs('livewire.user.user-list')">
+                    <x-nav-link href="{{ route('livewire.user.user-list') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Clausula') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                        {{ __('Permisos') }}
+                    </x-nav-link>
+                                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                        {{ __('Dispositivo') }}
+                    </x-nav-link>
+                                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                        {{ __('SimCards') }}
+                    </x-nav-link>
+                                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                        {{ __('Personal') }}
+                    </x-nav-link>
+                                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                        {{ __('Soporte') }}
+                    </x-nav-link>
+                                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                        {{ __('Pestamos') }}
                     </x-nav-link>
                 </div>
             </div>
