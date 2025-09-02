@@ -91,7 +91,7 @@ class UserFactory extends Factory
      * Indica que el usuario es un usuario moderador, es decir, subadministra con funciones limitadas.
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function manager()
+   public function manager()
     {
         return $this->afterCreating(
             function (User $user) {
@@ -102,4 +102,21 @@ class UserFactory extends Factory
             $user->roles()->attach($moderatorRole);
         });
     }
+
+    /**
+     * Indica que el usuario es un usuario visualizador, es decir, solo puede ver contenido.
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function viewer()
+    {
+        return $this->afterCreating(
+            function (User $user) {
+            $viewerRole = Role::firstOrCreate(['name' => 'Viewer']);
+            $viewerRole->description = 'Viewer User';
+            $viewerRole->save();
+            // Asigna el rol de visualizador al usuario
+            $user->roles()->attach($viewerRole);
+        });
+    }
 }
+

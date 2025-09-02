@@ -21,6 +21,16 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    //enruta a todos los usuarios con el rol de manager
+    Route::get('/dashboard-manager', function () {
+        return view('dashboard-manager');
+    })->name('dashboard.manager');
+
+    //enruta a todos los usuarios con el rol de viewer
+    Route::get('/dashboard-viewer', function () {
+        return view('dashboard-viewer');
+    })->name('dashboard.viewer');
+
     //ruta para el componente Livewire de la lista de usuarios
     Route::get('/livewire/user/user-list', UserList::class)->name('livewire.user.user-list');
 });
