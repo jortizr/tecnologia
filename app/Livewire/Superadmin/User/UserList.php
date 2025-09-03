@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\User;
+namespace App\Livewire\Superadmin\User;
 
 use Livewire\Component;
 use App\Models\User;
@@ -22,7 +22,7 @@ class UserList extends Component
 
     public function render()
     {
-        return view('livewire.user.user-list', [
+        return view('livewire.superadmin.user.user-list', [
             'users' => $this->users,
         ]);
     }

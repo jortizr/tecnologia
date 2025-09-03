@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\User;
+namespace App\Livewire\Superadmin\User;
 
 use Livewire\Component;
 use App\Models\User;
@@ -79,7 +79,7 @@ class CreateUserForm extends Component
     public function render()
     {
         $this->roles = Role::all();
-        return view('livewire.user.create-user-form', [
+        return view('livewire.superadmin.user.create-user-form', [
             'roles' => $this->roles,
         ]);
     }

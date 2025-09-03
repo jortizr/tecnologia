@@ -15,10 +15,10 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('livewire.user.user-list') }}" :active="request()->routeIs('livewire.user.user-list')">
+                    <x-nav-link href="{{ route('dashboard.user-list') }}" :active="request()->routeIs('dashboard.user-list')">
                         {{ __('Usuarios') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('livewire.user.user-list') }}" :active="request()->routeIs('dashboard')">
+                    <x-nav-link href="{{ route('dashboard.user-list') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Clausula') }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
@@ -166,7 +166,7 @@
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('livewire.user.user-list') }}" :active="request()->routeIs('livewire.user.user-list')">
+            <x-responsive-nav-link href="{{ route('dashboard.user-list') }}" :active="request()->routeIs('dashboard.user-list')">
                 {{ __('Usuarios') }}
             </x-responsive-nav-link>
         </div>
