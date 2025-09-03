@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->createRoles();
         // User::factory(10)->create();
 
         $user = User::factory()->create([
@@ -24,9 +25,11 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('apj12345'),
         ]);
 
-        $user->factory()->superadmin()->create();
-
-        $this->createRoles();
+        //asignar el rol al usuario creado
+        $superadminRole = Role::where('name','Superadmin')->first();
+        if ($superadminRole) {
+            $user->roles()->attach($superadminRole->id)->timestamps();
+        }
     }
 
     /**

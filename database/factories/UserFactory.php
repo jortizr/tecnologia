@@ -75,12 +75,12 @@ class UserFactory extends Factory
      * Indica que el usuario es un administrador.
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function administrator()
+    public function superadmin()
     {
         return $this->afterCreating(
             function (User $user) {
-            $adminRole = Role::firstOrCreate(['name' => 'Administrator']);
-            $adminRole->description = 'Administrator User';
+            $adminRole = Role::firstOrCreate(['name' => 'Superadmin']);
+            $adminRole->description = 'Superadmin User';
             $adminRole->save();
             // Asigna el rol de administrador al usuario
             $user->roles()->attach($adminRole);
