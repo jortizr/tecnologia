@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\UserController;
 use App\Livewire\Superadmin\User\UserList;
+use App\Livewire\Manager\Dashboard as ManagerDashboard;
+use App\Livewire\Viewer\Dashboard as ViewerDashboard;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,14 +26,11 @@ Route::middleware([
     })->name('dashboard');
 
     //enruta a todos los usuarios con el rol de manager
-    Route::get('/dashboard-manager', function () {
-        return view('dashboard-manager');
-    })->name('dashboard.manager');
+    Route::get('/dashboard/manager', ManagerDashboard::class)->name('dashboard.manager');
+
 
     //enruta a todos los usuarios con el rol de viewer
-    Route::get('/dashboard-viewer', function () {
-        return view('dashboard-viewer');
-    })->name('dashboard.viewer');
+    Route::get('/dashboard/viewer',ViewerDashboard::class)->name('dashboard.viewer');
 
     //ruta para el componente Livewire de la lista de usuarios
     Route::get('/dashboard/user/user-list', UserList::class)->name('dashboard.user-list');

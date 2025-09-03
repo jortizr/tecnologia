@@ -26,10 +26,10 @@ class RoleFactory extends Factory
         ];
     }
 
-    public function administrator(): Factory
+    public function superadmin(): Factory
     {
         return $this->state(fn (array $attributes) => [
-            'name' => 'Administrator',
+            'name' => 'Superadmin',
             'description' => 'Administrator de la plataforma',
         ]);
     }
