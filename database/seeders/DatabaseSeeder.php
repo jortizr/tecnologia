@@ -16,8 +16,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->createRoles();
-        // User::factory(10)->create();
+
+        $this->call([
+            RoleUserSeeder::class,
+        ]);
 
         $user = User::factory()->create([
             'name' => 'Jefferson',
@@ -28,20 +30,8 @@ class DatabaseSeeder extends Seeder
         //asignar el rol al usuario creado
         $superadminRole = Role::where('name','Superadmin')->first();
         if ($superadminRole) {
-            $user->roles()->attach($superadminRole->id)->timestamps();
+            $user->roles()->attach($superadminRole->id);
         }
     }
-
-    /**
-     * funcion que crea los roles basicos en la BD atraves del factory RoleFactory que se creo en el archivo RoleFactory.php
-     * @return void
-     */
-    protected function createRoles()
-    {
-        Role::factory()->superadmin()->create();
-        Role::factory()->manager()->create();
-        Role::factory()->Viewer()->create();
-    }
-
 
 }

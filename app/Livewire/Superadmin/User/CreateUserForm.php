@@ -21,7 +21,8 @@ class CreateUserForm extends Component
 
     public function mount()
     {
-
+        //autorizacion de la accion create con el form
+        $this->authorize("create", User::class);
     }
 
     public function loadRoles()
