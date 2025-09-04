@@ -108,3 +108,9 @@ la cual debe quedar asi:
 ```    
 'layout' => 'layouts.app',
 ```
+
+### 10. Publicar la migracion de Spatie
+este es una libreria que permite la creacion de permisos en laravel, para poder crear permisos de manera mas sencilla y rapida, ejecuta el comando para publicar la migracion de la libreria:
+```
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+```
