@@ -78,18 +78,26 @@ class RoleSeeder extends Seeder
        Permission::create(['name'=> 'manager.reports.create'])->syncRoles([$managerRole]);
        Permission::create(['name'=> 'manager.reports.edit'])->syncRoles([$managerRole]);
        Permission::create(['name'=> 'manager.reports.update'])->syncRoles([$managerRole]);
+
        Permission::create(['name'=> 'manager.loans.show'])->syncRoles([$managerRole]);
        Permission::create(['name'=> 'manager.loans.create'])->syncRoles([$managerRole]);
        Permission::create(['name'=> 'manager.loans.edit'])->syncRoles([$managerRole]);
        Permission::create(['name'=> 'manager.loans.update'])->syncRoles([$managerRole]);
+
        Permission::create(['name'=> 'manager.support.show'])->syncRoles([$managerRole]);
+
        Permission::create(['name'=> 'manager.devices.show'])->syncRoles([$managerRole]);
+
        Permission::create(['name'=> 'manager.failures.show'])->syncRoles([$managerRole]);
+
        Permission::create(['name'=> 'manager.accesories.show'])->syncRoles([$managerRole]);
        Permission::create(['name'=> 'manager.accesories.update'])->syncRoles([$managerRole]);
+
        Permission::create(['name'=> 'manager.people.show'])->syncRoles([$managerRole]);
        Permission::create(['name'=> 'manager.people.update'])->syncRoles([$managerRole]);
+
        Permission::create(['name'=> 'manager.assignments.show'])->syncRoles([$managerRole]);
+       
        Permission::create(['name'=> 'manager.physical.states.show'])->syncRoles([$managerRole]);
        Permission::create(['name'=> 'manager.operational.states.show'])->syncRoles([$managerRole]);
        Permission::create(['name'=> 'manager.accesories.states.show'])->syncRoles([$managerRole]);
