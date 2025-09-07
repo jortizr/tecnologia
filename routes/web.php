@@ -32,7 +32,7 @@ Route::middleware([
     })->name('dashboard.viewer');
 
     //ruta para el componente Livewire de la lista de usuarios
-    Route::get('/livewire/user/user-list', UserList::class)->name('livewire.user.user-list');
+    Route::get('dashboard/user/user-list', UserList::class)->name('livewire.user.user-list');
 });
 
 

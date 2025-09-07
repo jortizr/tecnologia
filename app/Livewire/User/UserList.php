@@ -22,7 +22,7 @@ class UserList extends Component
 
     public function render()
     {
-        return view('livewire.user.user-list', [
+        return view('livewire.superadmin.user.user-list', [
             'users' => $this->users,
         ]);
     }
