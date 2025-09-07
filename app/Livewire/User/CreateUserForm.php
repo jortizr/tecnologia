@@ -5,9 +5,12 @@ namespace App\Livewire\User;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Role;
+use Laravel\Jetstream\InteractsWithBanner;
 
 class CreateUserForm extends Component
 {
+    use InteractsWithBanner;
+
     public bool $isOpen = false;
     public $name;
     public $last_name;
@@ -69,7 +72,7 @@ class CreateUserForm extends Component
 
 
 
-        session()->flash('message', 'Usuario creado exitosamente');
+        $this->banner('Usuario creado exitosamente.');
         $this->closeModal();
         $this->resetForm();
         $this->dispatch('userCreated');
