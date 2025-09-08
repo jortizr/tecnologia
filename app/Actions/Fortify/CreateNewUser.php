@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use Spatie\Permission\Traits\HasRoles;
 
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
+    use HasRoles;
 
     /**
      * Validate and create a newly registered user.
@@ -32,7 +34,7 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
         ]);
 
-        $user->roles()->attach(3)->timestamps();
+        $user->assignRole('Viewer');
 
         return $user;
     }

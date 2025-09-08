@@ -6,10 +6,20 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Fortify\Features;
 use Laravel\Jetstream\Jetstream;
 use Tests\TestCase;
+use Spatie\Permission\Models\Role;
 
 class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        // Asegurarse de que los roles existan
+        Role::firstOrCreate(['name' => 'Viewer', 'guard_name' => 'web']);
+        // Puedes agregar otros roles si los necesitas en otros tests
+    }
 
     public function test_registration_screen_can_be_rendered(): void
     {
