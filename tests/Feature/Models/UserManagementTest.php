@@ -5,7 +5,7 @@ namespace Tests\Feature\Models;
 use App\Livewire\User\UserList;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\Role;
+use Database\Seeders\RoleSeeder;
 use App\Models\User;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,17 +21,15 @@ class UserManagementTest extends TestCase
     {
         parent::setUp();
         //verifica los roles basicos en la BD
-        Role::firstOrCreate(['name' => 'Administrator', 'description' => 'Administrator']);
-        Role::firstOrCreate(['name' => 'Manager', 'description' => 'Manager inventory']);
-        Role::firstOrCreate(['name' => 'Viewer', 'description' => 'Content Viewer']);
+        $this->seed(RoleSeeder::class);
     }
 
-    public function test_an_administrator_can_view_the_user_list(): void
+    public function test_an_superadmin_can_view_the_user_list(): void
     {
         //GIVEN: usuario admin autenticado
-        $admin = User::factory()->administrator()->create();
+        $superadmin = User::factory()->superadmin()->create();
         //GIVEN: usuario autenticado
-        $this->actingAs($admin);
+        $this->actingAs($superadmin);
 
         //WHEN: El componente UserList es montado
         //livewire::test() monta el componente en un entorno de testing
@@ -43,16 +41,16 @@ class UserManagementTest extends TestCase
         //THEN: el componente debe mostrar la lista de usuarios
         $component->assertSeeText( 'ID', 'Nombre');
         //verificar que aparezca al menos un usuario si hay datos
-        $component->assertSee($admin->name);
+        $component->assertSee($superadmin->name);
     }
 
-    public function test_an_administrator_can_view_the_livewire_user_creation_form(){
-        //GIVEN: usuario admin autenticado
-        $admin = User::factory()->administrator()->create();
+    public function test_an_superadmin_can_view_the_livewire_user_creation_form(){
+        //GIVEN: usuario superadmin autenticado
+        $superadmin = User::factory()->superadmin()->create();
 
 
         //WHEN: usuario autenticado como admin intenta acceder al formulario de creación de usuario
-        Livewire::actingAs($admin)
+        Livewire::actingAs($superadmin)
                 ->test(CreateUserForm::class)
                 ->assertStatus(200) // Verifica que el componente se renderiza sin errores
                 ->assertSeeText('Crear Usuario')
@@ -63,7 +61,7 @@ class UserManagementTest extends TestCase
                 ->assertSee('Rol') // Nuevo: Verifica la etiqueta del selector de rol
                 ->assertSee('is_active') // Nuevo: Verifica la etiqueta del checkbox is_active
                 ->assertSee('Crear usuario')
-                ->assertSeeInOrder(['Administrator']); // Nuevo: Verifica que los nombres de los roles aparecen en el selector
+                ->assertSeeInOrder(['Superadmin']); // Nuevo: Verifica que los nombres de los roles aparecen en el selector
     }
 
     // public function test_non_administrators_cannot_view_the_livewire_user_creation_form()

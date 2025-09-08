@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
-use App\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
+
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
 class UserFactory extends Factory
 {
+    use HasRoles;
     /**
      * The current password being used by the factory.
      */
@@ -77,13 +79,9 @@ class UserFactory extends Factory
      */
     public function superadmin()
     {
-        return $this->afterCreating(
-            function (User $user) {
-            $adminRole = Role::firstOrCreate(['name' => 'Superadmin']);
-            $adminRole->description = 'Superadministrador de la plataforma';
-            $adminRole->save();
+        return $this->afterCreating(function (User $user) {
             // Asigna el rol de administrador al usuario
-            $user->roles()->attach($adminRole);
+            $user->assignRole('Superadmin');
         });
     }
 
@@ -95,11 +93,8 @@ class UserFactory extends Factory
     {
         return $this->afterCreating(
             function (User $user) {
-            $moderatorRole = Role::firstOrCreate(['name' => 'Manager']);
-            $moderatorRole->description = 'Manager User';
-            $moderatorRole->save();
             // Asigna el rol de supervisor al usuario
-            $user->roles()->attach($moderatorRole);
+            $user->assignRole('Manager');
         });
     }
 
@@ -111,11 +106,8 @@ class UserFactory extends Factory
     {
         return $this->afterCreating(
             function (User $user) {
-            $viewerRole = Role::firstOrCreate(['name' => 'Viewer']);
-            $viewerRole->description = 'Viewer User';
-            $viewerRole->save();
             // Asigna el rol de visualizador al usuario
-            $user->roles()->attach($viewerRole);
+             $user->assignRole('Viewer');
         });
     }
 }
