@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\User;
+namespace App\Livewire\Superadmin\User;
 
 use Livewire\Component;
 use App\Models\User;
@@ -27,11 +27,6 @@ class CreateUserForm extends Component
 
     }
 
-    public function loadRoles()
-    {
-
-    }
-
     public function openModal()
     {
         $this->resetForm();
@@ -47,8 +42,6 @@ class CreateUserForm extends Component
     public function resetForm()
     {
         $this->reset(['name', 'last_name', 'email', 'password', 'confirm_password', 'roles']);
-
-
     }
 
     //funcion para generar passwored aleatorio y seguros

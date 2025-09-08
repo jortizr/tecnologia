@@ -6,7 +6,7 @@
             </h2>
             <div class="">
                 <div class="flex justify-end mb-4">
-                    @livewire('user.create-user-form')
+                    @livewire('superadmin.user.create-user-form')
                 </div>
                     @if (session()->has('success'))
                         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">
