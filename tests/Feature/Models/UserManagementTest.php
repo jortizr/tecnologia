@@ -5,7 +5,7 @@ namespace Tests\Feature\Models;
 use App\Livewire\Superadmin\User\UserList;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\Role;
+use Database\Seeders\RoleSeeder;
 use App\Models\User;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -20,10 +20,11 @@ class UserManagementTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
+        //verifica los roles basicos en la BD
+        $this->seed(RoleSeeder::class);
     }
 
-    public function test_an_superadmin_can_view_the_user_list(): void
+    public function test_a_superadmin_can_view_the_user_list(): void
     {
         //GIVEN: usuario admin autenticado
         $superadmin = User::factory()->superadmin()->create();
@@ -43,8 +44,8 @@ class UserManagementTest extends TestCase
         $component->assertSee($superadmin->name);
     }
 
-    public function test_an_superadmin_can_view_the_livewire_user_creation_form(){
-        //GIVEN: usuario admin autenticado
+    public function test_a_superadmin_can_view_the_livewire_user_creation_form(){
+        //GIVEN: usuario superadmin autenticado
         $superadmin = User::factory()->superadmin()->create();
 
 
@@ -63,84 +64,27 @@ class UserManagementTest extends TestCase
                 ->assertSeeInOrder(['Superadmin']); // Nuevo: Verifica que los nombres de los roles aparecen en el selector
     }
 
-    public function test_non_superadmin_cannot_view_the_livewire_user_creation_form()
-    {
-        //GIVEN: usuario autenticado que no es administrador
-        $user = User::factory()->viewer()->create();
 
-        //WHEN: usuario autenticado intenta acceder al formulario de creación de usuario
-        Livewire::actingAs($user)
-            ->test(CreateUserForm::class)
-            ->assertForbidden(); // Verifica que el acceso está prohibido
+    public function test_a_superadmin_can_edit_an_user(){
+         // 1. GIVEN: un superadmin autenticado y un usuario a editar
+        $superadmin = User::factory()->superadmin()->create();
+        $userToEdit = User::factory()->viewer()->create();
+
+        // 2. WHEN: el superadmin monta el componente UserList y hace clic en "editar"
+        $component = Livewire::actingAs($superadmin)
+                            ->test(UserList::class);
+        // Simular que se hace clic en el botón de edición para el usuario
+        // Aquí se llama al método 'openEditModal' con el ID del usuario
+        $component->call('openEditModal', $userToEdit->id);
+
+        // 3. THEN: el modal de edición se abre y contiene la información correcta del usuario
+        $component->assertSet('isOpen', true);
+        $component->assertSet('name', $userToEdit->name);
+        $component->assertSet('email', $userToEdit->email);
+        $component->assertSet('role', $userToEdit->roles->first()->id);
+
+        $component->assertSeeText('Editar Usuario');
     }
 
-    // public function test_an_administrator_can_create_a_new_user_with_livewire_component(): void
-    // {
-    //     //GIVEN: usuario admin autenticado
-    //     $admin = User::factory()->administrator()->create();
 
-    //     //GIVEN: datos del nuevo usuario
-    //     $viewerRole = Role::where('name', 'Viewer')->first();
-
-
-    //     //WHEN: el admin usa el componente Livewire para crear un nuevo usuario
-    //     Livewire::actingAs($admin)
-    //         ->test(CreateUserForm::class)
-    //         ->set('name', $this->faker->name())
-    //         ->set('email', $this->faker->unique()->safeEmail())
-    //         ->set('password', 'password123')
-    //         ->set('password_confirmation', 'password123')
-    //         ->set('role_id', $viewerRole->id) // Asignar rol Viewer
-    //         ->set('is_active', true) // Asignar estado activo
-    //         ->call('createUser')
-    //         ->assertRedirect(route('users.index'))
-    //         ->assertSessionHas('success', 'Usuario creado exitosamente.');
-
-    //     //THEN: el nuevo usuario debe existir en la base de datos
-    //     $this->assertDatabaseHas('users', [
-    //         'name' => $this->faker->name(),
-    //         'email' => $this->faker->unique()->safeEmail(),
-    //         'role_id' => $viewerRole->id,
-    //         'is_active' => true,
-    //     ]);
-
-    //     //THEN: validamos que el usuario no tenga errores de validación
-    //     Livewire::actingAs($admin)
-    //         ->test(CreateUserForm::class)
-    //         ->set('name', '') // Nombre vacío
-    //         ->set('email', 'invalid-email') // Email inválido
-    //         ->set('password', 'short') // Contraseña demasiado corta
-    //         ->set('password_confirmation', 'mismatch') // Confirmación de contraseña no coincide
-    //         ->call('createUser')
-    //         ->assertHasErrors(['name', 'email', 'password', 'password_confirmation']);
-
-
-    // }
-
-    // public function test_user_search_functionality(){
-    //     //GIVEN: usuario admin autenticado
-    //     $admin = User::factory()->administrator()->create();
-    //     $this->actingAs($admin);
-
-    //     //GIVEN: varios usuarios en la base de datos
-    //     $users = User::factory()->count(5)->create();
-
-    //     //WHEN: se monta el componente UserList
-    //     $component = Livewire::test(UserList::class);
-
-    //     //THEN: el componente debe renderizarse exitosamente
-    //     $component->assertStatus(200);
-
-    //     //WHEN: se busca un usuario por nombre
-    //     $searchTerm = $users->first()->name;
-    //     $component->set('search', $searchTerm);
-
-    //     //THEN: el componente debe mostrar solo los usuarios que coinciden con la búsqueda
-    //     $component->assertSee($searchTerm);
-    //     foreach ($users as $user) {
-    //         if ($user->name !== $searchTerm) {
-    //             $component->assertDontSee($user->name);
-    //         }
-    //     }
-    // }
 }

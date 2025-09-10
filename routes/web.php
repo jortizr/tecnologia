@@ -4,15 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\UserController;
 use App\Livewire\Superadmin\User\UserList;
-use App\Livewire\Manager\Dashboard as ManagerDashboard;
-use App\Livewire\Viewer\Dashboard as ViewerDashboard;
-
+use App\Livewire\Superadmin\User\CreateUserForm;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('users/create', \App\Livewire\Superadmin\User\CreateUserForm::class)->middleware('auth')
+Route::get('users/create', CreateUserForm::class)->middleware('auth')
 ->name('users.create');
 
 
@@ -33,7 +31,7 @@ Route::middleware([
     Route::get('/viewer/dashboard',ViewerDashboard::class)->name('dashboard.viewer');
 
     //ruta para el componente Livewire de la lista de usuarios
-    Route::get('/dashboard/user/user-list', UserList::class)->name('dashboard.user-list');
+    Route::get('dashboard/user/user-list', UserList::class)->name('superadminuser.user-list');
 });
 
 

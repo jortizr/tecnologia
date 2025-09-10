@@ -16,22 +16,29 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
+        //creamos los roles basicos
         $this->call([
             RoleSeeder::class,
         ]);
 
-        $user = User::factory()->create([
+        $user =User::factory()->create([
             'name' => 'Jefferson',
+            'last_name'=> 'Ortiz',
             'email' => 'sisibague@envia.co',
             'password' => bcrypt('apj12345'),
         ]);
-
         //asignar el rol al usuario creado
-        $superadminRole = Role::where('name','Superadmin')->first();
-        if ($superadminRole) {
-            $user->roles()->attach($superadminRole->id);
-        }
+        $user->assignRole('Superadmin');
+
+        $user2 =User::factory()->create([
+            'name' => 'Juan',
+            'last_name'=> 'Ortiz',
+            'email' => 'test2@envia.co',
+            'password' => bcrypt('apj12345'),
+        ]);
+        //asignar el rol al usuario creado
+        $user2->assignRole('Superadmin');
+
     }
 
 }
