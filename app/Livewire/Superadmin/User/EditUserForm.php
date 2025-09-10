@@ -5,25 +5,47 @@ namespace App\Livewire\Superadmin\User;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Laravel\Jetstream\InteractsWithBanner;
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\On;
 use App\Models\User;
+
+
 
 class EditUserForm extends Component
 {
+
     use InteractsWithBanner;
 
     public bool $isOpen = false;
-    public $name;
-    public $last_name;
-    public $email;
-    public $password;
-    public $role;
+    public ?User $user = null;
 
-    public $roles= [];
+    #[Validate('required|string|max:90')]
+    public $name = '';
+    #[Validate('required|string|max:90')]
+    public $last_name = '';
+    #[Validate('required|email|max:255|unique:users,email')]
+    public $email ='';
+    public $role_id ='';
 
-        public function openModal()
+    public $roles = [];
+
+    public function mount()
     {
-        $this->resetForm();
+        $this->roles = Role::all();
+    }
+
+    #[On('open-edit-modal')]
+    public function openModal(User $user)
+    {
+        $this->reset(['name', 'last_name', 'email', 'role_id']);
+        $this->resetValidation();
+        $this->user = $user;
+        $this->name = $user->name;
+        $this->last_name = $user->last_name;
+        $this->email = $user->email;
+        $this->role_id = $user->roles()->first()->id ?? null;
         $this->isOpen = true;
+
     }
 
     public function closeModal()
@@ -32,29 +54,29 @@ class EditUserForm extends Component
         $this->resetValidation();
     }
 
-    public function resetForm()
-    {
-        $this->reset(['name', 'last_name', 'email', 'password', 'roles', 'is_active']);
-    }
 
-    // Aquí iría tu método 'update' para guardar los cambios
     public function update()
     {
+
         $this->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $this->userId,
-            'role' => 'required|exists:roles,id',
+            'last_name' => 'required|string|max:90',
+            'email' => 'required|email|unique:users,email,' . $this->user->id,
+            'role_id' => 'required|exists:roles,id',
         ]);
 
-        $user = User::findOrFail($this->userId);
-        $user->update([
+
+
+        $this->user->update([
+
             'name' => $this->name,
+            'last_name' => $this->last_name,
             'email' => $this->email,
         ]);
 
-        $user->syncRoles($this->role); // Sincroniza el rol
-
-        session()->flash('success', 'Usuario actualizado con éxito.');
+        $this->user->roles()->sync([$this->role_id]);
+        $this->dispatch('user-updated');
+        $this->banner('Usuario actualizado con éxito.');
         $this->closeModal();
     }
 
@@ -62,9 +84,6 @@ class EditUserForm extends Component
 
     public function render()
     {
-        $this->roles = Role::all();
-        return view('livewire.superadmin.user.edit-user-form',[
-            'roles' => $this->roles,
-        ]);
+        return view('livewire.superadmin.user.edit-user-form');
     }
 }

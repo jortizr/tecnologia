@@ -27,7 +27,7 @@
                                 <thead>
                                     <tr class="bg-gray-800 text-gray-100">
                                         <th class="px-4 py-2 justification-start">ID</th>
-                                        <th class="px-4 py-2">Nombre</th>
+                                        <th class="px-4 py-2">Nombre completo</th>
                                         <th class="px-4 py-2">Email</th>
                                         <th class="px-4 py-2">Roles</th>
                                         <th class="px-4 py-2">Acciones</th>
@@ -37,7 +37,7 @@
                                     @foreach($users as $user)
                                         <tr class="border-b border-gray-700">
                                             <td class="px-4 py-2">{{ $user->id }}</td>
-                                            <td class="px-4 py-2">{{ $user->name }}</td>
+                                            <td class="px-4 py-2">{{ $user->name . ' ' . $user->last_name }}</td>
                                             <td class="px-4 py-2">{{ $user->email }}</td>
                                             <td class="px-4 py-2">
                                                 @foreach($user->roles as $role)
@@ -45,7 +45,7 @@
                                                 @endforeach
                                             </td>
                                             <td class="px-4 py-2">
-                                                <x-buttons.actions-button></x-buttons.actions-button>
+                                                <x-buttons.actions-button :user="$user" />
                                             </td>
                                         </tr>
                                     @endforeach
@@ -56,4 +56,5 @@
                 </div>
             </div>
         </div>
+        @livewire('superadmin.user.edit-user-form')
 </div>

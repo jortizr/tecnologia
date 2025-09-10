@@ -23,11 +23,21 @@ class DatabaseSeeder extends Seeder
 
         $user =User::factory()->create([
             'name' => 'Jefferson',
+            'last_name'=> 'Ortiz',
             'email' => 'sisibague@envia.co',
             'password' => bcrypt('apj12345'),
         ]);
         //asignar el rol al usuario creado
         $user->assignRole('Superadmin');
+
+        $user2 =User::factory()->create([
+            'name' => 'Juan',
+            'last_name'=> 'Ortiz',
+            'email' => 'test2@envia.co',
+            'password' => bcrypt('apj12345'),
+        ]);
+        //asignar el rol al usuario creado
+        $user2->assignRole('Superadmin');
 
     }
 
