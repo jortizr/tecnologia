@@ -41,16 +41,19 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow
                                 <input placeholder="Nombres"
                                     class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 w-1/2 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                                     type="text" wire:model="name"/>
-                                <input placeholder="Apellidos"
-                                    class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 w-1/2 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                                    type="text" wire:model="last_name"/>
+                                    <input placeholder="Apellidos"
+                                        class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 w-1/2 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                                        type="text" wire:model="last_name"/>
                             </div>
+                                                                        @error('name')
+            <span class="text-red-500 text-sm">{{ $message }}</span>
+        @enderror
                             <input placeholder="Email"
                                 class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                                 type="email" wire:model="email"/>
-                            <input placeholder="Confirmar email"
-                                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                                type="email" wire:model="confirm_email" />
+                                    @error('name')
+        <span class="text-red-500 text-sm">{{ $message }}</span>
+    @enderror
 
 <div class="relative w-full">
     <input
@@ -60,6 +63,9 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow
         wire:model="password"
         id="password"
     />
+        @error('name')
+        <span class="text-red-500 text-sm">{{ $message }}</span>
+    @enderror
 
     <div
         class="absolute inset-y-0 right-0 pr-3 flex items-center mb-4"
@@ -96,11 +102,6 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow
     </div>
 </div>
 
-                            <input placeholder="Confirmar contraseña"
-                                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                                type="password" wire:model="Confirm_password"/>
-
-
 
                             <label class="text-sm mb-2 text-gray-200 cursor-pointer" for="role">
                                 Rol de Usuario
@@ -108,14 +109,18 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow
                             <select
                                 class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                                 id="role" wire:model="role">
-                                <option value="" disabled selected>Seleccione un rol</option>
+                                <option value="" selected>Seleccione un rol</option>
                                  @foreach($roles as $role)
                                     <option value="{{ $role->id }}">{{ $role->name }}</option>
                                  @endforeach
+
                             </select>
+                                @error('role')
+        <span class="text-red-500 text-sm">{{ $message }}</span>
+    @enderror
                             <label class="text-sm mb-2 text-gray-200 cursor-pointer">
                                 Estado usuario
-                            <input type="checkbox" class="sr-only peer" value="is_active" />
+                            <input type="checkbox" class="sr-only peer" value="true" wire:model="is_active" />
                                 <div
                                     class="group peer bg-gray-700 rounded-full duration-300 w-8 h-4 ring-1 ring-red-500 after:duration-300 after:bg-red-500 peer-checked:after:bg-green-500 peer-checked:ring-green-500 after:rounded-full after:absolute after:h-4 after:w-4 after:left-0.1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-4 peer-hover:after:scale-95"
                                 ></div>

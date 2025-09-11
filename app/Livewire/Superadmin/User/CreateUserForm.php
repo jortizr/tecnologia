@@ -4,10 +4,14 @@ namespace App\Livewire\Superadmin\User;
 
 use Livewire\Component;
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Role;
+use Laravel\Jetstream\InteractsWithBanner;
 
 class CreateUserForm extends Component
 {
+    use InteractsWithBanner;
+    use AuthorizesRequests;
     public bool $isOpen = false;
     public $name;
     public $last_name;
@@ -18,6 +22,13 @@ class CreateUserForm extends Component
     public $role;
 
     public $roles= [];
+    public $is_active = false;
+
+    protected $messages = [
+    'email.unique' => 'Este correo ya está registrado.',
+    'confirm_email.same' => 'Los correos no coinciden.',
+    'confirm_password.same' => 'Las contraseñas no coinciden.',
+    ];
 
     public function mount()
     {
@@ -25,9 +36,16 @@ class CreateUserForm extends Component
         $this->authorize("create", User::class);
     }
 
-    public function loadRoles()
+    protected function rules()
     {
-
+        return [
+            'name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8',
+            'role' => 'required|exists:roles,id',
+            'is_active' => 'boolean',
+        ];
     }
 
     public function openModal()
@@ -44,7 +62,7 @@ class CreateUserForm extends Component
 
     public function resetForm()
     {
-        $this->reset(['name', 'last_name', 'email', 'password', 'confirm_password', 'roles']);
+        $this->reset(['name', 'last_name', 'email', 'password', 'confirm_password', 'role']);
 
 
     }
@@ -58,19 +76,23 @@ class CreateUserForm extends Component
 
     public function store()
     {
+        $this->validate();
+
         $user = User::create([
             'name' => $this->name,
             'last_name' => $this->last_name,
             'email' => $this->email,
             'password' => bcrypt($this->password),
-            'role' => $this->role,
+            'is_active' => $this->is_active,
         ]);
-        //agrega el id del usuario creado y el rol seleccionado
-        $user->roles()->attach($this->role);
 
+        // Aquí usas assignRole con el nombre del rol
+        $role = Role::find($this->role); // $this->role es el ID
+        if ($role) {
+            $user->assignRole($role->name);
+        }
 
-
-        session()->flash('message', 'Usuario creado exitosamente');
+        $this->banner('Usuario creado exitosamente');
         $this->closeModal();
         $this->resetForm();
         $this->dispatch('userCreated');

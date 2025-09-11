@@ -37,7 +37,7 @@
                                     @foreach($users as $user)
                                         <tr class="border-b border-gray-700">
                                             <td class="px-4 py-2">{{ $user->id }}</td>
-                                            <td class="px-4 py-2">{{ $user->name }}</td>
+                                            <td class="px-4 py-2">{{ $user->name}} {{$user->last_name}}</td>
                                             <td class="px-4 py-2">{{ $user->email }}</td>
                                             <td class="px-4 py-2">
                                                 @foreach($user->roles as $role)
