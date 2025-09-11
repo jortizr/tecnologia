@@ -26,8 +26,9 @@ class CreateUserForm extends Component
 
     protected $messages = [
     'email.unique' => 'Este correo ya está registrado.',
-    'confirm_email.same' => 'Los correos no coinciden.',
-    'confirm_password.same' => 'Las contraseñas no coinciden.',
+    'name.same' => 'Ingrese el nombre.',
+    'last_name.same' => 'Ingrese un apellido.',
+    'password.same' => 'La contraseña debe ser de mas de 8 caracteres.',
     ];
 
     public function mount()
