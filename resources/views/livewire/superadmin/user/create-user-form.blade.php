@@ -45,7 +45,7 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow
                                         class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 w-1/2 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                                         type="text" wire:model="last_name"/>
                             </div>
-                                                                        @error('nombre y apellido')
+                                                                        @error('name')
             <span class="text-red-500 text-sm">{{ $message }}</span>
         @enderror
                             <input placeholder="Email"
@@ -63,7 +63,7 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow
         wire:model="password"
         id="password"
     />
-        @error('contraseña')
+        @error('password')
         <span class="text-red-500 text-sm">{{ $message }}</span>
     @enderror
 
@@ -115,7 +115,7 @@ active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow
                                  @endforeach
 
                             </select>
-                                @error('rol')
+                                @error('role')
         <span class="text-red-500 text-sm">{{ $message }}</span>
     @enderror
                             <label class="text-sm mb-2 text-gray-200 cursor-pointer">

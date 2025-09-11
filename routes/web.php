@@ -5,6 +5,7 @@ use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\UserController;
 use App\Livewire\Superadmin\User\UserList;
 use App\Livewire\Superadmin\User\CreateUserForm;
+use App\Models\User;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,7 +20,19 @@ Route::middleware([
         return view('/dashboard');
     })->name('dashboard');
 
+//rutas del Superadmin
+    // Route::middleware(['role:Superadmin'])->group(function () {
+    //     Route::get('dashboard/users/show', UserList::class)
+    //         ->name('dashboard.users.show');
+    //     Route::get('dashboard/users/create', CreateUserForm::class)
+    //         ->name('dashboard.users.create');
+    // });
 
-    //ruta para el componente Livewire de la lista de usuarios
-    Route::get('dashboard/user/user-list', UserList::class)->name('superadminuser.user-list');
+Route::get('dashboard/users/show', UserList::class)
+            ->name('dashboard.users.show');
+        Route::get('dashboard/users/create', CreateUserForm::class)
+            ->name('dashboard.users.create');
+
+
 });
+
