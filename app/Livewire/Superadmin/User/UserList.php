@@ -22,6 +22,23 @@ class UserList extends Component
         $this->users = User::with('roles')->get();
     }
 
+    public function delete($userId)
+    {
+        try {
+            $user = User::findOrFail($userId);
+            $user->delete();
+
+            // Recargar la lista
+            $this->users = User::with('roles')->get();
+
+            // Mensaje de éxito (opcional)
+            session()->flash('message', 'Usuario eliminado correctamente.');
+
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error al eliminar el usuario.');
+        }
+    }
+
     public function render()
     {
         return view('livewire.superadmin.user.user-list', [

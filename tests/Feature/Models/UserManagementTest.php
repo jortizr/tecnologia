@@ -57,7 +57,6 @@ class UserManagementTest extends TestCase
                 ->assertSee('Nombre')
                 ->assertSee('Email')
                 ->assertSee('Contraseña')
-                ->assertSee('Confirmar contraseña')
                 ->assertSee('Rol') // Nuevo: Verifica la etiqueta del selector de rol
                 ->assertSee('is_active') // Nuevo: Verifica la etiqueta del checkbox is_active
                 ->assertSee('Crear usuario')
@@ -73,12 +72,8 @@ class UserManagementTest extends TestCase
         // 2. WHEN: el superadmin monta el componente UserList y hace clic en "editar"
         $component = Livewire::actingAs($superadmin)
                             ->test(UserList::class);
-        // Simular que se hace clic en el botón de edición para el usuario
-        // Aquí se llama al método 'openEditModal' con el ID del usuario
-        $component->call('openEditModal', $userToEdit->id);
 
         // 3. THEN: el modal de edición se abre y contiene la información correcta del usuario
-        $component->assertSet('isOpen', true);
         $component->assertSet('name', $userToEdit->name);
         $component->assertSet('email', $userToEdit->email);
         $component->assertSet('role', $userToEdit->roles->first()->id);

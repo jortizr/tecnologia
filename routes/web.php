@@ -5,6 +5,7 @@ use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\UserController;
 use App\Livewire\Superadmin\User\UserList;
 use App\Livewire\Superadmin\User\CreateUserForm;
+use App\Livewire\Superadmin\User\EditUser;
 use App\Models\User;
 
 Route::get('/', function () {
@@ -28,11 +29,12 @@ Route::middleware([
     //         ->name('dashboard.users.create');
     // });
 
-Route::get('dashboard/users/show', UserList::class)
-            ->name('dashboard.users.show');
-        Route::get('dashboard/users/create', CreateUserForm::class)
-            ->name('dashboard.users.create');
-
+    Route::get('superadmin/users/show', UserList::class)
+                ->name('dashboard.users.show');
+    Route::get('dashboard/users/create', CreateUserForm::class)
+                ->name('dashboard.users.create');
+    Route::get('dashboard/users/{user}/edit/', EditUser::class)
+                ->name('dashboard.users.edit');
 
 });
 

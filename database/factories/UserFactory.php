@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
 class UserFactory extends Factory
 {
+    use HasRoles;
     /**
      * The current password being used by the factory.
      */
@@ -29,6 +31,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('apj123456'),
@@ -80,10 +83,10 @@ class UserFactory extends Factory
         return $this->afterCreating(
             function (User $user) {
             $adminRole = Role::firstOrCreate(['name' => 'Superadmin']);
-            $adminRole->description = 'Superadmin User';
+            $adminRole->guard_name = 'web';
             $adminRole->save();
             // Asigna el rol de administrador al usuario
-            $user->roles()->attach($adminRole);
+            $user->assignRole($adminRole);
         });
     }
 
@@ -96,10 +99,10 @@ class UserFactory extends Factory
         return $this->afterCreating(
             function (User $user) {
             $moderatorRole = Role::firstOrCreate(['name' => 'Manager']);
-            $moderatorRole->description = 'Manager User';
+            $moderatorRole->guard_name = 'web';
             $moderatorRole->save();
             // Asigna el rol de supervisor al usuario
-            $user->roles()->attach($moderatorRole);
+            $user->assignRole($moderatorRole);
         });
     }
 
@@ -112,10 +115,10 @@ class UserFactory extends Factory
         return $this->afterCreating(
             function (User $user) {
             $viewerRole = Role::firstOrCreate(['name' => 'Viewer']);
-            $viewerRole->description = 'Viewer User';
+            $viewerRole->guard_name = 'web';
             $viewerRole->save();
             // Asigna el rol de visualizador al usuario
-            $user->roles()->attach($viewerRole);
+            $user->assignRole($viewerRole);
         });
     }
 }
