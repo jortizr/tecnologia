@@ -10,6 +10,7 @@ use App\Models\User;
 use Livewire\Livewire;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Livewire\Superadmin\User\CreateUserForm;
+use App\Livewire\Superadmin\User\EditUser;
 
 class UserManagementTest extends TestCase
 {
@@ -28,20 +29,14 @@ class UserManagementTest extends TestCase
     {
         //GIVEN: usuario admin autenticado
         $superadmin = User::factory()->superadmin()->create();
-        //GIVEN: usuario autenticado
-        $this->actingAs($superadmin);
 
-        //WHEN: El componente UserList es montado
-        //livewire::test() monta el componente en un entorno de testing
-        $component = Livewire::test(UserList::class);
-
-        //THEN: el componente debe renderizarse exitosamente
-        $component->assertStatus(200);
-
-        //THEN: el componente debe mostrar la lista de usuarios
-        $component->assertSeeText( 'ID', 'Nombre');
-        //verificar que aparezca al menos un usuario si hay datos
-        $component->assertSee($superadmin->name);
+        //WHEN: El componente UserList es montado livewire::test() monta el componente en un entorno de testing
+         Livewire::actingAs($superadmin)
+            ->test(UserList::class)
+            ->assertStatus(status: 200)
+            ->assertSeeText( 'ID', 'Nombre')
+            //verificar que aparezca al menos un usuario si hay datos
+            ->assertSee($superadmin->name);
     }
 
     public function test_a_superadmin_can_view_the_livewire_user_creation_form(){
@@ -71,14 +66,16 @@ class UserManagementTest extends TestCase
 
         // 2. WHEN: el superadmin monta el componente UserList y hace clic en "editar"
         $component = Livewire::actingAs($superadmin)
-                            ->test(UserList::class);
+            ->test(EditUser::class, ['user' => $userToEdit])
+                ->assertSet('name', $userToEdit->name)
+                ->assertSet('last_name', $userToEdit->last_name)
+                ->assertSet('email', $userToEdit->email)
+                ->assertSet('role', $userToEdit->roles->first()->name)
+                ->assertSeeText('Editar Usuario');
+
 
         // 3. THEN: el modal de edición se abre y contiene la información correcta del usuario
-        $component->assertSet('name', $userToEdit->name);
-        $component->assertSet('email', $userToEdit->email);
-        $component->assertSet('role', $userToEdit->roles->first()->id);
 
-        $component->assertSeeText('Editar Usuario');
     }
 
 

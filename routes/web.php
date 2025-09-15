@@ -29,7 +29,7 @@ Route::middleware([
     //         ->name('dashboard.users.create');
     // });
 
-    Route::get('superadmin/users/show', UserList::class)
+    Route::get('dashboard/users/show', UserList::class)
                 ->name('dashboard.users.show');
     Route::get('dashboard/users/create', CreateUserForm::class)
                 ->name('dashboard.users.create');
