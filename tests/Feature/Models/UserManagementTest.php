@@ -78,5 +78,13 @@ class UserManagementTest extends TestCase
 
     }
 
+    public function test_a_viewer_cannot_access_users_page_at_all()
+    {
+        $viewer = User::factory()->viewer()->create();
+
+        $this->actingAs($viewer)
+            ->get(route('dashboard.users.show'))
+            ->assertStatus(403);
+    }
 
 }
