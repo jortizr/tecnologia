@@ -68,4 +68,12 @@
             </div>
         </div>
         @endhasrole
+        @if(!auth()->user()->hasRole('Superadmin'))
+        <div class="text-center items-center text-red-600 font-bold">
+            <x-section-title
+                title="Acceso Denegado"
+                description="No tienes permiso para esta seccion."
+            />
+        </div>
+        @endif
 </div>

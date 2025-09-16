@@ -11,6 +11,8 @@ use Livewire\Livewire;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Livewire\Superadmin\User\CreateUserForm;
 use App\Livewire\Superadmin\User\EditUser;
+use Illuminate\Auth\Access\AuthorizationException;
+
 
 class UserManagementTest extends TestCase
 {
@@ -21,8 +23,8 @@ class UserManagementTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        //verifica los roles basicos en la BD
-        $this->seed(RoleSeeder::class);
+        // Ejecutar seeders UNA SOLA VEZ al inicio
+        $this->artisan('db:seed', ['--class' => 'RoleSeeder']);
     }
 
     public function test_a_superadmin_can_view_the_user_list(): void
@@ -78,13 +80,120 @@ class UserManagementTest extends TestCase
 
     }
 
-    public function test_a_viewer_cannot_access_users_page_at_all()
+    public function test_a_viewer_cannot_access_to_user_list()
     {
         $viewer = User::factory()->viewer()->create();
 
-        $this->actingAs($viewer)
-            ->get(route('dashboard.users.show'))
-            ->assertStatus(403);
+        //el viewer no puede acceder a la lista de usuarios
+        Livewire::actingAs($viewer)
+            ->test(UserList::class)
+            ->assertForbidden();
+    }
+
+    public function test_policies_and_ui_authorization_are_consistent()
+    {
+        $userToTest = User::factory()->viewer()->create();
+
+        //test para Superadmin
+        $superadmin = User::factory()->superadmin()->create();
+        $canViewAny = $superadmin->can('viewAny', User::class);
+        $canUpdate = $superadmin->can('update', $userToTest);
+        $canDelete = $superadmin->can('delete', $userToTest);
+
+        $this->assertTrue($canViewAny, 'Superadmin should be able to view any users');
+        $this->assertTrue($canUpdate, 'Superadmin should be able to update users');
+        $this->assertTrue($canDelete, 'Superadmin should be able to delete users');
+
+        //test para viewer
+        $viewer = User::factory()->viewer()->create();
+        $canViewAnyViewer = $viewer->can('viewAny', User::class);
+        $canUpdate = $viewer->can('update', $userToTest);
+        $canDelete = $viewer->can('delete', $userToTest);
+
+        $this->assertFalse($canViewAnyViewer, 'Viewer should not be able to view any users');
+        $this->assertFalse($canUpdate, 'Viewer should not be able to update users');
+        $this->assertFalse($canDelete, 'Viewer should not be able to delete users');
+
+        //test para manager
+        $manager = User::factory()->manager()->create();
+        $canViewAnyManager = $manager->can('viewAny', User::class);
+        $canUpdate = $manager->can('update', $userToTest);
+        $canDelete = $manager->can('delete', $userToTest);
+
+        $this->assertTrue($canViewAnyManager, 'Manager should be able to view any users');
+        $this->assertTrue($canUpdate, 'Manager should be able to update users');
+        $this->assertFalse($canDelete, 'Manager should not be able to delete users');
+
+    }
+
+    public function test_superadmin_cannot_delete_themselves()
+    {
+        $superadmin = User::factory()->superadmin()->create();
+
+        $canDeleteSelf = $superadmin->can('delete', $superadmin);
+
+        $this->assertFalse($canDeleteSelf,'Superadmin should not be able to delete themselves');
+    }
+
+    public function test_a_superadmin_can_delete_an_user()
+    {
+        // 1. GIVEN: un superadmin autenticado y un usuario a eliminar
+        $superadmin = User::factory()->superadmin()->create();
+        $userToDelete = User::factory()->viewer()->create();
+
+        // 2. WHEN: el superadmin monta el componente UserList y hace clic en "eliminar"
+        Livewire::actingAs($superadmin)
+            ->test(UserList::class)
+            ->call('delete', $userToDelete->id);
+
+        // 3. THEN: el usuario es eliminado de la base de datos
+        $this->assertDatabaseMissing('users', [
+            'id' => $userToDelete->id,
+        ]);
+    }
+
+    public function test_debug_roles_are_assigned_correctly()
+    {
+        // creacion de usuarios
+        $superadmin = User::factory()->superadmin()->create();
+        $manager = User::factory()->manager()->create();
+        $viewer = User::factory()->viewer()->create();
+
+        // Verificar que los roles se asignaron correctamente
+        $this->assertTrue($superadmin->hasRole('Superadmin'), 'Superadmin role not assigned');
+        $this->assertTrue($manager->hasRole('Manager'), 'Manager role not assigned');
+        $this->assertTrue($viewer->hasRole('Viewer'), 'Viewer role not assigned');
+
+        // Verificar que los roles existen en la base de datos
+        $this->assertDatabaseHas('roles', ['name' => 'Superadmin']);
+        $this->assertDatabaseHas('roles', ['name' => 'Manager']);
+        $this->assertDatabaseHas('roles', ['name' => 'Viewer']);
+
+        // Verificar las relaciones en model_has_roles
+        $this->assertDatabaseHas('model_has_roles', [
+            'model_id' => $superadmin->id,
+            'model_type' => User::class,
+        ]);
+
+        echo "✅ Roles asignados correctamente\n";
+        echo "Superadmin roles: " . $superadmin->roles->pluck('name')->implode(', ') . "\n";
+        echo "Manager roles: " . $manager->roles->pluck('name')->implode(', ') . "\n";
+        echo "Viewer roles: " . $viewer->roles->pluck('name')->implode(', ') . "\n";
+
+    }
+
+    public function test_debug_simple_authorization(){
+        $viewer = User::factory()->viewer()->create();
+
+        // Debug básico
+        $this->assertNotNull($viewer, 'Usuario no fue creado');
+        $this->assertTrue($viewer->hasRole('Viewer'), 'Usuario no tiene rol Viewer');
+        $this->assertFalse($viewer->hasRole('Superadmin'), 'Usuario no debería tener rol Superadmin');
+        $this->assertFalse($viewer->can('viewAny', User::class), 'Viewer no debería poder viewAny User');
+
+        // Verificar que existe la policy
+        $policy = app(\Illuminate\Contracts\Auth\Access\Gate::class)->getPolicyFor(User::class);
+        $this->assertNotNull($policy, 'UserPolicy no está registrada');
     }
 
 }

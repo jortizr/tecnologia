@@ -1,4 +1,5 @@
 <x-form-card>
+    @can('update', $user)
     <x-form-section submit="update">
         <x-slot name="title">
             Editar Usuario
@@ -55,4 +56,12 @@
             </div>
         </x-slot>
     </x-form-section>
+    @else
+    <div class="text-center items-center text-red-600 font-bold">
+        <x-section-title
+            title="Acceso Denegado"
+            description="No tienes permiso para editar usuarios."
+        />
+    </div>
+    @endcan
 </x-form-card>

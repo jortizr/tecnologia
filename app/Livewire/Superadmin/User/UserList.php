@@ -14,14 +14,20 @@ class UserList extends Component
     use WithPagination, InteractsWithBanner;
     public $roles = [];
 
+    public function mount(){
+        $this->authorize('viewAny', User::class);
+    }
+
     public function delete($userId)
     {
-        try {
-            $user = User::findOrFail($userId);
-            $user->delete();
+        $user = User::findOrFail($userId);
+        //verifica la autorizacion especifica para eliminar el usuario
+        $this->authorize('delete', $user);
 
-            // Mensaje de éxito (opcional)
+        try {
+            $user->delete();
             $this->Banner('Usuario eliminado correctamente.');
+            $this->resetPage();
 
         } catch (\Exception $e) {
             $this->warningBanner('Error al eliminar el usuario.' . $e->getMessage());
@@ -32,9 +38,8 @@ class UserList extends Component
     #[On(['userCreated', 'user-updated'])]
     public function render()
     {
-        $users = User::with('roles')->paginate(12);
         return view('livewire.superadmin.user.user-list', [
-            'users' => $users,
+            'users' => User::with('roles')->paginate(10),
         ]);
     }
 }

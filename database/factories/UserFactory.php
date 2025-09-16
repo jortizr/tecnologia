@@ -82,11 +82,13 @@ class UserFactory extends Factory
     {
         return $this->afterCreating(
             function (User $user) {
-            $adminRole = Role::firstOrCreate(['name' => 'Superadmin']);
-            $adminRole->guard_name = 'web';
-            $adminRole->save();
-            // Asigna el rol de administrador al usuario
-            $user->assignRole($adminRole);
+            $adminRole = Role::where('name','Superadmin')->first();
+
+            if ($adminRole) {
+                $user->assignRole($adminRole);
+            } else {
+                throw new \Exception('Role Superadmin not found. Run RoleSeeder first.');
+            }
         });
     }
 
@@ -96,13 +98,15 @@ class UserFactory extends Factory
      */
    public function manager()
     {
-        return $this->afterCreating(
-            function (User $user) {
-            $moderatorRole = Role::firstOrCreate(['name' => 'Manager']);
-            $moderatorRole->guard_name = 'web';
-            $moderatorRole->save();
-            // Asigna el rol de supervisor al usuario
-            $user->assignRole($moderatorRole);
+        return $this->afterCreating(function (User $user) {
+            // Buscar el rol existente, NO crear uno nuevo
+            $managerRole = Role::where('name', 'Manager')->first();
+
+            if ($managerRole) {
+                $user->assignRole($managerRole);
+            } else {
+                throw new \Exception('Role Manager not found. Run RoleSeeder first.');
+            }
         });
     }
 
@@ -112,13 +116,15 @@ class UserFactory extends Factory
      */
     public function viewer()
     {
-        return $this->afterCreating(
-            function (User $user) {
-            $viewerRole = Role::firstOrCreate(['name' => 'Viewer']);
-            $viewerRole->guard_name = 'web';
-            $viewerRole->save();
-            // Asigna el rol de visualizador al usuario
-            $user->assignRole($viewerRole);
+        return $this->afterCreating(function (User $user) {
+            // Buscar el rol existente, NO crear uno nuevo
+            $viewerRole = Role::where('name', 'Viewer')->first();
+
+            if ($viewerRole) {
+                $user->assignRole($viewerRole);
+            } else {
+                throw new \Exception('Role Viewer not found. Run RoleSeeder first.');
+            }
         });
     }
 }
