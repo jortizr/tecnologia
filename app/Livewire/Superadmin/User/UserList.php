@@ -6,21 +6,13 @@ use Livewire\Component;
 use App\Models\User;
 use Livewire\Attributes\On;
 use Spatie\Permission\Models\Role;
+use Livewire\WithPagination;
+use Laravel\Jetstream\InteractsWithBanner;
 
 class UserList extends Component
 {
+    use WithPagination, InteractsWithBanner;
     public $roles = [];
-    public $users;
-    public function mount()
-    {
-        $this->loadUsers();
-    }
-
-    #[On(['userCreated', 'user-updated'])]
-    public function loadUsers()
-    {
-        $this->users = User::with('roles')->get();
-    }
 
     public function delete($userId)
     {
@@ -28,21 +20,21 @@ class UserList extends Component
             $user = User::findOrFail($userId);
             $user->delete();
 
-            // Recargar la lista
-            $this->users = User::with('roles')->get();
-
             // Mensaje de éxito (opcional)
-            session()->flash('message', 'Usuario eliminado correctamente.');
+            $this->Banner('Usuario eliminado correctamente.');
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Error al eliminar el usuario.');
+            $this->warningBanner('Error al eliminar el usuario.' . $e->getMessage());
+
         }
     }
 
+    #[On(['userCreated', 'user-updated'])]
     public function render()
     {
+        $users = User::with('roles')->paginate(12);
         return view('livewire.superadmin.user.user-list', [
-            'users' => $this->users,
+            'users' => $users,
         ]);
     }
 }

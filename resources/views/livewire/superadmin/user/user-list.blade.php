@@ -1,22 +1,26 @@
 <div>
     <x-slot name="header">
+        @hasrole('Superadmin')
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                     {{ __('Lista de Usuarios') }}
             </h2>
             <div class="">
+
                 <div class="flex justify-end mb-4">
                     @livewire('superadmin.user.create-user-form')
                 </div>
+
                     @if (session()->has('success'))
                         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">
                         <span class="block sm:inline">{{ session('success') }}</span>
                         </div>
                     @endif
-                </div>
             </div>
+        </div>
+        @endhasrole
     </x-slot>
-
+        @hasrole('Superadmin')
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
@@ -55,9 +59,13 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div class="mt-4">
+                                {{ $users->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        @endhasrole
 </div>
