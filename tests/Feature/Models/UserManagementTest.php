@@ -75,9 +75,6 @@ class UserManagementTest extends TestCase
                 ->assertSet('role', $userToEdit->roles->first()->name)
                 ->assertSeeText('Editar Usuario');
 
-
-        // 3. THEN: el modal de edición se abre y contiene la información correcta del usuario
-
     }
 
     public function test_a_viewer_cannot_access_to_user_list()
@@ -92,36 +89,46 @@ class UserManagementTest extends TestCase
 
     public function test_policies_and_ui_authorization_are_consistent()
     {
+        // 1. PREPARACIÓN: Crear un usuario "conejillo de indias" para las pruebas
         $userToTest = User::factory()->viewer()->create();
+        // Este usuario será el "objetivo" sobre el que otros usuarios intentarán hacer acciones
 
-        //test para Superadmin
+        // 2. PRUEBA PARA SUPERADMIN
         $superadmin = User::factory()->superadmin()->create();
-        $canViewAny = $superadmin->can('viewAny', User::class);
-        $canUpdate = $superadmin->can('update', $userToTest);
-        $canDelete = $superadmin->can('delete', $userToTest);
 
+        // Verificar permisos del SUPERADMIN:
+        $canViewAny = $superadmin->can('viewAny', User::class); // ¿Puede ver lista de usuarios?
+        $canUpdate = $superadmin->can('update', $userToTest);// ¿Puede editar usuarios?
+        $canDelete = $superadmin->can('delete', $userToTest);// ¿Puede eliminar usuarios?
+
+         // EXPECTATIVAS: Superadmin debería poder hacer TODO
         $this->assertTrue($canViewAny, 'Superadmin should be able to view any users');
         $this->assertTrue($canUpdate, 'Superadmin should be able to update users');
         $this->assertTrue($canDelete, 'Superadmin should be able to delete users');
 
-        //test para viewer
+        // Verificar permisos del VIEWER - no puede hacer nada con usuarios:
         $viewer = User::factory()->viewer()->create();
-        $canViewAnyViewer = $viewer->can('viewAny', User::class);
-        $canUpdate = $viewer->can('update', $userToTest);
-        $canDelete = $viewer->can('delete', $userToTest);
 
+        // Verificar permisos del VIEWER :
+        $canViewAnyViewer = $viewer->can('viewAny', User::class);// ¿Puede ver lista?
+        $canUpdate = $viewer->can('update', $userToTest);// ¿Puede editar usuarios?
+        $canDelete = $viewer->can('delete', $userToTest);// ¿Puede eliminar?
+
+        // EXPECTATIVAS: Viewer NO debería poder hacer NADA con usuarios
         $this->assertFalse($canViewAnyViewer, 'Viewer should not be able to view any users');
         $this->assertFalse($canUpdate, 'Viewer should not be able to update users');
         $this->assertFalse($canDelete, 'Viewer should not be able to delete users');
 
-        //test para manager
+        // 4. PRUEBA PARA MANAGER
         $manager = User::factory()->manager()->create();
+
+        // Verificar permisos del MANAGER - NO puede gestionar usuarios :
         $canViewAnyManager = $manager->can('viewAny', User::class);
         $canUpdate = $manager->can('update', $userToTest);
         $canDelete = $manager->can('delete', $userToTest);
 
-        $this->assertTrue($canViewAnyManager, 'Manager should be able to view any users');
-        $this->assertTrue($canUpdate, 'Manager should be able to update users');
+        $this->assertFalse($canViewAnyManager, 'Manager should not be able to view any users');
+        $this->assertFalse($canUpdate, 'Manager should not be able to update users');
         $this->assertFalse($canDelete, 'Manager should not be able to delete users');
 
     }
