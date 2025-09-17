@@ -35,6 +35,7 @@
                                         <th class="px-4 py-2">Apellidos</th>
                                         <th class="px-4 py-2">Email</th>
                                         <th class="px-4 py-2">Roles</th>
+                                        <th class="px-4 py-2">Estado</th>
                                         <th class="px-4 py-2">Acciones</th>
                                     </tr>
                                 </thead>
@@ -51,9 +52,11 @@
                                                 @endforeach
                                             </td>
                                             <td class="px-4 py-2">
-                                                <x-buttons.actions-button :editRoute="route('dashboard.users.edit', $user)"
-                                                :deleteId="$user->id"
-                                                />
+                                                <x-buttons.toggle-status toggleId="{{ $user->id }}" :isActive="$user->is_active"/>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <x-buttons.actions-button editRoute="{{route('dashboard.users.edit', $user)}}"
+                                                deleteId="{{$user->id}}"/>
                                             </td>
                                         </tr>
                                     @endforeach
