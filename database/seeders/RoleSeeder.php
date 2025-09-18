@@ -25,7 +25,7 @@ class RoleSeeder extends Seeder
        Permission::create(['name'=> 'dashboard.users.delete'])->syncRoles([$superadminRole]);
        Permission::create(['name'=> 'dashboard.users.update'])->syncRoles([$superadminRole]);
 
-       Permission::create(['name'=> 'dashboard.clausule.show'])->syncRoles([$superadminRole]);
+       Permission::create(['name'=> 'dashboard.clausule.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
        Permission::create(['name'=> 'dashboard.clausule.create'])->syncRoles([$superadminRole]);
        Permission::create(['name'=> 'dashboard.clausule.delete'])->syncRoles([$superadminRole]);
        Permission::create(['name'=> 'dashboard.clausule.update'])->syncRoles([$superadminRole]);
@@ -39,11 +39,6 @@ class RoleSeeder extends Seeder
        Permission::create(['name'=> 'dashboard.accesories.create'])->syncRoles([$superadminRole]);
        Permission::create(['name'=> 'dashboard.accesories.delete'])->syncRoles([$superadminRole]);
        Permission::create(['name'=> 'dashboard.accesories.update'])->syncRoles([$superadminRole, $managerRole]);
-
-       Permission::create(['name'=> 'dashboard.assignments.show'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.assignments.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.assignments.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.assignments.update'])->syncRoles([$superadminRole]);
 
        Permission::create(['name'=> 'dashboard.simcards.show'])->syncRoles([$superadminRole]);
        Permission::create(['name'=> 'dashboard.simcards.create'])->syncRoles([$superadminRole]);
