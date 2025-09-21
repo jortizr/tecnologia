@@ -7,7 +7,7 @@
             </h2>
             <div class="">
 
-                <div class="flex justify-end mb-4">
+                <div class="flex justify-end mx-3">
                     @livewire('superadmin.user.create-user-form')
                 </div>
 

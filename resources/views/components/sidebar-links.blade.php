@@ -1,25 +1,32 @@
-<nav>
-    <div class="flex flex-col space-y-1">
+<ul class="space-y-2 font-medium">
+    <li>
         <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-            {{ __('Dashboard') }}
+        <x-heroicon-m-squares-plus class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
+            <span class="ms-3">{{ __('Dashboard') }}</span>
         </x-nav-link>
-
+    </li>
+    <li>
         <x-nav-link href="{{ route('dashboard.users.show') }}" :active="request()->routeIs('dashboard.users.show')">
-            {{ __('Usuarios') }}
+            <x-heroicon-s-users class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
+            <span class="ms-3">{{ __('Usuarios') }}</span>
         </x-nav-link>
-
-        <x-nav-link href="{{-- tu ruta --}}" :active="request()->routeIs('clausula.*')">
-            {{ __('Clausula') }}
+    </li>
+    <li>
+        <x-nav-link href="{{-- tu ruta --}}" :active="request()->routeIs('Colaboradores.*')">
+            <x-heroicon-c-user-group class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
+            <span class="ms-3">{{ __('Colaboradores') }}</span>
         </x-nav-link>
-
-        <x-nav-link href="{{-- tu ruta --}}" :active="request()->routeIs('permisos.*')">
-            {{ __('Permisos') }}
+    </li>
+    <li>
+        <x-nav-link href="{{-- tu ruta --}}" :active="request()->routeIs('Dispositivos.*')">
+            <x-heroicon-o-device-phone-mobile class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
+            <span class="ms-3">{{ __('Celulares') }}</span>
         </x-nav-link>
-
-        <x-nav-link href="{{-- tu ruta --}}" :active="request()->routeIs('dispositivo.*')">
-            {{ __('Dispositivo') }}
+    </li>
+    <li>
+        <x-nav-link href="{{-- tu ruta --}}" :active="request()->routeIs('Clausulas.*')">
+            <x-heroicon-o-document-text class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
+            <span class="ms-3">{{ __('Clausulas') }}</span>
         </x-nav-link>
-
-        {{-- ... y así con todos tus otros enlaces ... --}}
-    </div>
-</nav>
+    </li>
+</ul>

@@ -18,7 +18,7 @@
     <body class="font-sans antialiased">
         <x-banner />
 
-        <div x-data="{ sidebarOpen: false }" class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div x-data="{ sidebarOpen: false }" class="min-h-screen bg-gray-100 dark:bg-gray-900 mx-50">
 
             <aside class="hidden lg:block bg-gray-800 text-white w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 z-20">
                 <a href="{{ route('dashboard') }}" class="text-white flex items-center space-x-2 px-4">
@@ -55,16 +55,17 @@
                                 {{ $header }}
                             </div>
                         @endif
+
                     </div>
+
                     @livewire('navigation-menu')
                 </header>
-
-                <main>
-                    {{ $slot }}dfs
-                </main>
+                        <main>
+                            {{ $slot }}
+                        </main>
             </div>
 
-            </div>
+        </div>
 
         @stack('modals')
         @livewireScripts
