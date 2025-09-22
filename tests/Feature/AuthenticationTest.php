@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Database\Seeders\RoleSeeder;
 
 class AuthenticationTest extends TestCase
 {
@@ -20,11 +21,13 @@ class AuthenticationTest extends TestCase
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create();
+        $this->seed(RoleSeeder::class);
 
         $response = $this->post('/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
+
 
         $this->assertAuthenticated();
         $response->assertRedirect(route('dashboard', absolute: false));

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Fortify\Features;
 use Laravel\Jetstream\Jetstream;
 use Tests\TestCase;
+use Database\Seeders\RoleSeeder;
 
 class RegistrationTest extends TestCase
 {
@@ -39,15 +40,19 @@ class RegistrationTest extends TestCase
             $this->markTestSkipped('Registration support is not enabled.');
         }
 
+        $this->seed(RoleSeeder::class);
+
         $response = $this->post('/register', [
             'name' => 'Test User',
+            'last_name'=> 'Test User',
             'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'Password!123',
+            'password_confirmation' => 'Password!123',
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
         ]);
 
         $this->assertAuthenticated();
+
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 }

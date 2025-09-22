@@ -6,10 +6,12 @@
         </x-nav-link>
     </li>
     <li>
+        @hasrole('Superadmin')
         <x-nav-link href="{{ route('dashboard.users.show') }}" :active="request()->routeIs('dashboard.users.show')">
             <x-heroicon-s-users class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
             <span class="ms-3">{{ __('Usuarios') }}</span>
         </x-nav-link>
+        @endhasrole
     </li>
     <li>
         <x-nav-link href="{{-- tu ruta --}}" :active="request()->routeIs('Colaboradores.*')">
