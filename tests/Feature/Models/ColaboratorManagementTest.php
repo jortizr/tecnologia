@@ -34,6 +34,5 @@ class ColaboratorManagementTest extends TestCase
             ->test(ColaboratorList::class)
             ->assertStatus(200)
             ->assertSeeHtml($colaborators[0]->name);
-
     }
 }
