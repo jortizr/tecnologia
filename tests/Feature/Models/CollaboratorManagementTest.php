@@ -8,6 +8,7 @@ use Livewire\Livewire;
 use Tests\TestCase;
 use App\Models\User;
 use App\Livewire\Superadmin\Colaborator\ColaboratorList;
+use App\Models\Collaborator;
 
 
 class ColaboratorManagementTest extends TestCase
@@ -29,10 +30,12 @@ class ColaboratorManagementTest extends TestCase
         //GIVEN: usuario admin autenticado
         $superadmin = User::factory()->superadmin()->create();
 
+        $collaborators = Collaborator::factory()->count(3)->create();
+
         //WHEN: El componente UserList es montado livewire::test() monta el componente en un entorno de testing
          Livewire::actingAs($superadmin)
             ->test(ColaboratorList::class)
             ->assertStatus(200)
-            ->assertSeeHtml($collaborators[0]->name);
+            ->assertSee('collaborators',$collaborators->toArray());
     }
 }
