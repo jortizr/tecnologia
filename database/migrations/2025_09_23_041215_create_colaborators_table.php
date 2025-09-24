@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('collaborators', function (Blueprint $table) {
             $table->id();
             $table->string('names');
-            $table->string('last_names');
+            $table->string('last_name');
             $table->string('identification')->unique();
             $table->string('payroll_code')->unique();
             $table->foreignId('department_id')->constrained();

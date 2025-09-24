@@ -13,6 +13,18 @@ class Collaborator extends Model
     /** @use HasFactory<\Database\Factories\CollaboratorFactory> */
     use HasFactory;
 
+       protected $fillable = [
+        'name',
+        'last_name',
+        'identification',
+        'payroll_code',
+        'department_id',
+        'regional_id',
+        'occupation_id',
+        'is_active',
+
+    ];
+
     public function department(){
         return $this->belongsTo(Department::class);
     }

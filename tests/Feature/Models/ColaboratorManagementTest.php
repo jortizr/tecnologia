@@ -12,7 +12,7 @@ use App\Livewire\Superadmin\Colaborator\ColaboratorList;
 
 class ColaboratorManagementTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     public function setUp(): void
     {
