@@ -33,6 +33,6 @@ class ColaboratorManagementTest extends TestCase
          Livewire::actingAs($superadmin)
             ->test(ColaboratorList::class)
             ->assertStatus(200)
-            ->assertSeeHtml($colaborators[0]->name);
+            ->assertSeeHtml($collaborators[0]->name);
     }
 }

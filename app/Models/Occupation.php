@@ -9,4 +9,8 @@ class Occupation extends Model
 {
     /** @use HasFactory<\Database\Factories\OccupationFactory> */
     use HasFactory;
+
+    public function collaborator(){
+        return $this->hasMany(Collaborator::class);
+    }
 }

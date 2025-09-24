@@ -11,14 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('colaborators', function (Blueprint $table) {
+        Schema::create('collaborators', function (Blueprint $table) {
             $table->id();
             $table->string('names');
             $table->string('last_names');
             $table->string('identification')->unique();
             $table->string('payroll_code')->unique();
-            $table->string('department');
+            $table->foreignId('department_id')->constrained();
+            $table->foreignId('regional_id')->constrained();
+            $table->foreignId('occupation_id')->constrained();
             $table->boolean('is_active')->default(true);
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();
         });
     }

@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
         //creamos los roles basicos
         $this->call([
             RoleSeeder::class,
+            RegionalSeeder::class,
+            DepartmentSeeder::class,
+            OccupationSeeder::class,
+            CollaboratorSeeder::class,
         ]);
 
         $user =User::factory()->create([

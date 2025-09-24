@@ -9,4 +9,8 @@ class Regional extends Model
 {
     /** @use HasFactory<\Database\Factories\RegionalFactory> */
     use HasFactory;
+
+    public function collaborator(){
+        return $this->hasMany(Collaborator::class);
+    }
 }
