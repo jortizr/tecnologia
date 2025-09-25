@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserRoleController;
-use App\Http\Controllers\UserController;
 use App\Livewire\Superadmin\User\UserList;
 use App\Livewire\Superadmin\User\CreateUserForm;
 use App\Livewire\Superadmin\User\EditUser;
-use App\Models\User;
+use App\Livewire\Superadmin\Collaborator\CollaboratorList;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,6 +35,8 @@ Route::middleware([
                 ->name('dashboard.users.create');
     Route::get('dashboard/users/{user}/edit/', EditUser::class)
                 ->name('dashboard.users.edit');
+    Route::get('dashboard/collaborators/show',CollaboratorList::class )
+    ->name('dashboard.collaborators.show');
 
 });
 

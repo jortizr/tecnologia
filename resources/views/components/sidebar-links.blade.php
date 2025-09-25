@@ -14,7 +14,7 @@
         @endhasrole
     </li>
     <li>
-        <x-nav-link href="{{-- tu ruta --}}" :active="request()->routeIs('Colaboradores.*')">
+        <x-nav-link href="{{route ('dashboard.collaborators.show')}}" :active="request()->routeIs('dashboard.collaborators.show')">
             <x-heroicon-c-user-group class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
             <span class="ms-3">{{ __('Colaboradores') }}</span>
         </x-nav-link>

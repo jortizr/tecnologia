@@ -7,11 +7,11 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 use App\Models\User;
-use App\Livewire\Superadmin\Colaborator\ColaboratorList;
+use App\Livewire\Superadmin\Collaborator\CollaboratorList;
 use App\Models\Collaborator;
 
 
-class ColaboratorManagementTest extends TestCase
+class CollaboratorManagementTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -27,15 +27,21 @@ class ColaboratorManagementTest extends TestCase
      */
     public function test_a_superadmin_can_view_the_colaborator_list(): void
     {
-        //GIVEN: usuario admin autenticado
+        //GIVEN: An authenticated superadmin user
         $superadmin = User::factory()->superadmin()->create();
 
+        // AND: Some collaborators exist in the database
         $collaborators = Collaborator::factory()->count(3)->create();
 
-        //WHEN: El componente UserList es montado livewire::test() monta el componente en un entorno de testing
-         Livewire::actingAs($superadmin)
-            ->test(ColaboratorList::class)
-            ->assertStatus(200)
-            ->assertSee('collaborators',$collaborators->toArray());
+        // WHEN: The CollaboratorList component is rendered
+        $livewire = Livewire::actingAs($superadmin)
+            ->test(CollaboratorList::class)
+            ->assertStatus(200);
+
+        // THEN: The collaborators' details are visible in the list
+        foreach ($collaborators as $collaborator) {
+            $livewire->assertSee($collaborator->names);
+            $livewire->assertSee($collaborator->last_name);
+        }
     }
 }
