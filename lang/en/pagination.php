@@ -16,4 +16,15 @@ return [
     'previous' => '&laquo; Anterior',
     'next' => 'Siguiente &raquo;',
 
+    // Textos para la información de resultados
+    'showing' => 'Mostrando',
+    'to' => 'a',
+    'of' => 'de',
+    'results' => 'resultados',
+    'result' => 'resultado',
+
+    // Texto completo personalizable
+    'showing_results' => 'Mostrando :first a :last de :total resultados',
+    'showing_results_single' => 'Mostrando :total resultado|Mostrando :total resultados',
+
 ];
