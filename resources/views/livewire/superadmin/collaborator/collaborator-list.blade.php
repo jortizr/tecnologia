@@ -8,7 +8,11 @@
                 {{ __("Lista de colaboradores") }}
             </h2>
             <div class="">
-                <div class="flex justify-end mx-3">componente livewire</div>
+
+                <div class="flex justify-end mx-3">
+                   aqui el componente
+                </div>
+
 
                 @if (session()->has('success'))
                 <div
