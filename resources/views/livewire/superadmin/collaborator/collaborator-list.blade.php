@@ -10,7 +10,7 @@
             <div class="">
 
                 <div class="flex justify-end mx-3">
-                   aqui el componente
+                   @livewire('superadmin.collaborator.create-collaborator-form')
                 </div>
 
 

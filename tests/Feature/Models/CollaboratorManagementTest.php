@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 use App\Models\User;
+use App\Livewire\Superadmin\Collaborator\CreateCollaboratorForm;
 use App\Livewire\Superadmin\Collaborator\CollaboratorList;
 use App\Models\Collaborator;
 use App\Models\Department;
