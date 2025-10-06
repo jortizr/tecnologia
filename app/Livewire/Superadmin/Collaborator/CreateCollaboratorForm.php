@@ -3,7 +3,9 @@
 namespace App\Livewire\Superadmin\Collaborator;
 
 use App\Models\Collaborator;
+use App\Models\Department;
 use App\Models\Occupation;
+use App\Models\Regional;
 use Livewire\Component;
 use Laravel\Jetstream\InteractsWithBanner;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -114,6 +116,80 @@ class CreateCollaboratorForm extends Component
         $this->occupations = [];
     }
 
+    public function updatedSearchDepartment($value){
+        if($this->department_id && $value !== $this->selectedDepartmentName){
+            $this->department_id = null;
+            $this->selectedDepartmentName = '';
+        }
+
+        if(strlen($value) >= 3){
+            $this->departments = Department::where('name', 'like', '%' . $value . '%')
+            ->limit(10)
+            ->get()
+            ->map(function($department){
+                return [
+                    'id' => $department->id,
+                    'name' => $department->name,
+                ];
+            })
+            ->toArray();
+        }else {
+            $this->departments = [];
+        }
+    }
+
+        public function selectDepartment($departmentId, $departmentName){
+        $this->department_id = $departmentId;
+        $this->selectedDepartmentName = $departmentName;
+        $this->searchDepartment = $departmentName;
+        $this->departments = [];
+        $this->resetErrorBag('department_id');
+    }
+
+    public function clearDepartment(){
+        $this->department_id = null;
+        $this->selectedDepartmentName = '';
+        $this->searchDepartment = '';
+        $this->departments = [];
+    }
+
+
+    public function updatedSearchRegional($value){
+        if($this->regional_id && $value !== $this->selectedRegionalName){
+            $this->regional_id = null;
+            $this->selectedRegionalName = '';
+        }
+
+        if(strlen($value) >= 3){
+            $this->regionals = Regional::where('name', 'like', '%' . $value . '%')
+            ->limit(10)
+            ->get()
+            ->map(function($department){
+                return [
+                    'id' => $department->id,
+                    'name' => $department->name,
+                ];
+            })
+            ->toArray();
+        }else {
+            $this->departments = [];
+        }
+    }
+
+        public function selectRegional($regionalId, $regionalName){
+        $this->regional_id = $regionalId;
+        $this->selectedRegionalName = $regionalName;
+        $this->searchRegional = $regionalName;
+        $this->regionals = [];
+        $this->resetErrorBag('regional_id');
+    }
+
+    public function clearRegional(){
+        $this->regional_id = null;
+        $this->selectedRegionalName = '';
+        $this->searchRegional = '';
+        $this->regionals = [];
+    }
     public function render()
     {
         if($this->occupation_id && !$this->selectedOccupationName){
