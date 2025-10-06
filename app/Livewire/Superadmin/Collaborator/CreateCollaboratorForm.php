@@ -30,6 +30,8 @@ class CreateCollaboratorForm extends Component
     public $departments = [];
     public $regionals = [];
     public $selectedOccupationName = '';
+    public $selectedDepartmentName = '';
+    public $selectedRegionalName = '';
     public $selectedDepartment = '';
     public $selectedRegional = '';
 
@@ -72,28 +74,44 @@ class CreateCollaboratorForm extends Component
     }
     public function resetForm()
     {
-        $this->reset(['names', 'last_name', 'identification', 'payroll_code', 'department_id', 'regional_id', 'occupation_id']);
+        $this->reset(['names', 'last_name', 'identification', 'payroll_code', 'department_id', 'regional_id', 'occupation_id','searchOccupation', 'searchDepartment', 'searchRegional', 'selectedOccupationName', 'selectedDepartmentName', 'selectedRegionalName', 'occupations', 'departments', 'regionals']);
     }
 
     public function updatedSearchOccupation($value){
-        //limpia cuando se escriba en el input
-        $this->occupation_id = '';
-        $this->selectedOccupationName = '';
+        if($this->occupation_id && $value !== $this->selectedOccupationName){
+            $this->occupation_id = null;
+            $this->selectedOccupationName = '';
+        }
 
         if(strlen($value) >= 3){
             $this->occupations = Occupation::where('name', 'like', '%' . $value . '%')
             ->limit(10)
             ->get()
+            ->map(function($occupation){
+                return [
+                    'id' => $occupation->id,
+                    'name' => $occupation->name,
+                ];
+            })
             ->toArray();
+        }else {
+            $this->occupations = [];
         }
     }
 
     public function selectOccupation($occupationId, $occupationName){
         $this->occupation_id = $occupationId;
         $this->selectedOccupationName = $occupationName;
-        $this->searchOccupation = '';
+        $this->searchOccupation = $occupationName;
         $this->occupations = [];
         $this->resetErrorBag('occupation_id');
+    }
+
+    public function clearOccupation(){
+        $this->occupation_id = null;
+        $this->selectedOccupationName = '';
+        $this->searchOccupation = '';
+        $this->occupations = [];
     }
 
     public function render()
