@@ -13,14 +13,6 @@ class OccupationSeeder extends Seeder
      */
     public function run(): void
     {
-        Occupation::firstOrCreate([
-            "name"=> "Mensajero",
-        ]);
-        Occupation::firstOrCreate([
-            "name"=> "Operador de servicio",
-        ]);
-        Occupation::firstOrCreate([
-            "name"=> "Conductor",
-        ]);
+        Occupation::factory()->count(8)->create();
     }
 }

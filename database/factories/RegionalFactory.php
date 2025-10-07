@@ -16,8 +16,20 @@ class RegionalFactory extends Factory
      */
     public function definition(): array
     {
+        $RegionalNames = [
+                'Bogota',
+                'Cali',
+                'Medellin',
+                'Barranquilla',
+                'Pereira',
+                'Bucaramanga',
+                'Manizales',
+                'Ibague',
+                'Pasto',
+                'Monteria'];
+
         return [
-            'name' => $this->faker->city(),
+            'name' => $this->faker->randomElement($RegionalNames),
         ];
     }
 }

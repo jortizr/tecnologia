@@ -13,7 +13,6 @@ class DepartmentSeeder extends Seeder
      */
     public function run(): void
     {
-        Department::firstOrCreate(['name' => 'MT']);
-        Department::firstOrCreate(['name' => 'PT']);
+        Department::factory()->count(3)->create();
     }
 }

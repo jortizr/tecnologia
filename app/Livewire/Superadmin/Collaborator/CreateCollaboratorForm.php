@@ -22,7 +22,7 @@ class CreateCollaboratorForm extends Component
     public $department_id;
     public $regional_id;
     public $occupation_id;
-    public $is_active= false;
+    public $is_active= true;
 
     //busqueda del input
     public $searchOccupation = '';
@@ -190,14 +190,31 @@ class CreateCollaboratorForm extends Component
         $this->searchRegional = '';
         $this->regionals = [];
     }
+
+    public function store(){
+        $this->validate();
+        try {
+            $collaborate = Collaborator::create([
+                'names' => $this->names,
+                'last_name' => $this->last_name,
+                'identification' => $this->identification,
+                'payroll_code' => $this->payroll_code,
+                'department_id' => $this->department_id,
+                'regional_id' => $this->regional_id,
+                'occupation_id' => $this->occupation_id,
+                'is_active' => $this->is_active
+            ]);
+            $this->banner('Colaborador creado exitosamente');
+            $this->closeModal();
+            $this->resetForm();
+            $this->dispatch('collaboratorCreated');
+        } catch (\Exception $e){
+            $this->addError('general', 'Error al crear el colaborador: ' . $e->getMessage());
+        }
+    }
+
     public function render()
     {
-        if($this->occupation_id && !$this->selectedOccupationName){
-            $occupation = Occupation::find($this->occupation_id);
-            if($occupation){
-                $this->selectedOccupationName = $occupation->name;
-            }
-        }
         return view('livewire.superadmin.collaborator.create-collaborator-form');
     }
 }

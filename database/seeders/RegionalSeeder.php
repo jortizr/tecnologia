@@ -13,6 +13,6 @@ class RegionalSeeder extends Seeder
      */
     public function run(): void
     {
-        Regional::firstOrCreate(['name' => 'Ibague']);
+        Regional::factory()->count(8)->create();
     }
 }

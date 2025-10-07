@@ -16,8 +16,11 @@ class DepartmentFactory extends Factory
      */
     public function definition(): array
     {
+        $departmentNames = [
+            'MT', 'PT', 'Administrativo'
+        ];
         return [
-            'name'=> $this->faker->words(4, true),
+            'name'=> $this->faker->randomElement($departmentNames),
         ];
     }
 }
