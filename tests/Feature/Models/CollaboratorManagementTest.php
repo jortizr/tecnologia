@@ -94,8 +94,9 @@ class CollaboratorManagementTest extends TestCase
             ->set('regional_id', $collaboratorNew['regional_id'])
             ->set('occupation_id', $collaboratorNew['occupation_id'])
             ->set('is_active', $collaboratorNew['is_active'])
-            ->call('save')
-            ->assertDatabaseHas('collaborators');
+            ->call('store')
+            ->assertHasNoErrors()
+            ->assertDispatched('collaboratorCreated');
 
 
             // THEN: verificacion del colaborador nuevo en la BD
