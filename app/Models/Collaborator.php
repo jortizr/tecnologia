@@ -14,7 +14,7 @@ class Collaborator extends Model
     use HasFactory;
 
        protected $fillable = [
-        'name',
+        'names',
         'last_name',
         'identification',
         'payroll_code',

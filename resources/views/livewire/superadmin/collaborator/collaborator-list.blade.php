@@ -56,7 +56,7 @@
                                             <td class="px-4 py-2">{{ $collaborator->occupation?->name ?? 'Sin cargo' }}</td>
                                             <td class="px-4 py-2">{{ $collaborator->regional?->name ?? 'Sin regional' }}</td>
                                             <td class="px-4 py-2">
-                                                <x-buttons.toggle-status toggleId="{{ $collaborator->id }}" :isActive="$collaborator->is_active"/>
+                                                <x-buttons.toggle-status toggleId="{{ $collaborator->id }}" :isActive="$collaborator->is_active" keyName="collaboratorId"/>
                                             </td>
                                             <td class="px-4 py-2">
                                                 <x-buttons.actions-button editRoute="{{route('dashboard.collaborators.show', $collaborator)}}"

@@ -3,6 +3,7 @@
     'isActive' => false,
     'size' => 'sm', // sm, md, lg
     'disabled' => false,
+    'keyName' => 'userId', // Nombre de la clave para el evento
 ])
 
 @php
@@ -24,7 +25,7 @@
         <input
             type="checkbox"
             class="sr-only peer"
-            wire:change="$dispatch('toggleStatus', { userId: {{ $toggleId }} })"
+            wire:change="$dispatch('toggleStatus', { '{{ $keyName }}': {{ $toggleId }} })"
             {{ $isActive ? 'checked' : '' }}
             {{ $disabled ? 'disabled' : '' }}
         />
