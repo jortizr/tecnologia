@@ -1,5 +1,5 @@
 <div>
-    @hasrole('Superadmin')
+    @can('create', App\Models\Collaborator::class)
     <x-forms.create-form>
         <x-slot name="title">Formulario colaborador</x-slot>
         <x-slot name="buttonCreate">Crear Colaborador</x-slot>
@@ -52,5 +52,5 @@
         </x-slot>
         <x-slot name="buttonText">Crear</x-slot>
     </x-forms.create-form>
-    @endhasrole
+    @endcan
 </div>

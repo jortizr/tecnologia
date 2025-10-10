@@ -7,10 +7,15 @@ use Laravel\Jetstream\InteractsWithBanner;
 use Livewire\Attributes\On;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
+use App\Models\User;
 
 class CollaboratorList extends Component
 {
     use InteractsWithBanner, AuthorizesRequests;
+
+    public function mount(){
+        $this->authorize('viewAny', Collaborator::class);
+    }
 
     #[On('toggleStatus')]
     public function toggleStatus($collaboratorId)
@@ -36,5 +41,18 @@ class CollaboratorList extends Component
         return view('livewire.superadmin.collaborator.collaborator-list', [
             'collaborators'=> Collaborator::with(['regional', 'department', 'occupation'])->paginate(10),
         ]);
+    }
+
+    public function delete($collaboratorId)
+    {
+        $collaborator = Collaborator::findOrFail($collaboratorId);
+        $this->authorize('delete', $collaborator);
+
+        try {
+            $collaborator->delete();
+            $this->banner('Colaborador eliminado correctamente.');
+        } catch (\Exception $e) {
+            $this->dangerBanner('Error al eliminar el colaborador. ' . $e->getMessage());
+        }
     }
 }

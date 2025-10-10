@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Collaborator;
+use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class CollaboratorPolicy
+{
+    use HandlesAuthorization;
+
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): bool
+    {
+        return $user->hasAnyRole(['Superadmin', 'Manager', 'Viewer']);
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, Collaborator $collaborator): bool
+    {
+        return $user->hasAnyRole(['Superadmin', 'Manager', 'Viewer']);
+    }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
+    {
+        return $user->hasAnyRole(['Superadmin', 'Manager']);
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Collaborator $collaborator): bool
+    {
+        return $user->hasAnyRole(['Superadmin', 'Manager']);
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Collaborator $collaborator): bool
+    {
+        return $user->hasRole('Superadmin');
+    }
+}

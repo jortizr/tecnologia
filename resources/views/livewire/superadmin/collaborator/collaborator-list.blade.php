@@ -1,6 +1,5 @@
 <div>
     <x-slot name="header">
-        @hasrole('Superadmin')
         <div class="flex justify-between items-center">
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
@@ -8,11 +7,11 @@
                 {{ __("Lista de colaboradores") }}
             </h2>
             <div class="">
-
-                <div class="flex justify-end mx-3">
+                @can('create', App\Models\Collaborator::class)
+                <div class="flex justify-end mx-3" id="form-collaborator">
                    @livewire('superadmin.collaborator.create-collaborator-form')
                 </div>
-
+                @endcan
 
                 @if (session()->has('success'))
                 <div
@@ -26,9 +25,9 @@
                 @endif
             </div>
         </div>
-        @endhasrole
+
     </x-slot>
-    @hasrole('Superadmin')
+    @can('viewAny', App\Models\Collaborator::class)
     <x-data-table :data="$collaborators">
         <x-slot name="headers">
             <tr class="bg-gray-800 text-gray-100">
@@ -66,12 +65,7 @@
             @endforeach
         </x-slot>
     </x-data-table>
-    @endhasrole @if(!auth()->user()->hasRole('Superadmin'))
-    <div class="text-center items-center text-red-600 font-bold">
-        <x-section-title
-            title="Acceso Denegado"
-            description="No tienes permiso para esta seccion."
-        />
-    </div>
-    @endif
+    @endcan
+
+
 </div>

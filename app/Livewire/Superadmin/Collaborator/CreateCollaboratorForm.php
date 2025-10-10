@@ -6,6 +6,7 @@ use App\Models\Collaborator;
 use App\Models\Department;
 use App\Models\Occupation;
 use App\Models\Regional;
+use App\Models\User;
 use Livewire\Component;
 use Laravel\Jetstream\InteractsWithBanner;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -57,11 +58,6 @@ class CreateCollaboratorForm extends Component
         'regional_id.same' => 'Seleccione una regional.',
         'occupation_id.same' => 'Seleccione un cargo.',
     ];
-
-    public function mount(){
-        //autorizacion de la accion create con el form
-        //$this->authorize("create", Collaborator::class);
-    }
 
     public function openModal()
     {
@@ -192,6 +188,7 @@ class CreateCollaboratorForm extends Component
     }
 
     public function store(){
+        $this->authorize('create', Collaborator::class);
         $this->validate();
         try {
             $collaborate = Collaborator::create([
