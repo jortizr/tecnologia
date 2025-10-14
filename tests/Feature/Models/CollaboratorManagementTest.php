@@ -97,6 +97,22 @@ class CollaboratorManagementTest extends TestCase
         ]);
     }
 
+    public function test_a_superadmin_can_edit_a_collaborator(){
+        // 1. GIVEN: un superadmin autenticado y un usuario a editar
+        $superadmin = User::factory()->superadmin()->create();
+        $collaboratorToEdit = Collaborator::factory()->create();
+
+        // 2. WHEN: el superadmin monta el componente CollaboratorList y hace clic en "editar"
+        Livewire::actingAs($superadmin)
+            ->test(CollaboratorEdit::class, ['collaborator' => $collaboratorToEdit])
+                ->assertSet('names', $collaboratorToEdit->names)
+                ->assertSet('last_name', $collaboratorToEdit->last_name)
+                ->assertSet('identification', $collaboratorToEdit->identification)
+                ->assertSet('payroll_code', $collaboratorToEdit->payroll_code)
+                ->assertSeeText('Editar Colaborador');
+
+    }
+
     // Policy Tests
 
     public function test_superadmin_can_view_any_collaborator()

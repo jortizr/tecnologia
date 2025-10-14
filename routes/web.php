@@ -5,6 +5,7 @@ use App\Livewire\Superadmin\User\UserList;
 use App\Livewire\Superadmin\User\CreateUserForm;
 use App\Livewire\Superadmin\User\EditUser;
 use App\Livewire\Superadmin\Collaborator\CollaboratorList;
+use App\Livewire\Superadmin\Collaborator\CollaboratorEdit;
 
 
 Route::get('/', function () {
@@ -31,12 +32,11 @@ Route::middleware([
 
     Route::get('dashboard/users/show', UserList::class)
                 ->name('dashboard.users.show');
-    Route::get('dashboard/users/create', CreateUserForm::class)
-                ->name('dashboard.users.create');
     Route::get('dashboard/users/{user}/edit/', EditUser::class)
                 ->name('dashboard.users.edit');
     Route::get('dashboard/collaborators/show',CollaboratorList::class )
     ->name('dashboard.collaborators.show');
+    Route::get('dashboard/collaborators/{user}/edit/', CollaboratorEdit::class)->name('dashboard.collaborators.edit');
 
 });
 
