@@ -58,7 +58,7 @@
                                                 <x-buttons.toggle-status toggleId="{{ $collaborator->id }}" :isActive="$collaborator->is_active" keyName="collaboratorId"/>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <x-buttons.actions-button editRoute="{{route('dashboard.collaborators.show', $collaborator)}}"
+                                                <x-buttons.actions-button editRoute="{{route('dashboard.collaborators.edit', $collaborator)}}"
                                                 deleteId="{{$collaborator->id}}"/>
                                             </td>
                 </tr>

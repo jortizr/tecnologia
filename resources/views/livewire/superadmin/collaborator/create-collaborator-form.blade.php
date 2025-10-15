@@ -26,7 +26,6 @@
                 :selectedName="$selectedOccupationName"
                 noResultsMessage="No existe el cargo"
                 class="mb-1 text-white"
-
             />
             @error('occupation_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
              <x-forms.searchable-select
@@ -37,7 +36,6 @@
                 :selectedName="$selectedRegionalName"
                 noResultsMessage="No existe la regional"
                 class="mb-1 text-white"
-
             />
             @error('regional_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
 
