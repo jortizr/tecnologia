@@ -100,22 +100,40 @@ class CollaboratorManagementTest extends TestCase
 
     public function test_a_superadmin_can_edit_a_collaborator(){
         // 1. GIVEN: un superadmin autenticado y un usuario a editar
-        $superadmin = User::factory()->superadmin()->create();
         $collaboratorToEdit = Collaborator::factory()->create();
 
-        // 2. WHEN: el superadmin monta el componente CollaboratorList y hace clic en "editar"
-        Livewire::actingAs($superadmin)
-            ->test(CollaboratorEdit::class, ['collaborator' => $collaboratorToEdit])
-                ->assertSet('names', $collaboratorToEdit->names)
-                ->assertSet('last_name', $collaboratorToEdit->last_name)
-                ->assertSet('identification', $collaboratorToEdit->identification)
-                ->assertSet('payroll_code', $collaboratorToEdit->payroll_code)
-                ->assertSeeText('Editar Colaborador');
+        $newData = [
+            'names' => 'Nuevo Nombre',
+            'last_name' => 'Apellido Nuevo',
+            'identification' => '987654321',
+            'payroll_code' => 'L98765',
+        ];
 
+        // 2. WHEN: el superadmin actualiza los datos del colaborador
+        Livewire::actingAs($this->superadmin)
+            ->test(CollaboratorEdit::class, ['collaborator' => $collaboratorToEdit])
+                ->set('names', 'Nuevo Nombre')
+                ->set('last_name', 'apellido nuevo')
+                ->set('identification', $collaboratorToEdit->identification)
+                ->set('payroll_code', $collaboratorToEdit->payroll_code)
+                ->call('update')
+                ->assertHasNoErrors()
+                ->assertDispatched('collaborator-updated');
+
+                // 2. WHEN: la base de datos refleja los cambios
+                $this->assertDatabaseHas('collaborators', [
+                    'id' => $collaboratorToEdit->id,
+                    'names' => 'Nuevo Nombre',
+                    'last_name' => 'apellido nuevo',
+                ]);
+                $this->assertDatabaseMissing('collaborators', [
+                    'id' => $collaboratorToEdit->id,
+                    'names' => $collaboratorToEdit->names,
+                    'last_name' => $collaboratorToEdit->last_name,
+                ]);
     }
 
     // Policy Tests
-
     public function test_superadmin_can_view_any_collaborator()
     {
         $policy = new CollaboratorPolicy();

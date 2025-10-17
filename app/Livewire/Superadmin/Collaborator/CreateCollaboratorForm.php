@@ -134,7 +134,7 @@ class CreateCollaboratorForm extends Component
         }
     }
 
-        public function selectDepartment($departmentId, $departmentName){
+    public function selectDepartment($departmentId, $departmentName){
         $this->department_id = $departmentId;
         $this->selectedDepartmentName = $departmentName;
         $this->searchDepartment = $departmentName;

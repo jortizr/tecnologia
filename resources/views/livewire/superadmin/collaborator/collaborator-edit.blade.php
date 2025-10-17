@@ -11,19 +11,19 @@
 
             <div class="w-full">
                 <x-label for="names" value="Nombres" class="text-center block"/>
-                <x-input id="names" type="text" class="mt-1 block w-full text-center" value="{{ $collaborator->names }}" wire:model="names" />
+                <x-input id="names" type="text" class="mt-1 block w-full text-center" wire:model="names" />
                 <x-input-error for="names" class="mt-2 text-center"/>
             </div>
 
             <div class="w-full">
                 <x-label for="last_name" value="Apellidos" class="text-center block"/>
-                <x-input id="last_name" type="text" class="mt-1 block w-full text-center" value="{{ $collaborator->last_name }}" wire:model="last_name"/>
+                <x-input id="last_name" type="text" class="mt-1 block w-full text-center" wire:model="last_name"/>
                 <x-input-error for="last_name" class="mt-2 text-center"/>
             </div>
 
             <div class="w-full">
                 <x-label for="identification" value="identification" class="text-center block"/>
-                <x-input id="identification" type="number" class="mt-1 block w-full text-center" value="{{ $collaborator->identification }}" wire:model="identification"/>
+                <x-input id="identification" type="number" class="mt-1 block w-full text-center" wire:model="identification"/>
                 <x-input-error for="identification" class="mt-2 text-center"/>
             </div>
 

@@ -5,7 +5,7 @@
     'items' => [],
     'seletedId' => null,
     'error' => null,
-    'minChars' => 3,
+    'minChars' => 2,
     'noResultsMessage' => 'No se encontraron resultados'
 ])
 

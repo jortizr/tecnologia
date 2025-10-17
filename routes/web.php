@@ -36,6 +36,6 @@ Route::middleware([
                 ->name('dashboard.users.edit');
     Route::get('dashboard/collaborators/show',CollaboratorList::class )
     ->name('dashboard.collaborators.show');
-    Route::get('dashboard/collaborators/{user}/edit/', CollaboratorEdit::class)->name('dashboard.collaborators.edit');
+    Route::get('dashboard/collaborators/{collaborator}/edit/', CollaboratorEdit::class)->name('dashboard.collaborators.edit');
 });
 
