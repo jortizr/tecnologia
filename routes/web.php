@@ -6,6 +6,7 @@ use App\Livewire\Superadmin\User\CreateUserForm;
 use App\Livewire\Superadmin\User\EditUser;
 use App\Livewire\Superadmin\Collaborator\CollaboratorList;
 use App\Livewire\Superadmin\Collaborator\CollaboratorEdit;
+use App\Livewire\Superadmin\Collaborator\CollaboratorImport;
 
 
 Route::get('/', function () {
@@ -22,14 +23,6 @@ Route::middleware([
         return view('/dashboard');
     })->name('dashboard');
 
-//rutas del Superadmin
-    // Route::middleware(['role:Superadmin'])->group(function () {
-    //     Route::get('dashboard/users/show', UserList::class)
-    //         ->name('dashboard.users.show');
-    //     Route::get('dashboard/users/create', CreateUserForm::class)
-    //         ->name('dashboard.users.create');
-    // });
-
     Route::get('dashboard/users/show', UserList::class)
                 ->name('dashboard.users.show');
     Route::get('dashboard/users/{user}/edit/', EditUser::class)
@@ -37,5 +30,6 @@ Route::middleware([
     Route::get('dashboard/collaborators/show',CollaboratorList::class )
     ->name('dashboard.collaborators.show');
     Route::get('dashboard/collaborators/{collaborator}/edit/', CollaboratorEdit::class)->name('dashboard.collaborators.edit');
+    Route::get('dashboard/collaborators/import', CollaboratorImport::class)->name('dashboard.collaborators.import');
 });
 

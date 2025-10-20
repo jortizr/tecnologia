@@ -8,8 +8,11 @@
             </h2>
             <div class="">
                 @can('create', App\Models\Collaborator::class)
-                <div class="flex justify-end mx-3" id="form-collaborator">
+                <div class="flex justify-end mx-3 space-x-1" id="form-collaborator">
                    @livewire('superadmin.collaborator.create-collaborator-form')
+                   <x-buttons.create-button route="{{ route('dashboard.collaborators.import') }}">
+                    Importar Colaboradores
+                   </x-buttons.create-button>
                 </div>
                 @endcan
 
