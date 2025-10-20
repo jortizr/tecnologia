@@ -11,12 +11,12 @@
     <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                    <div class="bg-gray-800 text-gray-100 p-6 rounded-lg shadow-xl">
-                        <h2 class="text-center">Importacion de colaboradores</h2>
+                    <div class="bg-gray-800 text-gray-100 p-6 rounded-lg shadow-xl mt-4 mb-4">
+                        <h2 class="text-center mb-3">Importacion de colaboradores desde Excel</h2>
+                        <x-input type="file" />
+                        <x-button>Cargar archivo</x-button>
+                        <x-button >Guardar Importacion</x-button>
                     </div>
-
-                    <input type="file">
-
                 </div>
             </div>
 
