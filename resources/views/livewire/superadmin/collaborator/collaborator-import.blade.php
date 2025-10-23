@@ -12,35 +12,54 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="bg-gray-800 text-gray-100 p-6 rounded-lg shadow-xl mt-4 mb-4">
-                        <h2 class="text-center mb-3">Importacion de colaboradores desde Excel</h2>
-
-                        <x-form-section wire:submit.prevent="importExcel" enctype="multipart/form-data">
-                            <x-slot name="title">Importacion de datos</x-slot>
-                            <x-slot name="description">
-                                    Seleccione el archivo Excel (.xlsx) que contiene los datos de los colaboradores a importar. Asegúrese de que el formato del archivo sea correcto.
-                            </x-slot>
-                            <div class="mb-4">
-                                <x-label for="excel" value="Archivo Excel.xlxs"/>
-                                <x-input id="excel" type="file" wire:model="excel" class="mt-1 w-full"/>
-                                <x-input-error for="excel" class="mt-2"/>
-                            </div>
-                            <x-slot name="buttonText">Importar</x-slot>
-                        </x-form-section>
-                        @if($errorsImport->isNotEmpty())
-                            <div class="mt-4 text-red-600 text-sm">
-                                <p>Algunas filas no se pudieron importar:</p>
-                                <ul class="list-disc ml-6">
-                                    @foreach($errorsImport as $e)
-                                        <li>Fila {{ $e['row'] }}: {{ $e['msg']}}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
+                        @if (session()->has('message'))
+                        <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800">
+                            {{ session('message') }}
+                        </div>
                         @endif
 
+                        <x-form-section submit="importExcel">
+                            <x-slot name="title">Importacion de colaboradores</x-slot>
+                            <x-slot name="description">Seleccione un archivo Excel con la estructura correcta para importar los colaboradores.</x-slot>
+                            <x-slot name="form">
+                                <div class="col-span-6 sm:col-span-4">
+                                    <x-label for="excel" value="Archivo Excel.xlxs"/>
+                                    <x-input id="excel" type="file" wire:model="excel" class="mt-1 w-full"/>
+                                    <div wire:loading wire:target="excel" class="mt-2 text-sm text-yellow-400">
+                                        Cargando previsualizacion...
+                                    </div>
+                                    <x-input-error for="excel" class="mt-2"/>
+                                </div>
+                            </x-slot>
+                            <x-slot name="actions">
+                                {{-- Aquí aplicamos el paso 2 --}}
+                                <x-button wire:loading.attr="disabled" wire:target="importExcel"
+                                @disabled(empty($preview))
+                                >
+                                <span wire:loading wire:target="importExcel">
+                                            Importando...
+                                </span>
+                                <span wire:loading.remove wire:target="importExcel">
+                                        Importar
+                                </span>
+                                </x-button>
+                            </x-slot>
+                        </x-form-section>
+                        {{--lista de errores --}}
+                        @if($errorsImport->isNotEmpty())
+                        <div class="mt-4 text-red-600 text-sm">
+                            <p>Algunas filas no se pudieron importar:</p>
+                            <ul class="list-disc ml-6">
+                                @foreach($errorsImport as $e)
+                                    <li>Fila {{ $e['row'] }}: {{ $e['msg']}}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
-            @if($preview)
+            @if(!empty($preview))
             <section>
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
@@ -60,9 +79,16 @@
                                         </tr>
                                     </x-slot>
                                     <x-slot name="dataTBody">
-                                        @foreach($row as $v)
+                                        {{-- Iteramos sobre la variable $preview que SÍ existe --}}
+                                        @foreach($preview as $row)
                                             <tr class="border-b border-gray-700">
-                                                <td class="px-4 py-2">{{ $v }}</td>
+                                                <td class="px-4 py-2">{{ $row['Nombres'] }}</td>
+                                                <td class="px-4 py-2">{{ $row['Apellidos'] ?? 'N/A' }}</td>
+                                                <td class="px-4 py-2">{{ $row['Identificacion'] }}</td>
+                                                <td class="px-4 py-2">{{ $row['Codigo'] }}</td>
+                                                <td class="px-4 py-2">{{ $row['CC'] ?? 'N/A' }}</td>
+                                                <td class="px-4 py-2">{{ $row['Cargo'] }}</td>
+                                                <td class="px-4 py-2">{{ $row['Ciudad'] ?? 'N/A' }}</td>
                                             </tr>
                                         @endforeach
                                     </x-slot>
