@@ -19,9 +19,11 @@
                             {{$dataTBody}}
                         </tbody>
                     </table>
+                    @if ($data instanceof \Illuminate\Pagination\AbstractPaginator)
                     <div class="mt-4">
                         {{ $data->links() }}
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

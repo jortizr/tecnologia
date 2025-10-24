@@ -11,7 +11,7 @@
     <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                    <div class="bg-gray-800 text-gray-100 p-6 rounded-lg shadow-xl mt-4 mb-4">
+                    <div class="bg-gray-800 text-gray-100 p-6 rounded-lg shadow-xl mt-4">
                         @if (session()->has('message'))
                         <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800">
                             {{ session('message') }}
@@ -23,7 +23,7 @@
                             <x-slot name="description">Seleccione un archivo Excel con la estructura correcta para importar los colaboradores.</x-slot>
                             <x-slot name="form">
                                 <div class="col-span-6 sm:col-span-4">
-                                    <x-label for="excel" value="Archivo Excel.xlxs"/>
+                                    <x-label for="excel" value="Archivo Excel.xlsx"/>
                                     <x-input id="excel" type="file" wire:model="excel" class="mt-1 w-full"/>
                                     <div wire:loading wire:target="excel" class="mt-2 text-sm text-yellow-400">
                                         Cargando previsualizacion...
@@ -34,7 +34,7 @@
                             <x-slot name="actions">
                                 {{-- Aquí aplicamos el paso 2 --}}
                                 <x-button wire:loading.attr="disabled" wire:target="importExcel"
-                                @disabled(empty($preview))
+                                :disabled="empty($preview)"
                                 >
                                 <span wire:loading wire:target="importExcel">
                                             Importando...
@@ -60,7 +60,6 @@
                 </div>
             </div>
             @if(!empty($preview))
-            <section>
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                         <div class="bg-gray-900 text-gray-100 p-6 rounded-lg shadow-xl">
@@ -69,26 +68,26 @@
                                 <x-data-table :data="$preview" class="mt-4">
                                     <x-slot name="headers">
                                         <tr class="bg-gray-800 text-gray-100">
+                                            <th class="px-4 py-2">Regional</th>
+                                            <th class="px-4 py-2">Codigo de nomina</th>
                                             <th class="px-4 py-2">Nombres</th>
                                             <th class="px-4 py-2">Apellidos</th>
                                             <th class="px-4 py-2">Identificacion</th>
-                                            <th class="px-4 py-2">Codigo de nomina</th>
-                                            <th class="px-4 py-2">Area</th>
                                             <th class="px-4 py-2">Cargo</th>
-                                            <th class="px-4 py-2">Regional</th>
+                                            <th class="px-4 py-2">Area</th>
                                         </tr>
                                     </x-slot>
                                     <x-slot name="dataTBody">
                                         {{-- Iteramos sobre la variable $preview que SÍ existe --}}
                                         @foreach($preview as $row)
                                             <tr class="border-b border-gray-700">
+                                                <td class="px-4 py-2">{{ $row['Ciudad'] ?? 'N/A' }}</td>
+                                                <td class="px-4 py-2">{{ $row['Codigo'] }}</td>
                                                 <td class="px-4 py-2">{{ $row['Nombres'] }}</td>
                                                 <td class="px-4 py-2">{{ $row['Apellidos'] ?? 'N/A' }}</td>
                                                 <td class="px-4 py-2">{{ $row['Identificacion'] }}</td>
-                                                <td class="px-4 py-2">{{ $row['Codigo'] }}</td>
-                                                <td class="px-4 py-2">{{ $row['CC'] ?? 'N/A' }}</td>
                                                 <td class="px-4 py-2">{{ $row['Cargo'] }}</td>
-                                                <td class="px-4 py-2">{{ $row['Ciudad'] ?? 'N/A' }}</td>
+                                                <td class="px-4 py-2">{{ $row['CC'] ?? 'N/A' }}</td>
                                             </tr>
                                         @endforeach
                                     </x-slot>
@@ -97,7 +96,6 @@
                         </div>
                     </div>
                 </div>
-            </section>
             @endif
     </div>
 </div>
