@@ -68,16 +68,17 @@ class CollaboratorImport extends Component
             ->getRows()
             ->toArray();
 
-            dd($rows);
+
             foreach ($rows as $rowProperties) {
+                
                 // 2. Look up IDs
                 $department = $departments->get($rowProperties['CC']);
                 $regional = $regionals->get($rowProperties['Ciudad']);
                 $occupation = $occupations->get($rowProperties['Cargo']);
-
+                dump($department->id, $rowProperties);
                 // 3. Validate IDs
                 if (!$department) {
-                    $this->errorsImport->push(['row' => $rowIndex, 'msg' => "El departamento '{$rowProperties['CC']}' no existe."]);
+                    $this->errorsImport->push(['row' => $rowProperties['CC'], 'msg' => "El departamento '{$rowProperties['CC']}' no existe."]);
                     continue; // Skip this row
                 }
                 if (!$regional) {
