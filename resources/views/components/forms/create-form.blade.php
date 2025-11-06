@@ -5,7 +5,17 @@
     border-indigo-400
     border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
     active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow-lg hover:shadow-indigo-300 shadow-indigo-300 active:shadow-none">
-        {{ $buttonCreate}}
+        @if (isset($icon))
+        <span class="inline sm:hidden">
+            {{ $icon }}
+        </span>
+
+        <span class="hidden sm:inline">
+            {{ $buttonCreate }}
+        </span>
+        @else
+            {{ $buttonCreate }}
+        @endif
     </button>
     <div x-data="{ showModal: @entangle('isOpen') }" x-show="showModal"
         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90"

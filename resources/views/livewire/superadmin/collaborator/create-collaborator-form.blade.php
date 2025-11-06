@@ -2,7 +2,12 @@
     @can('create', App\Models\Collaborator::class)
     <x-forms.create-form>
         <x-slot name="title">Formulario colaborador</x-slot>
-        <x-slot name="buttonCreate">Crear Colaborador</x-slot>
+        <x-slot name="buttonCreate">Crear Colaborador
+            <x-slot name="icon">
+                <svg id="add-user-5" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color w-6 h-6"><g id="SVGRepo_iconCarrier"><path id="secondary" d="M17,17h4m-2-2v4" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path><path id="primary" d="M15,13.1a4.71,4.71,0,0,0-1-.1H8a5,5,0,0,0-5,5v1s2,2,8,2a22,22,0,0,0,3-.19c.35,0,.69-.1,1-.17" style="fill: none; stroke: #ffff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path><circle id="primary-2" data-name="primary" cx="11" cy="8" r="5" style="fill: none; stroke: #ffff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></circle></g></svg>
+            </x-slot>
+            <x-slot name="tooltip"
+        </x-slot>
         <x-slot name="contentForm">
             <x-input placeholder="Nombres" type="text" wire:model="names" class="mb-1"/>
             <x-input placeholder="Apellidos" type="text" wire:model="last_name" class="mb-1"/>
