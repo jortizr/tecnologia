@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('occupations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();
         });
     }

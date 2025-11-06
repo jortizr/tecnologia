@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use App\Observers\CollaboratorObserver;
 
 #[ObservedBy([CollaboratorObserver::class])]
@@ -35,5 +36,9 @@ class Collaborator extends Model
 
     public function occupation(){
         return $this->belongsTo(Occupation::class);
+    }
+
+    public function creator(){
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

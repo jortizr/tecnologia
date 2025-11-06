@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clausulas', function (Blueprint $table) {
+        Schema::create('clauses', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clausulas');
+        Schema::dropIfExists('clauses');
     }
 };

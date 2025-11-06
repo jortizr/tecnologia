@@ -6,6 +6,7 @@ use Livewire\Component;
 use Spatie\SimpleExcel\SimpleExcelReader;
 use Illuminate\Support\Collection;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Auth;
 
 class CollaboratorImport extends Component
 {
@@ -58,6 +59,7 @@ class CollaboratorImport extends Component
         }
 
         try {
+
             // 1. Pre-load data for efficiency
             $departments = \App\Models\Department::all()->keyBy('name');
             $regionals = \App\Models\Regional::all()->keyBy('name');
@@ -68,41 +70,53 @@ class CollaboratorImport extends Component
             ->getRows()
             ->toArray();
 
-
+            $index = 1;
             foreach ($rows as $rowProperties) {
-                
+                $index++;
+
+                $ccExists = \App\Models\Collaborator::where(
+                    ['identification'=> $rowProperties['Identificacion']]
+                )->exists();
+
+                if($ccExists){
+                    continue;
+                }
+
+                $ciudad = ucfirst(strtolower($rowProperties['Ciudad']));
                 // 2. Look up IDs
                 $department = $departments->get($rowProperties['CC']);
-                $regional = $regionals->get($rowProperties['Ciudad']);
+                $regional = $regionals->get($ciudad);
                 $occupation = $occupations->get($rowProperties['Cargo']);
-                dump($department->id, $rowProperties);
+
+
                 // 3. Validate IDs
                 if (!$department) {
-                    $this->errorsImport->push(['row' => $rowProperties['CC'], 'msg' => "El departamento '{$rowProperties['CC']}' no existe."]);
+                    $this->errorsImport->push(['row' => $index, 'msg' => "El departamento '{$rowProperties['CC']}' no existe."]);
                     continue; // Skip this row
                 }
                 if (!$regional) {
-                    $this->errorsImport->push(['row' => $rowIndex, 'msg' => "La regional '{$rowProperties['Ciudad']}' no existe."]);
+                    $this->errorsImport->push(['row' => $index, 'msg' => "La regional '{$rowProperties['Ciudad']}' no existe."]);
                     continue; // Skip this row
                 }
                 if (!$occupation) {
-                    $this->errorsImport->push(['row' => $rowIndex, 'msg' => "El cargo '{$rowProperties['Cargo']}' no existe."]);
+                    $this->errorsImport->push(['row' => $index, 'msg' => "El cargo '{$rowProperties['Cargo']}' no existe."]);
                     continue; // Skip this row
                 }
 
                 // 4. Create collaborator if all data is valid
                 \App\Models\Collaborator::create([
                     'names' => $rowProperties['Nombres'],
-                    'last_names' => $rowProperties['Apellidos'] ?? null,
+                    'last_name' => $rowProperties['Apellidos'] ?? null,
                     'identification' => $rowProperties['Identificacion'],
                     'payroll_code' => $rowProperties['Codigo'],
                     'department_id' => $department->id,
                     'regional_id' => $regional->id,
                     'occupation_id' => $occupation->id,
                     'is_active' => true,
+                    'created_by' => Auth::user()->id,
                 ]);
-            }
 
+            }
             if ($this->errorsImport->isEmpty()) {
                 session()->flash('message', 'Colaboradores importados con éxito.');
                 $this->reset('excel', 'preview');
