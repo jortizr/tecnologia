@@ -7,17 +7,19 @@
                 {{ __("Lista de colaboradores") }}
             </h2>
             <div class="">
-                @can('create', App\Models\Collaborator::class)
+
                 <div class="flex justify-end mx-3 space-x-1" id="form-collaborator">
                    @livewire('superadmin.collaborator.create-collaborator-form')
+                   @hasrole(['Superadmin', 'Manager'])
                    <x-buttons.create-button route="{{ route('dashboard.collaborators.import') }}">
-                    Importar Colaboradores
+                    Importar datos
                     <x-slot name="icon">
-                        <svg fill="#ffff" viewBox="0 0 24 24" id="import-2" data-name="Flat Color" xmlns="http://www.w3.org/2000/svg" class="icon flat-color w-6 h-6"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path id="secondary" d="M13,6a1,1,0,0,0-1,1v3.59L3.71,2.29A1,1,0,0,0,2.29,3.71L10.59,12H7a1,1,0,0,0,0,2h6a1,1,0,0,0,1-1V7A1,1,0,0,0,13,6Z" style="fill: #2ca9bc;"></path><path id="primary" d="M20,22H4a2,2,0,0,1-2-2V13a1,1,0,0,1,2,0v7H20V4H13a1,1,0,0,1,0-2h7a2,2,0,0,1,2,2V20A2,2,0,0,1,20,22Z" style="fill: #fff;"></path></g></svg>
+                        <x-icons.import />
                     </x-slot>
                    </x-buttons.create-button>
+                   @endhasrole
                 </div>
-                @endcan
+
 
                 @if (session()->has('success'))
                 <div

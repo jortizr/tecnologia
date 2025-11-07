@@ -235,9 +235,9 @@ class CollaboratorManagementTest extends TestCase
     public function test_a_manager_can_see_the_create_collaborator_button()
     {
         $this->actingAs($this->manager);
-        Livewire::test(CollaboratorList::class)
+        Livewire::test(CreateCollaboratorForm::class)
             ->assertStatus(200)
-            ->assertSeeText('Crear Colaborador');
+            ->assertSee('Crear Colaborador');
     }
 
     public function test_a_viewer_is_forbidden_from_creating_a_collaborator()
