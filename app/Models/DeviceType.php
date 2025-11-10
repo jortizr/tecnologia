@@ -9,4 +9,21 @@ class DeviceType extends Model
 {
     /** @use HasFactory<\Database\Factories\DeviceTypeFactory> */
     use HasFactory;
+    protected $fillable =[
+        'name',
+        'description',
+    ];
+
+
+    public function device(){
+        return $this->hasMany(Device::class);
+    }
+
+    public function create(){
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updater(){
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }
