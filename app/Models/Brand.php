@@ -15,7 +15,6 @@ class Brand extends Model
     public function device_model(){
         return $this->hasMany(DeviceModel::class);
     }
-
     public function creator(){
         return $this->belongsTo(User::class, 'created_by');
     }

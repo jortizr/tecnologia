@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Superadmin\Brand\BrandList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Superadmin\User\UserList;
 use App\Livewire\Superadmin\User\CreateUserForm;
@@ -31,5 +32,6 @@ Route::middleware([
     ->name('dashboard.collaborators.show');
     Route::get('dashboard/collaborators/{collaborator}/edit/', CollaboratorEdit::class)->name('dashboard.collaborators.edit');
     Route::get('dashboard/collaborators/import', CollaboratorImport::class)->name('dashboard.collaborators.import');
+    Route::get('dashboard/brand/show', BrandList::class)->name('dashboard.brand.show');
 });
 
