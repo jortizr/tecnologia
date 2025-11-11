@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Factory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Brand;
 
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             OccupationSeeder::class,
             CollaboratorSeeder::class,
+            BrandSeeder::class,
         ]);
 
         $user =User::factory()->create([

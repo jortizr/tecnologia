@@ -24,7 +24,6 @@ class BrandManagementTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-                parent::setUp();
         $this->artisan('db:seed', ['--class' => 'RoleSeeder']);
 
         $this->superadmin = User::factory()->create()->assignRole('Superadmin');
@@ -37,6 +36,19 @@ class BrandManagementTest extends TestCase
         Livewire::actingAs($this->superadmin)
             ->test(BrandList::class)
             ->assertStatus(200)
+            ->assertSee('Lista de marcas');
+    }
+
+    public function test_a_manager_and_viewer_can_view_the_brand_list(){
+
+        Livewire::actingAs($this->manager)
+            ->test(BrandList::class)
+            ->assertOk()
+            ->assertSee('Lista de marcas');
+
+        Livewire::actingAs($this->viewer)
+            ->test(BrandList::class)
+            ->assertOk()
             ->assertSee('Lista de marcas');
     }
 
