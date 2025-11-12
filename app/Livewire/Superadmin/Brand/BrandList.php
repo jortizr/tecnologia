@@ -6,19 +6,21 @@ use Livewire\Component;
 use Laravel\Jetstream\InteractsWithBanner;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Brand;
+use Livewire\WithPagination;
 
 class BrandList extends Component
 {
-    use InteractsWithBanner, AuthorizesRequests;
+    use InteractsWithBanner, AuthorizesRequests, WithPagination;
     public $brans;
 
     public function mount(){
-        $this->authorize('viewAny', Brand::class);
+
     }
     public function render()
     {
+        $brands = Brand::with(['creator', 'updater'])->get();
         return view('livewire.superadmin.brand.brand-list', [
-            'brands' => Brand::all()->paginate(10),
+            'brands' => $brands,
         ]);
     }
 }

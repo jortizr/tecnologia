@@ -9,7 +9,7 @@
         </div>
     </x-slot>
 
-    @hasanyrole
+
     <x-data-table :data="$brands">
         <x-slot name="headers">
             <tr class="bg-gray-800 text-gray-100">
@@ -24,16 +24,15 @@
             @foreach($brands as $brand)
                 <tr class="border-b border-gray-700">
                                             <td class="px-4 py-2">{{ $brand->id }}</td>
-                                            <td class="px-4 py-2">{{ $brand->names}}</td>
-                                            <td class="px-4 py-2">{{ $brand->created_by?->name ?? 'sin movimiento' }}</td>
-                                            <td class="px-4 py-2">{{ $brand->updated_by?->name ?? 'sin actualizacion' }}</td>
+                                            <td class="px-4 py-2">{{ $brand->name}}</td>
+                                            <td class="px-4 py-2">{{ $brand->creator?->name ?? 'sin movimiento' }}</td>
+                                            <td class="px-4 py-2">{{ $brand->updater?->name ?? 'sin actualizacion' }}</td>
                                             <td class="px-4 py-2">
-                                                <!-- <x-buttons.actions-button editRoute="{{route('dashboard.collaborators.edit', $collaborator)}}"
-                                                deleteId="{{$collaborator->id}}"/> -->
+
                                             </td>
                 </tr>
             @endforeach
         </x-slot>
     </x-data-table>
-    
+
 </div>

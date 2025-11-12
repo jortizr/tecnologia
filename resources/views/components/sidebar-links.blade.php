@@ -20,7 +20,7 @@
         </x-nav-link>
     </li>
         <li>
-        <x-nav-link href="{{route('dashboard.brand.show') }}" :active="request()->routeIs('dashboard.brand.show')">
+        <x-nav-link href="{{route('dashboard.brands.show') }}" :active="request()->routeIs('dashboard.brands.show')">
             <x-phosphor-list-plus-fill class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-indigo-700"/>
             <span class="ms-3">{{ __('Marcas dispositivos') }}</span>
         </x-nav-link>
