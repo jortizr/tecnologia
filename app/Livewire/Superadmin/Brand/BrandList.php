@@ -11,16 +11,19 @@ use Livewire\WithPagination;
 class BrandList extends Component
 {
     use InteractsWithBanner, AuthorizesRequests, WithPagination;
-    public $brans;
+    public $brands;
+    public $canViewBrands;
 
     public function mount(){
+        // $this->authorize('viewAny', Brand::class);
 
     }
     public function render()
     {
-        $brands = Brand::with(['creator', 'updater'])->get();
+        $this->brands = Brand::with(['creator', 'updater'])->paginate(10);
+
         return view('livewire.superadmin.brand.brand-list', [
-            'brands' => $brands,
+            'brands' => $this->brands,
         ]);
     }
 }

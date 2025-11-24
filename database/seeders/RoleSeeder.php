@@ -95,10 +95,10 @@ class RoleSeeder extends Seeder
        Permission::create(['name'=> 'dashboard.failure.types.delete'])->syncRoles([$superadminRole]);
        Permission::create(['name'=> 'dashboard.failure.types.update'])->syncRoles([$superadminRole]);
 
-       Permission::create(['name'=> 'dashboard.brand.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.brand.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.brand.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.brand.update'])->syncRoles([$superadminRole]);
+       Permission::create(['name'=> 'dashboard.brands.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
+       Permission::create(['name'=> 'dashboard.brands.create'])->syncRoles([$superadminRole]);
+       Permission::create(['name'=> 'dashboard.brands.delete'])->syncRoles([$superadminRole]);
+       Permission::create(['name'=> 'dashboard.brands.update'])->syncRoles([$superadminRole]);
 
 
     }

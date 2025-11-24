@@ -36,7 +36,7 @@ class BrandManagementTest extends TestCase
         Livewire::actingAs($this->superadmin)
             ->test(BrandList::class)
             ->assertStatus(200)
-            ->assertSee('Lista de marcas');
+            ->assertSeeText('Lista de marcas');
     }
 
     public function test_a_manager_and_viewer_can_view_the_brand_list(){
