@@ -10,7 +10,7 @@ class Brand extends Model
     /** @use HasFactory<\Database\Factories\BrandFactory> */
     use HasFactory;
     protected $fillable = [
-        'name',
+        'name', 'created_by', 'updated_by'
     ];
     public function device_model(){
         return $this->hasMany(DeviceModel::class);

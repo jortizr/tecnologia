@@ -9,7 +9,7 @@
         </div>
     </x-slot>
 
-    @can('viewAny', App\Models\Brand::class)
+    @hasrole(['Superadmin','Manager', 'Viewer'])
     <x-data-table :data="$brands">
         <x-section-title>
             <x-slot name="title">Lista de fabricantes</x-slot>
@@ -32,11 +32,12 @@
                                             <td class="px-4 py-2 text-center">{{ $brand->creator?->name ?? 'sin movimiento' }}</td>
                                             <td class="px-4 py-2 text-center">{{ $brand->updater?->name ?? 'sin actualizacion' }}</td>
                                             <td class="px-4 py-2">
-                                             aqui los botones
+                                                <x-buttons.actions-button editRoute="{{route('dashboard.collaborators.edit', $brand)}}"
+                                                deleteId="{{$brand->id}}"/>
                                             </td>
                 </tr>
             @endforeach
         </x-slot>
     </x-data-table>
-    @endcan
+    @endhasrole
 </div>
