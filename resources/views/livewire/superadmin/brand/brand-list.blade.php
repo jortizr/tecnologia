@@ -31,10 +31,12 @@
                                             <td class="px-4 py-2">{{ $brand->name}}</td>
                                             <td class="px-4 py-2 text-center">{{ $brand->creator?->name ?? 'sin movimiento' }}</td>
                                             <td class="px-4 py-2 text-center">{{ $brand->updater?->name ?? 'sin actualizacion' }}</td>
+                                            @hasrole(['Superadmin','Manager'])
                                             <td class="px-4 py-2">
                                                 <x-buttons.actions-button editRoute="{{route('dashboard.collaborators.edit', $brand)}}"
                                                 deleteId="{{$brand->id}}"/>
                                             </td>
+                                            @endhasrole
                 </tr>
             @endforeach
         </x-slot>

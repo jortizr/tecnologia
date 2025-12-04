@@ -8,6 +8,8 @@ use App\Livewire\Superadmin\User\EditUser;
 use App\Livewire\Superadmin\Collaborator\CollaboratorList;
 use App\Livewire\Superadmin\Collaborator\CollaboratorEdit;
 use App\Livewire\Superadmin\Collaborator\CollaboratorImport;
+use App\Livewire\Superadmin\Brand\BrandEdit;
+
 
 
 Route::get('/', function () {
@@ -33,5 +35,7 @@ Route::middleware([
     Route::get('dashboard/collaborators/{collaborator}/edit/', CollaboratorEdit::class)->name('dashboard.collaborators.edit');
     Route::get('dashboard/collaborators/import', CollaboratorImport::class)->name('dashboard.collaborators.import');
     Route::get('dashboard/brands/show', BrandList::class)->name('dashboard.brands.show');
+    Route::get('dashboard/brands/edit', BrandEdit::class)
+         ->name('dashboard.brands.edit');
 });
 
