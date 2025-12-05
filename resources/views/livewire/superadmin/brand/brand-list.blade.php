@@ -9,7 +9,6 @@
         </div>
     </x-slot>
 
-    @hasrole(['Superadmin','Manager', 'Viewer'])
     <x-data-table :data="$brands">
         <x-section-title>
             <x-slot name="title">Lista de fabricantes</x-slot>
@@ -21,25 +20,26 @@
                 <th class="px-4 py-2">Nombre</th>
                 <th class="px-4 py-2">Creado por</th>
                 <th class="px-4 py-2">Actualizado por</th>
+                @if($canManage)
                 <th class="px-4 py-2">Acciones</th>
+                @endif
             </tr>
         </x-slot>
         <x-slot name="dataTBody">
             @foreach($brands as $brand)
-                <tr class="border-b border-gray-700">
-                                            <td class="px-4 py-2">{{ $brand->id }}</td>
-                                            <td class="px-4 py-2">{{ $brand->name}}</td>
-                                            <td class="px-4 py-2 text-center">{{ $brand->creator?->name ?? 'sin movimiento' }}</td>
-                                            <td class="px-4 py-2 text-center">{{ $brand->updater?->name ?? 'sin actualizacion' }}</td>
-                                            @hasrole(['Superadmin','Manager'])
-                                            <td class="px-4 py-2">
-                                                <x-buttons.actions-button editRoute="{{route('dashboard.collaborators.edit', $brand)}}"
-                                                deleteId="{{$brand->id}}"/>
-                                            </td>
-                                            @endhasrole
+                <tr class="border-b border-gray-700" wire:key="brand-{{ $brand->id }}">
+                    <td class="px-4 py-2">{{ $brand->id }}</td>
+                    <td class="px-4 py-2">{{ $brand->name}}</td>
+                    <td class="px-4 py-2 text-center">{{ $brand->creator?->name ?? 'sin movimiento' }}</td>
+                    <td class="px-4 py-2 text-center">{{ $brand->updater?->name ?? 'sin actualizacion' }}</td>
+                    @if($canManage)
+                        <td class="px-4 py-2">
+                        <x-buttons.actions-button editRoute="{{route('dashboard.collaborators.edit', $brand)}}"
+                        deleteId="{{$brand->id}}"/>
+                        </td>
+                    @endif
                 </tr>
             @endforeach
         </x-slot>
     </x-data-table>
-    @endhasrole
 </div>
