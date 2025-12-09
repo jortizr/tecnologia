@@ -12,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class BrandList extends Component
 {
-    use WithPagination;
+    use WithPagination, InteractsWithBanner;
 
 
     public function render()
