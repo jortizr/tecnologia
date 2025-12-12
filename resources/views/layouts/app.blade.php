@@ -10,6 +10,7 @@
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="/css/tom-select.default.css">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -69,5 +70,11 @@
 
         @stack('modals')
         @livewireScripts
+
+        <script src="/js/tom-select.complete.js"></script>
+        <script>
+            var settings = {};
+            new TomSelect('#tom-select-it',settings);
+        </script>
     </body>
 </html>

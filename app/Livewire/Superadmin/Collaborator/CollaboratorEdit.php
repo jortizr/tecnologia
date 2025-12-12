@@ -25,10 +25,10 @@ class CollaboratorEdit extends Component
     public $is_cancelled = false;
      //busqueda del input
     public $searchOccupation = '';
-    public $searchDepartment = '';
+
     public $searchRegional = '';
     public $occupations = [];
-    public $departments = [];
+    public $allDepartments;
     public $regionals = [];
     public $selectedOccupationName = '';
     public $selectedDepartmentName = '';
@@ -108,35 +108,6 @@ class CollaboratorEdit extends Component
         $this->resetErrorBag('occupation_id');
     }
 
-    public function updatedSearchDepartment($value){
-        if($this->department_id && $value !== $this->selectedDepartmentName){
-            $this->department_id = null;
-            $this->selectedDepartmentName = '';
-        }
-
-        if(strlen($value) >= 2){
-            $this->departments = Department::where('name', 'like', '%' . $value . '%')
-            ->limit(10)
-            ->get()
-            ->map(function($department){
-                return [
-                    'id' => $department->id,
-                    'name' => $department->name,
-                ];
-            })
-            ->toArray();
-        }else {
-            $this->departments = [];
-        }
-    }
-
-    public function selectDepartment($departmentId, $departmentName){
-        $this->department_id = $departmentId;
-        $this->selectedDepartmentName = $departmentName;
-        $this->searchDepartment = $departmentName;
-        $this->departments = [];
-        $this->resetErrorBag('department_id');
-    }
 
     public function updatedSearchRegional($value){
         if($this->regional_id && $value !== $this->selectedRegionalName){
@@ -156,7 +127,7 @@ class CollaboratorEdit extends Component
             })
             ->toArray();
         }else {
-            $this->departments = [];
+            $this->regionals = [];
         }
     }
 
@@ -175,6 +146,6 @@ class CollaboratorEdit extends Component
     public function render()
     {
         $this->is_cancelled = false;
-        return view('livewire..superadmin.collaborator.collaborator-edit');
+        return view('livewire.superadmin.collaborator.collaborator-edit');
     }
 }
