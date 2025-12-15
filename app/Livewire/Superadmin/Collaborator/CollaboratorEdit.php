@@ -29,6 +29,7 @@ class CollaboratorEdit extends Component
     public $searchRegional = '';
     public $occupations = [];
     public $allDepartments;
+    public $departmentOptions = [];
     public $regionals = [];
     public $selectedOccupationName = '';
     public $selectedDepartmentName = '';
@@ -40,6 +41,7 @@ class CollaboratorEdit extends Component
     {
         //carga las relaciones para usarlas en el form
         $this->collaborator = $collaborator->load('occupation', 'department', 'regional');
+        
 
         $this->names = $collaborator->names;
         $this->last_name = $collaborator->last_name;
@@ -54,6 +56,15 @@ class CollaboratorEdit extends Component
         $this->selectedOccupationName = $collaborator->occupation->name ?? '';
         $this->selectedDepartmentName = $collaborator->department->name ?? '';
         $this->selectedRegionalName = $collaborator->regional->name ?? '';
+
+        //cargar los datos del select
+        $this->departmentOptions = Department::all()
+            ->map(function($department){
+                return [
+                    'id' => $department->id,
+                    'title' => $department->name,
+                ];
+            })->toArray();
 
     }
 

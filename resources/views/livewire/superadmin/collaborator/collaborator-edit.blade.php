@@ -29,44 +29,15 @@
 
             <div class="w-full">
                 <x-label for="department_id" value="Area" class="text-center block"/>
-                <div
-                    wire:ignore
-                    x-data="{
-                        selectedId: @entangle('department_id'),
-                        init() {
-                            let select = new TomSelect(this.$refs.select, {
-                                // Opciones de Tom Select
-                                sortField: {
-                                    field: 'text',
-                                    direction: 'asc'
-                                }
-                            });
-
-                            // Asegura que Livewire se actualice cuando Tom Select cambie el valor
-                            select.on('change', (value) => {
-                                this.selectedId = value;
-                            });
-                        }
-                    }"
-                >
-                    <select
-                        id="department_id"
-                        x-ref="select"
-                        class="mt-1 block w-full"
-                        placeholder="Seleccionar un Departamento..."
-                    >
-                        <option value="">Seleccione un Departamento...</option>
-                        {{-- 🟢 Iteramos sobre los datos cargados desde Livewire --}}
-                        @foreach($allDepartments as $department)
-                            <option
-                                value="{{ $department->id }}"
-                                @if($department->id == $department_id) selected @endif
-                            >
-                                {{ $department->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                <x-tom-select
+                    id="department_id"
+                    name="department_id"
+                    wire:model="department_id"
+                    :options="$departmentOptions"
+                    placeholder="Seleccione un Area"
+                    items="{{ $department_id }}"
+                    
+                />
                 <x-input-error for="department_id" class="mt-2 text-center"/>
             </div>
 
