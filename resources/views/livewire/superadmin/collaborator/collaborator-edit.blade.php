@@ -1,5 +1,4 @@
 <x-form-card>
-
     <x-form-section submit="update">
         <x-slot name="title">
             Editar Colaborador
@@ -29,15 +28,7 @@
 
             <div class="w-full">
                 <x-label for="department_id" value="Area" class="text-center block"/>
-                <x-tom-select
-                    id="department_id"
-                    name="department_id"
-                    wire:model="department_id"
-                    :options="$departmentOptions"
-                    placeholder="Seleccione un Area"
-                    items="{{ $department_id }}"
-                    
-                />
+                <x-wireui-select label="Prueba" placeholder="{{$selectedDepartmentName}}" :options="['a','b']" />
                 <x-input-error for="department_id" class="mt-2 text-center"/>
             </div>
 
