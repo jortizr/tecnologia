@@ -39,7 +39,6 @@
     <x-data-table :data="$collaborators">
         <x-slot name="headers">
             <tr class="bg-gray-800 text-gray-100">
-                <th class="px-4 py-2 justification-start">ID</th>
                 <th class="px-4 py-2">Nombres</th>
                 <th class="px-4 py-2">Apellidos</th>
                 <th class="px-4 py-2">Identificacion</th>
@@ -54,7 +53,6 @@
         <x-slot name="dataTBody">
             @foreach($collaborators as $collaborator)
                 <tr class="border-b border-gray-700">
-                                            <td class="px-4 py-2">{{ $collaborator->id }}</td>
                                             <td class="px-4 py-2">{{ $collaborator->names}}</td>
                                             <td class="px-4 py-2">{{$collaborator->last_name}}</td>
                                             <td class="px-4 py-2">{{ $collaborator->identification }}</td>

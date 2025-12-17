@@ -21,40 +21,44 @@
             </div>
 
             <div class="w-full">
-                <x-label for="identification" value="identification" class="text-center block"/>
+                <x-label for="identification" value="Identificacion" class="text-center block"/>
                 <x-input id="identification" type="number" class="mt-1 block w-full text-center" wire:model="identification"/>
                 <x-input-error for="identification" class="mt-2 text-center"/>
             </div>
 
             <div class="w-full">
                 <x-label for="department_id" value="Area" class="text-center block"/>
-                <x-wireui-select label="Prueba" placeholder="{{$selectedDepartmentName}}" :options="['a','b']" />
+                <x-wireui-select
+                placeholder="Selecciona una area"
+                wire:model.defer="department_id"
+                :options="$departmentOptions"
+                option-label="name"
+                option-value="id"/>
                 <x-input-error for="department_id" class="mt-2 text-center"/>
             </div>
 
             <div class="w-full">
-                <x-forms.searchable-select
-                    placeholder="Buscar cargo..."
-                    wire:model.live.debounce.200ms="searchOccupation"
-                    wire:select="selectOccupation"
-                    :items="$occupations"
-                    :selectedName="$selectedOccupationName"
-                    noResultsMessage="No existe el cargo"
-                    class="mb-1 text-white"
+                <x-label for="occupation_id" value="Cargo" class="text-center block"/>
+                <x-wireui-select
+                    placeholder="Selecciona un cargo"
+                    wire:models.defer="occupation_id"
+                    :options="$occupationOptions"
+                    option-label="name"
+                    option-value="id"
                 />
                 <x-input-error for="occupation_id" class="mt-2 text-center"/>
             </div>
 
             <div class="w-full">
-                <x-forms.searchable-select
-                placeholder="Buscar regional..."
-                wire:model.live.debounce.200ms="searchRegional"
-                wire:select="selectRegional"
-                :items="$regionals"
-                :selectedName="$selectedRegionalName"
-                noResultsMessage="No existe la regional"
-                class="mb-1 text-white"
-            />
+                <x-label for="regional_id" value="Regional" class="text-center block"/>
+                <x-wireui-select
+                    placeholder="Selecciona una regional"
+                    wire:models.defer="regional_id"
+                    :options="$regionalOptions"
+                    option-label="name"
+                    option-value="id"
+                />
+                <x-input-error for="regional_id" class="mt-2 text-center"/>
             </div>
 
             <div class="w-full flex justify-center mt-6 space-x-4">

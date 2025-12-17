@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         {{-- ... tu head sigue igual ... --}}
         <meta charset="utf-8">
@@ -24,7 +24,6 @@
             <aside class="hidden lg:block bg-gray-800 text-white w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 z-20">
                 <a href="{{ route('dashboard') }}" class="text-white flex items-center space-x-2 px-4">
                     <x-application-mark class="block h-9 w-auto" />
-                    <span class="text-2xl font-extrabold">Tu App</span>
                 </a>
                 @include('components.sidebar-links')
             </aside>
@@ -40,7 +39,7 @@
                 class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 z-30 lg:hidden">
                 <a href="{{ route('dashboard') }}" class="text-white flex items-center space-x-2 px-4">
                     <x-application-mark class="block h-9 w-auto" />
-                    <span class="text-2xl font-extrabold">Tu App</span>
+                    <span class="text-2xl font-extrabold">Inventario Tecnologico</span>
                 </a>
                 @include('components.sidebar-links')
             </aside>

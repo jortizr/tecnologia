@@ -10,10 +10,10 @@
         <div class="flex items-center space-x-1">
             @if($editRoute)
                <a href="{{ $editRoute }}"
-                class="inline-flex items-center px-2 py-1.5 text-sm font-medium text-white bg-gray-700 border-indigo-400 border-b-2 rounded-md
+                class="inline-flex items-center px-2 py-1.5 text-sm font-medium text-white bg-gray-700 border-red-700 border-b-2 rounded-md
                 hover:bg-gray-800 hover:text-green-600
                 hover:brightness-110 hover:-translate-y-[1px]
-                hover:shadow-sm hover:shadow-indigo-300
+                hover:shadow-sm hover:shadow-red-500
 
                 transition-colors duration-200 group"
                 title="Editar este registro">
@@ -59,7 +59,7 @@
         @elseif($deleteId)
             <button wire:click="delete({{ $deleteId }})"
                     wire:confirm="¿Estás seguro de que quieres eliminar este registro?"
-                    class="inline-flex items-center px-2 py-1.5 text-sm font-medium text-white bg-gray-700 border-indigo-400 border-b-2 rounded-md hover:bg-gray-800
+                    class="inline-flex items-center px-2 py-1.5 text-sm font-medium text-white bg-gray-700 border-red-700 border-b-2 rounded-md hover:bg-gray-800
                     hover:brightness-110 hover:-translate-y-[1px]
                     hover:shadow-sm hover:shadow-red-600 hover:text-red-600
                     hover:border-red-700

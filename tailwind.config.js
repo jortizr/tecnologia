@@ -4,6 +4,7 @@ import typography from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'class',
     presets: [
         require('./vendor/wireui/wireui/tailwind.config.js')
     ],

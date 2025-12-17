@@ -2,9 +2,9 @@
     <button wire:click="openModal"
         class="cursor-pointer transition-all
     bg-gray-700 text-white px-6 py-2 rounded-lg
-    border-indigo-400
+    border-red-700
     border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
-    active:border-b-[2px] active:brightness-90 active:translate-y-[1px] hover:shadow-lg hover:shadow-indigo-300 shadow-indigo-300 active:shadow-none">
+    active:border-b-[4px] active:brightness-90 active:translate-y-[2px] hover:shadow-lg hover:shadow-red-600 shadow-red-500 active:shadow-none">
         @if (isset($icon))
         <span class="inline sm:hidden">
             {{ $icon }}
@@ -49,7 +49,7 @@
                         <form wire:submit="store" class="flex flex-col">
                             {{ $contentForm }}
                             <button
-                                class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
+                                class="bg-gradient-to-r from-gray-800 to-gray-800 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-red-700 hover:to-red-800 transition ease-in-out duration-150"
                                 type="submit">
                                 {{ $buttonText }}
                             </button>

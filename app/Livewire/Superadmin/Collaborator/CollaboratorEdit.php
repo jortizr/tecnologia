@@ -23,14 +23,10 @@ class CollaboratorEdit extends Component
     public $occupation_id;
     public $is_active;
     public $is_cancelled = false;
-     //busqueda del input
-    public $searchOccupation = '';
 
-    public $searchRegional = '';
-    public $occupations = [];
-    public $allDepartments;
+    public $occupationOptions = [];
     public $departmentOptions = [];
-    public $regionals = [];
+    public $regionalOptions = [];
     public $selectedOccupationName = '';
     public $selectedDepartmentName = '';
     public $selectedRegionalName = '';
@@ -41,7 +37,7 @@ class CollaboratorEdit extends Component
     {
         //carga las relaciones para usarlas en el form
         $this->collaborator = $collaborator->load('occupation', 'department', 'regional');
-        
+
 
         $this->names = $collaborator->names;
         $this->last_name = $collaborator->last_name;
@@ -58,14 +54,9 @@ class CollaboratorEdit extends Component
         $this->selectedRegionalName = $collaborator->regional->name ?? '';
 
         //cargar los datos del select
-        $this->departmentOptions = Department::all()
-            ->map(function($department){
-                return [
-                    'id' => $department->id,
-                    'title' => $department->name,
-                ];
-            })->toArray();
-
+        $this->departmentOptions = Department::all('id', 'name');
+        $this->occupationOptions = Occupation::all('id', 'name');
+        $this->regionalOptions = Regional::all('id', 'name');
     }
 
     public function update(){
@@ -87,67 +78,6 @@ class CollaboratorEdit extends Component
         $this->dispatch('collaborator-updated');
         return redirect()->route('dashboard.collaborators.show');
 
-    }
-
-    public function updatedSearchOccupation($value){
-        if($this->occupation_id && $value !== $this->selectedOccupationName){
-            $this->occupation_id = null;
-            $this->selectedOccupationName = '';
-        }
-
-        if(strlen($value) >= 3){
-            $this->occupations = Occupation::where('name', 'like', '%' . $value . '%')
-            ->limit(10)
-            ->get()
-            ->map(function($occupation){
-                return [
-                    'id' => $occupation->id,
-                    'name' => $occupation->name,
-                ];
-            })
-            ->toArray();
-        }else {
-            $this->occupations = [];
-        }
-    }
-
-    public function selectOccupation($occupationId, $occupationName){
-        $this->occupation_id = $occupationId;
-        $this->selectedOccupationName = $occupationName;
-        $this->searchOccupation = $occupationName;
-        $this->occupations = [];
-        $this->resetErrorBag('occupation_id');
-    }
-
-
-    public function updatedSearchRegional($value){
-        if($this->regional_id && $value !== $this->selectedRegionalName){
-            $this->regional_id = null;
-            $this->selectedRegionalName = '';
-        }
-
-        if(strlen($value) >= 3){
-            $this->regionals = Regional::where('name', 'like', '%' . $value . '%')
-            ->limit(10)
-            ->get()
-            ->map(function($regionals){
-                return [
-                    'id' => $regionals->id,
-                    'name' => $regionals->name,
-                ];
-            })
-            ->toArray();
-        }else {
-            $this->regionals = [];
-        }
-    }
-
-    public function selectRegional($regionalId, $regionalName){
-        $this->regional_id = $regionalId;
-        $this->selectedRegionalName = $regionalName;
-        $this->searchRegional = $regionalName;
-        $this->regionals = [];
-        $this->resetErrorBag('regional_id');
     }
 
     public function cancel(){
