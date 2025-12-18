@@ -35,7 +35,7 @@ Route::middleware([
     Route::get('dashboard/collaborators/{collaborator}/edit', CollaboratorEdit::class)->name('dashboard.collaborators.edit');
     Route::get('dashboard/collaborators/import', CollaboratorImport::class)->name('dashboard.collaborators.import');
     Route::get('dashboard/brands/show', BrandList::class)->name('dashboard.brands.show');
-    Route::get('dashboard/brands/edit', BrandEdit::class)
+    Route::get('dashboard/brands/{brand}/edit', BrandEdit::class)
          ->name('dashboard.brands.edit');
 });
 

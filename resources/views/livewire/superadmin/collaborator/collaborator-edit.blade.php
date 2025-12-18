@@ -71,7 +71,4 @@
             </div>
         </x-slot>
     </x-form-section>
-
-
-
 </x-form-card>
