@@ -65,8 +65,14 @@
                 <x-button wire:loading.attr="disabled" wire:click="cancel">
                     Cancelar
                 </x-button>
-                <x-button wire:loading.attr="disabled" wire:target="update">
-                    Actualizar Usuario
+                <x-button wire:click="update" wire:loading.attr="disabled" wire:target="update">
+                    <span wire:loading.remove wire:target="update">
+                        Actualizar
+                    </span>
+                    <div wire:loading wire:target="update" class="flex items-center">
+                        <x-loading-spinner size="w-5 h-5" fill="fill-white" class="mr-2" />
+                        <span>Procesando...</span>
+                    </div>
                 </x-button>
             </div>
         </x-slot>

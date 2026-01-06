@@ -18,7 +18,7 @@
                 </x-button>
                 <x-button wire:click="update" wire:loading.attr="disabled" wire:target="update">
                     <span wire:loading.remove wire:target="update">
-                        Actualizar Fabricante
+                        Actualizar
                     </span>
                 <div wire:loading wire:target="update" class="flex items-center">
                     <x-loading-spinner size="w-5 h-5" fill="fill-white" class="mr-2" />
