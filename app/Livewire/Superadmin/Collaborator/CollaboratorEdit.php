@@ -81,8 +81,7 @@ class CollaboratorEdit extends Component
     }
 
     public function cancel(){
-        $this->is_cancelled = true;
-        return redirect()->back();
+        return redirect()->route('dashboard.collaborators.show');
     }
     public function render()
     {

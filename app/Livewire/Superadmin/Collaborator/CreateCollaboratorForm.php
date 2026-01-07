@@ -29,9 +29,9 @@ class CreateCollaboratorForm extends Component
     public $searchOccupation = '';
     public $searchDepartment = '';
     public $searchRegional = '';
-    public $occupations = [];
-    public $departments = [];
-    public $regionals = [];
+    public $occupationOptions = [];
+    public $departmentOptions = [];
+    public $regionalOptions = [];
     public $selectedOccupationName = '';
     public $selectedDepartmentName = '';
     public $selectedRegionalName = '';
@@ -73,118 +73,6 @@ class CreateCollaboratorForm extends Component
     public function resetForm()
     {
         $this->reset(['names', 'last_name', 'identification', 'payroll_code', 'department_id', 'regional_id', 'occupation_id','searchOccupation', 'searchDepartment', 'searchRegional', 'selectedOccupationName', 'selectedDepartmentName', 'selectedRegionalName', 'occupations', 'departments', 'regionals']);
-    }
-
-    public function updatedSearchOccupation($value){
-        if($this->occupation_id && $value !== $this->selectedOccupationName){
-            $this->occupation_id = null;
-            $this->selectedOccupationName = '';
-        }
-
-        if(strlen($value) >= 3){
-            $this->occupations = Occupation::where('name', 'like', '%' . $value . '%')
-            ->limit(10)
-            ->get()
-            ->map(function($occupation){
-                return [
-                    'id' => $occupation->id,
-                    'name' => $occupation->name,
-                ];
-            })
-            ->toArray();
-        }else {
-            $this->occupations = [];
-        }
-    }
-
-    public function selectOccupation($occupationId, $occupationName){
-        $this->occupation_id = $occupationId;
-        $this->selectedOccupationName = $occupationName;
-        $this->searchOccupation = $occupationName;
-        $this->occupations = [];
-        $this->resetErrorBag('occupation_id');
-    }
-
-    public function clearOccupation(){
-        $this->occupation_id = null;
-        $this->selectedOccupationName = '';
-        $this->searchOccupation = '';
-        $this->occupations = [];
-    }
-
-    public function updatedSearchDepartment($value){
-        if($this->department_id && $value !== $this->selectedDepartmentName){
-            $this->department_id = null;
-            $this->selectedDepartmentName = '';
-        }
-
-        if(strlen($value) >= 3){
-            $this->departments = Department::where('name', 'like', '%' . $value . '%')
-            ->limit(10)
-            ->get()
-            ->map(function($department){
-                return [
-                    'id' => $department->id,
-                    'name' => $department->name,
-                ];
-            })
-            ->toArray();
-        }else {
-            $this->departments = [];
-        }
-    }
-
-    public function selectDepartment($departmentId, $departmentName){
-        $this->department_id = $departmentId;
-        $this->selectedDepartmentName = $departmentName;
-        $this->searchDepartment = $departmentName;
-        $this->departments = [];
-        $this->resetErrorBag('department_id');
-    }
-
-    public function clearDepartment(){
-        $this->department_id = null;
-        $this->selectedDepartmentName = '';
-        $this->searchDepartment = '';
-        $this->departments = [];
-    }
-
-
-    public function updatedSearchRegional($value){
-        if($this->regional_id && $value !== $this->selectedRegionalName){
-            $this->regional_id = null;
-            $this->selectedRegionalName = '';
-        }
-
-        if(strlen($value) >= 3){
-            $this->regionals = Regional::where('name', 'like', '%' . $value . '%')
-            ->limit(10)
-            ->get()
-            ->map(function($department){
-                return [
-                    'id' => $department->id,
-                    'name' => $department->name,
-                ];
-            })
-            ->toArray();
-        }else {
-            $this->departments = [];
-        }
-    }
-
-        public function selectRegional($regionalId, $regionalName){
-        $this->regional_id = $regionalId;
-        $this->selectedRegionalName = $regionalName;
-        $this->searchRegional = $regionalName;
-        $this->regionals = [];
-        $this->resetErrorBag('regional_id');
-    }
-
-    public function clearRegional(){
-        $this->regional_id = null;
-        $this->selectedRegionalName = '';
-        $this->searchRegional = '';
-        $this->regionals = [];
     }
 
     public function store(){
