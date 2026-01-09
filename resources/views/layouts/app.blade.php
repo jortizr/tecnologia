@@ -17,6 +17,7 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
+
         <x-banner />
 
         <div x-data="{ sidebarOpen: false }" class="min-h-screen bg-gray-100 dark:bg-gray-900 mx-50">
@@ -61,6 +62,8 @@
                     @livewire('navigation-menu')
                 </header>
                         <main>
+                            <x-wireui-notifications />
+                            <x-wireui-dialogs />
                             {{ $slot }}
                         </main>
             </div>
