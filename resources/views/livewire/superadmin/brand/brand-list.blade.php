@@ -7,7 +7,7 @@
                 {{ __("Lista de marcas") }}
             </h2>
             @if($canManage)
-                <x-wireui-button primary label="Nueva Marca" icon="plus" wire:click="create" />
+                <x-wireui-button label="Nueva Marca" icon="plus" wire:click="create" primary />
             @endif
         </div>
     </x-slot>
@@ -49,20 +49,7 @@
                                 circle
                                 negative
                                 icon="trash"
-                                x-on:click="$wireui.confirmDialog({
-                                    title: '¿Estás seguro?',
-                                    description: 'Eliminarás el fabricante permanentemente.',
-                                    icon: 'error',
-                                    accept: {
-                                        label: 'Sí, eliminar',
-                                        params: {{ $brand->id }},
-                                        execute: (id) => $wire.delete(id)
-                                    },
-                                    reject: {
-                                        label: 'Cancelar',
-                                        style: 'flat'
-                                    }
-                                })"
+                                wire:click="confirmDelete({{ $brand->id }})"
                             />
                         </td>
                     @endif
@@ -81,7 +68,7 @@
         </div>
 
         <x-slot name="footer" class="flex justify-end gap-x-4">
-            <x-wireui-button flat label="Cancelar" x-on:click="close" />
+            <x-wireui-button flat label="Cancelar" x-on:click="$wire.brandModal = false"/>
             <x-wireui-button primary label="Guardar" wire:click="save" wire:loading.attr="disabled" />
         </x-slot>
     </x-wireui-modal-card>

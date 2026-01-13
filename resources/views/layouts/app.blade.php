@@ -63,7 +63,7 @@
                 </header>
                         <main>
                             <x-wireui-notifications />
-                            <x-wireui-dialogs />
+                            <x-wireui-dialog />
                             {{ $slot }}
                         </main>
             </div>

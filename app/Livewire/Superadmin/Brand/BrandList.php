@@ -40,8 +40,10 @@ class BrandList extends Component
 
     //abrir el modal para crear
     public function create(){
-        $this->reset(['name', 'isEditing', 'brand']);
+
+        $this->notification()->success('Ingreso a create');
         $this->brandModal = true;
+        $this->reset(['name', 'isEditing', 'brand']);
     }
 
     //abrir el modal para editar
@@ -54,29 +56,55 @@ class BrandList extends Component
 
     public function save()
     {
+            // Validamos según si es edición o creación
         $this->validate($this->isEditing ? [
-            'name' => 'required|min:3|max:50|unique:brands,name' .
-            $this->brand->id
+            'name' => 'required|min:3|max:50|unique:brands,name,' . $this->brand->id
         ] : $this->rules);
 
-        if($this->isEditing){
-            $this->brand->update(['name' => $this->name,
+        if ($this->isEditing) {
+            $this->brand->update([
+                'name'       => $this->name,
                 'updater_id' => Auth::user()->id
+            ]);
+            $this->notification()->success('Marca actualizada', 'Los cambios se guardaron con éxito');
+        } else {
+            // LÓGICA PARA CREAR QUE FALTABA:
+            Brand::create([
+                'name'       => $this->name,
+                'creator_id' => Auth::user()->id,
+                'updater_id' => Auth::user()->id,
             ]);
             $this->notification()->success('Marca creada', 'Nueva marca registrada con éxito');
         }
 
         $this->brandModal = false;
+        $this->reset(['name', 'isEditing', 'brand']); // Limpiar después de guardar
+    }
+
+    public function confirmDelete($brandId){
+        //confirmacion del dialogo
+        $this->notification()->confirm([
+            'title' => '¿Estás seguro?',
+            'description' => 'Esta accion eliminara la marca permanentemente.',
+            'icon' => 'question',
+            'accept' => [
+                'label' => 'Si, eliminar',
+                'method' => 'delete',
+                'params' => $brandId,
+            ],
+            'reject' => [
+                'label' => 'Cancelar',
+                'style' => 'flat'
+            ]
+        ]);
     }
 
     public function delete($brandId)
     {
         try {
             $brand = Brand::findOrFail($brandId);
-
             // Si usas Policies de Spatie/Laravel
-            // $this->authorize('delete', $brand);
-
+            $this->authorize('delete', $brand);
             $brand->delete();
 
             // Notificación estilo WireUI (versión 2.x)
