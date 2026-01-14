@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Brand;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
+use Livewire\Attributes\Computed;
 
 class BrandList extends Component
 {
@@ -17,31 +18,30 @@ class BrandList extends Component
     public ?Brand $brand = null;//instancia de la marca a editar
     public $name;
     public $isEditing = false;
+    public bool $canManage = false;
 
     protected $rules =[
         'name'=> 'required|min:3|max:50|unique:brands,name',
     ];
 
+    #[Computed]
+    public function brands()
+    {
+        // La consulta se queda aquí para ser eficiente
+        return Brand::with(['creator:id,name', 'updater:id,name'])->paginate(10);
+    }
+
     public function render()
     {
-        $brands = Brand::with(['creator:id,name', 'updater:id,name'])->paginate(10);
-
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Verificación de nulidad por si no hay usuario logueado (buena práctica)
-        $canManage = $user ? $user->hasAnyRole(['Superadmin', 'Manage']) : false;
-
         return view('livewire.superadmin.brand.brand-list', [
-            'brands' => $brands,
-            'canManage' => $canManage,
+            'canManage' => $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false,
         ]);
     }
 
-    //abrir el modal para crear
     public function create(){
-
-        $this->notification()->success('Ingreso a create');
         $this->brandModal = true;
         $this->reset(['name', 'isEditing', 'brand']);
     }
@@ -79,24 +79,6 @@ class BrandList extends Component
 
         $this->brandModal = false;
         $this->reset(['name', 'isEditing', 'brand']); // Limpiar después de guardar
-    }
-
-    public function confirmDelete($brandId){
-        //confirmacion del dialogo
-        $this->notification()->confirm([
-            'title' => '¿Estás seguro?',
-            'description' => 'Esta accion eliminara la marca permanentemente.',
-            'icon' => 'question',
-            'accept' => [
-                'label' => 'Si, eliminar',
-                'method' => 'delete',
-                'params' => $brandId,
-            ],
-            'reject' => [
-                'label' => 'Cancelar',
-                'style' => 'flat'
-            ]
-        ]);
     }
 
     public function delete($brandId)

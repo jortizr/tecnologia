@@ -7,12 +7,12 @@
                 {{ __("Lista de marcas") }}
             </h2>
             @if($canManage)
-                <x-wireui-button label="Nueva Marca" icon="plus" wire:click="create" primary />
+                <x-wireui-button label="Nueva Marca" icon="plus" x-on:click="$openModal('brandModal')" class="mr-2"  primary />
             @endif
         </div>
     </x-slot>
 
-    <x-data-table :data="$brands">
+    <x-data-table :data="$this->brands">
         <x-section-title>
             <x-slot name="title">Lista de fabricantes</x-slot>
             <x-slot name="description">Administración de marcas de dispositivos</x-slot>
@@ -30,7 +30,7 @@
         </x-slot>
 
         <x-slot name="dataTBody" lazy >
-            @foreach($brands as $brand)
+            @foreach($this->brands as $brand)
                 <tr class="border-b border-gray-700" wire:key="brand-{{ $brand->id }}">
                     <td class="px-4 py-2">{{ $brand->name}}</td>
                     <td class="px-4 py-2 text-center">{{ $brand->creator?->name ?? 'sin movimiento' }}</td>
@@ -49,7 +49,16 @@
                                 circle
                                 negative
                                 icon="trash"
-                                wire:click="confirmDelete({{ $brand->id }})"
+                                x-on:confirm="{
+                                    title: '¿Estás seguro?',
+                                    description: 'Esta acción eliminará la marca permanentemente.',
+                                    icon: 'question',
+                                    accept: {
+                                        label: 'Sí, eliminar',
+                                        method: 'delete',
+                                        params: {{ $brand->id }}
+                                    }
+                                }"
                             />
                         </td>
                     @endif
