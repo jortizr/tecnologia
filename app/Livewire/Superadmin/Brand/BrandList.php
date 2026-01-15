@@ -35,9 +35,10 @@ class BrandList extends Component
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false;
 
         return view('livewire.superadmin.brand.brand-list', [
-            'canManage' => $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false,
+            'canManage' => $this->canManage,
         ]);
     }
 

@@ -19,10 +19,16 @@
             <span class="ms-3">{{ __('Colaboradores') }}</span>
         </x-nav-link>
     </li>
-        <li>
+    <li>
         <x-nav-link href="{{route('dashboard.brands.show') }}" :active="request()->routeIs('dashboard.brands.show')">
             <x-phosphor-list-plus-fill class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-red-700"/>
             <span class="ms-3">{{ __('Marcas dispositivos') }}</span>
+        </x-nav-link>
+    </li>
+        <li>
+        <x-nav-link href="{{route('dashboard.devicemodels.show') }}" :active="request()->routeIs('dashboard.devicemodels.show')">
+            <x-phosphor-list-plus-fill class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-red-700"/>
+            <span class="ms-3">{{ __('Modelos dispositivos') }}</span>
         </x-nav-link>
     </li>
     <li>
