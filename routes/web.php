@@ -3,12 +3,11 @@
 use App\Livewire\Superadmin\Brand\BrandList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Superadmin\User\UserList;
-use App\Livewire\Superadmin\User\CreateUserForm;
 use App\Livewire\Superadmin\User\EditUser;
 use App\Livewire\Superadmin\Collaborator\CollaboratorList;
 use App\Livewire\Superadmin\Collaborator\CollaboratorEdit;
 use App\Livewire\Superadmin\Collaborator\CollaboratorImport;
-use App\Models\DeviceModel;
+use App\Livewire\Superadmin\Device\DeviceModelList;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,6 +38,7 @@ Route::middleware([
 
     Route::get('dashboard/brands/show', BrandList::class)->name('dashboard.brands.show');
 
-    Route::get('dashboard/devicemodel/show', DeviceModel::class)->name('dashboard.devicemodel.show');
+    Route::get('dashboard/devicemodels/show', DeviceModelList::class)->name('dashboard.devicemodels.show');
+
 });
 
