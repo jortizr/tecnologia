@@ -12,7 +12,7 @@
         </div>
     </x-slot>
 
-    <x-data-table :data="$this->models">
+    <x-data-table :data="$this->deviceModels">
         <x-section-title>
             <x-slot name="title">Lista de modelos</x-slot>
             <x-slot name="description">Administración de los modelos de dispositivos</x-slot>
@@ -30,11 +30,12 @@
         </x-slot>
 
         <x-slot name="dataTBody" lazy >
-            @foreach($this->brands as $brand)
-                <tr class="border-b border-gray-700" wire:key="brand-{{ $brand->id }}">
-                    <td class="px-4 py-2">{{ $brand->name}}</td>
-                    <td class="px-4 py-2 text-center">{{ $brand->creator?->name ?? 'sin movimiento' }}</td>
-                    <td class="px-4 py-2 text-center">{{ $brand->updater?->name ?? 'sin actualizacion' }}</td>
+            @foreach($this->deviceModels as $deviceModel)
+                <tr class="border-b border-gray-700" wire:key="model-{{ $deviceModel->id }}">
+                    <td class="px-4 py-2">{{ $deviceModel->name}}</td>
+                    <td class="px-4 py-2">{{ $deviceModel->brand_id->name}}</td>
+                    <td class="px-4 py-2 text-center">{{ $deviceModel->creator?->name ?? 'sin movimiento' }}</td>
+                    <td class="px-4 py-2 text-center">{{ $deviceModel->updater?->name ?? 'sin actualizacion' }}</td>
                     @if($canManage)
                         <td class="px-4 py-2 flex gap-2 justify-center">
                             <x-wireui-button
@@ -42,7 +43,7 @@
                                 circle
                                 primary
                                 icon="pencil"
-                                wire:click="edit({{ $brand->id }})"
+                                wire:click="edit({{ $deviceModel->id }})"
                             />
                             <x-wireui-button
                                 xs
@@ -56,18 +57,26 @@
                                     accept: {
                                         label: 'Sí, eliminar',
                                         method: 'delete',
-                                        params: {{ $brand->id }}
+                                        params: {{ $deviceModel->id }}
                                     }
                                 }"
                             />
                         </td>
                     @endif
                 </tr>
+
             @endforeach
+            @if($this->deviceModels->isEmpty())
+                <tr>
+                    <td colspan="4" class="text center">
+                        <strong>No hay modelos registrados</strong>
+                    </td>
+                </tr>
+            @endif
         </x-slot>
     </x-data-table>
 
-    <x-wireui-modal-card title="{{ $isEditing ? 'Editar Marca' : 'Nueva Marca' }}" name="brandModal" wire:model.defer="brandModal">
+    <x-wireui-modal-card title="{{ $isEditing ? 'Editar Marca' : 'Nueva Marca' }}" name="deviceModelModal" wire:model.defer="deviceModelModal">
         <div class="grid grid-cols-1 gap-4">
             <x-wireui-input
                 label="Nombre de la Marca"
@@ -77,7 +86,7 @@
         </div>
 
         <x-slot name="footer" class="flex justify-end gap-x-4">
-            <x-wireui-button flat label="Cancelar" x-on:click="$wire.brandModal = false"/>
+            <x-wireui-button flat label="Cancelar" x-on:click="$wire.deviceModelModal = false"/>
             <x-wireui-button primary label="Guardar" wire:click="save" wire:loading.attr="disabled" />
         </x-slot>
     </x-wireui-modal-card>
