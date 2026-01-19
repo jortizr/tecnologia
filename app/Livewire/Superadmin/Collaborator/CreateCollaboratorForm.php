@@ -31,6 +31,9 @@ class CreateCollaboratorForm extends Component
     public $searchRegional = '';
     public $occupations = [];
     public $departments = [];
+    public $departmentOptions;
+    public $occupationOptions;
+    public $regionalOptions;
     public $regionals = [];
     public $selectedOccupationName = '';
     public $selectedDepartmentName = '';

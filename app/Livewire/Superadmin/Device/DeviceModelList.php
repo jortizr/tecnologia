@@ -10,11 +10,12 @@ use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
 use Livewire\Attributes\Computed;
 use App\Models\Brand;
+use App\Traits\WithSearch;//trait para el input de busquedas
 
 
 class DeviceModelList extends Component
 {
-    use WithPagination, AuthorizesRequests, WireUiActions;
+    use WithPagination, AuthorizesRequests, WireUiActions, WithSearch;
     public bool $deviceModelModal = false;
     public ?DeviceModel $deviceModel = null;
     public $name;
@@ -29,14 +30,21 @@ class DeviceModelList extends Component
     public function deviceModels()
     {
         // La consulta se queda aquí para ser eficiente
-        return DeviceModel::with(['brand:id,name','creator:id,name', 'updater:id,name'])->paginate(10);
+        return DeviceModel::query()->with(['brand:id,name','creator:id,name', 'updater:id,name'])
+        ->when($this->search, function($query){
+            $query->where('name', 'like', '%' . $this->search . '%')
+            ->orWhereHas('brand', function ($q){
+                $q->where('name', 'like', '%' . $this->search . '%');
+            });
+        })
+
+        ->paginate(10);
     }
     #[Computed]
     public function brands()
     {
         return Brand::select('id', 'name')->orderBy('name', 'asc')->get();
     }
-
 
     public function render()
     {

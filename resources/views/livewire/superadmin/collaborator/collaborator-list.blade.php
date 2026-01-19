@@ -7,16 +7,15 @@
                 {{ __("Lista de colaboradores") }}
             </h2>
             <div class="">
-
                 <div class="flex justify-end mx-3 space-x-1" id="form-collaborator">
                    @livewire('superadmin.collaborator.create-collaborator-form')
                    @hasrole(['Superadmin', 'Manager'])
-                   <x-buttons.create-button route="{{ route('dashboard.collaborators.import') }}">
+                   <x-buttons.btn-3d route="{{ route('dashboard.collaborators.import') }}">
                     Importar datos
                     <x-slot name="icon">
                         <x-icons.import />
                     </x-slot>
-                   </x-buttons.create-button>
+                   </x-buttons.btn-3d>
                    @endhasrole
                 </div>
 
