@@ -68,7 +68,7 @@ class DeviceModelList extends Component
         $this->deviceModelModal = true;
     }
 
-    public function save()
+    public function store()
     {
         // Validamos: si editamos, ignoramos el nombre del modelo actual en el unique
         $this->validate([
@@ -111,10 +111,5 @@ class DeviceModelList extends Component
                 'description' => 'No se pudo eliminar: ' . $e->getMessage(),
             ]);
         }
-    }
-    #[On('model-updated')]
-    public function refreshComponent()
-    {
-        // Este método vacío forzará el re-renderizado de los Computed Properties
     }
 }

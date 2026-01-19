@@ -1,74 +1,152 @@
-<div>
+<div class="py-6">
     <x-slot name="header">
-        @hasrole('Superadmin')
-        <div class="flex justify-between items-center">
+        <div class="flex justify-center items-center" x-data x-on:model-updated.window="$wire.$refresh()">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    {{ __('Lista de Usuarios') }}
+                {{ __('Lista de Usuarios') }}
             </h2>
-            <div class="">
-
-                <div class="flex justify-end mx-3">
-                    @livewire('superadmin.user.create-user-form')
-                </div>
-
-                    @if (session()->has('success'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">
-                        <span class="block sm:inline">{{ session('success') }}</span>
-                        </div>
-                    @endif
-            </div>
+            <x-badge-title :count="$this->users->total()" />
         </div>
-        @endhasrole
     </x-slot>
-        @hasrole('Superadmin')
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                    <div class="bg-gray-900 text-gray-100 p-6 rounded-lg shadow-xl">
-                        <div class="overflow-x-auto">
-                            <!-- tabla de usuarios -->
-                            <table class="min-w-full divide-y divide-gray-700">
-                                <thead>
-                                    <tr class="bg-gray-800 text-gray-100">
-                                        <th class="px-4 py-2 justification-start">ID</th>
-                                        <th class="px-4 py-2">Nombres</th>
-                                        <th class="px-4 py-2">Apellidos</th>
-                                        <th class="px-4 py-2">Email</th>
-                                        <th class="px-4 py-2">Roles</th>
-                                        <th class="px-4 py-2">Estado</th>
-                                        <th class="px-4 py-2">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($users as $user)
-                                        <tr class="border-b border-gray-700">
-                                            <td class="px-4 py-2">{{ $user->id }}</td>
-                                            <td class="px-4 py-2">{{ $user->name}}</td>
-                                            <td class="px-4 py-2">{{$user->last_name}}</td>
-                                            <td class="px-4 py-2">{{ $user->email }}</td>
-                                            <td class="px-4 py-2">
-                                                @foreach($user->roles as $role)
-                                                    {{ $role->name }}{{ !$loop->last ? ', ' : '' }}
-                                                @endforeach
-                                            </td>
-                                            <td class="px-4 py-2">
-                                                <x-buttons.toggle-status toggleId="{{ $user->id }}" :isActive="$user->is_active"/>
-                                            </td>
-                                            <td class="px-4 py-2">
-                                                <x-buttons.actions-button editRoute="{{route('dashboard.users.edit', $user)}}"
-                                                deleteId="{{$user->id}}"/>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <div class="mt-4">
-                                {{ $users->links() }}
+
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <x-data-table :data="$this->users">
+            {{-- TOOLBAR: Buscador y Botón Nuevo --}}
+            <x-slot name="toolbar">
+                <div class="w-full sm:flex-1 sm:max-w-md">
+                    <x-wireui-input
+                        wire:model.live.debounce.500ms="search"
+                        icon="magnifying-glass"
+                        placeholder="Buscar usuario por nombre, email o rol..."
+                        class="bg-white dark:bg-secondary-800 md:max-w-80"
+                    />
+                </div>
+
+                <div class="w-full sm:w-48">
+                    <x-wireui-select
+                        placeholder="Estado: Todos"
+                        wire:model.live="filterStatus"
+                        :options="[
+                            ['name' => 'Todos', 'id' => ''],
+                            ['name' => 'Solo Activos', 'id' => '1'],
+                            ['name' => 'Solo Inactivos', 'id' => '0'],
+                        ]"
+                        option-label="name"
+                        option-value="id"
+                        shadow="flat"
+                    />
+                </div>
+                <div class="w-full sm:w-auto">
+                    @if($canManage)
+                        <x-wireui-button
+                            label="Nuevo Usuario"
+                            icon="user-plus"
+                            wire:click="create"
+                            primary
+                            class="w-full sm:w-auto sm:px-6 sm:ml-2"
+                        />
+                    @endif
+                </div>
+            </x-slot>
+
+            {{-- HEADERS --}}
+            <x-slot name="headers">
+                <tr class="bg-gray-800 text-gray-100">
+                    <th class="px-4 py-3 text-left">Usuario</th>
+                    <th class="px-4 py-3 text-left">Email</th>
+                    <th class="px-4 py-3 text-center">Rol</th>
+                    <th class="px-4 py-3 text-center">Estado</th>
+                    <th class="px-4 py-3 text-center">Acciones</th>
+                </tr>
+            </x-slot>
+
+            {{-- BODY --}}
+            <x-slot name="dataTBody">
+                @forelse($this->users as $user)
+                    <tr class="border-b border-gray-700 hover:bg-gray-800/50 transition-colors" wire:key="user-{{ $user->id }}">
+                        <td class="px-4 py-3">
+                            <div class="flex flex-col">
+                                <span class="font-bold text-gray-200">{{ $user->name }} {{ $user->last_name }}</span>
                             </div>
-                        </div>
+                        </td>
+                        <td class="px-4 py-3 text-gray-300">{{ $user->email }}</td>
+                        <td class="px-4 py-3 text-center">
+                            @foreach($user->roles as $role)
+                                <x-wireui-badge flat primary :label="$role->name" />
+                            @endforeach
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <div class="flex justify-center">
+                                <x-wireui-toggle
+                                    positive
+                                    {{-- Atributo vital para que Livewire no se confunda de fila --}}
+                                    wire:key="user-status-{{ $user->id }}-{{ $user->is_active }}"
+                                    {{-- Estado real de la DB --}}
+                                    :checked="$user->is_active"
+                                    {{-- Acción inmediata --}}
+                                    wire:click="toggleStatus({{ $user->id }})"
+                                    {{-- UI: Desactivar mientras procesa para evitar doble clic --}}
+                                    wire:loading.attr="disabled"
+                                    wire:target="toggleStatus({{ $user->id }})"
+                                />
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 flex gap-2 justify-center">
+                            <x-wireui-button xs circle primary icon="pencil" wire:click="edit({{ $user->id }})" />
+                            <x-wireui-button
+                                xs circle negative icon="trash"
+                                x-on:confirm="{
+                                    title: '¿Eliminar usuario?',
+                                    description: 'Esta acción no se puede deshacer.',
+                                    icon: 'error',
+                                    accept: { label: 'Eliminar', method: 'delete', params: {{ $user->id }} }
+                                }"
+                            />
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="py-12 text-center text-gray-500">
+                            <x-wireui-icon name="users" class="w-12 h-12 mx-auto mb-2 opacity-20" />
+                            <p>No se encontraron usuarios que coincidan.</p>
+                        </td>
+                    </tr>
+                @endforelse
+            </x-slot>
+        </x-data-table>
+
+        {{-- MODAL DE CREACIÓN/EDICIÓN --}}
+        <x-wireui-modal-card title="{{ $isEditing ? 'Editar Usuario' : 'Nuevo Usuario' }}" wire:model.defer="userModal">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <x-wireui-input label="Nombre" wire:model.defer="name" />
+                <x-wireui-input label="Apellido" wire:model.defer="last_name" />
+                <div class="sm:col-span-2">
+                    <x-wireui-input label="Correo Electrónico" icon="envelope" wire:model.defer="email" />
+                </div>
+
+                @if(!$isEditing)
+                    <div class="sm:col-span-2">
+                        <x-wireui-password label="Contraseña" wire:model.defer="password" />
                     </div>
+                @endif
+
+                <x-wireui-select
+                    label="Asignar Rol"
+                    placeholder="Seleccione un rol"
+                    wire:model.defer="role"
+                    :options="$this->rolesList"
+                    option-label="name"
+                    option-value="id"
+                />
+
+                <div class="flex items-center pt-6">
+                    <x-wireui-toggle label="¿Usuario Activo?" wire:model.defer="is_active" />
                 </div>
             </div>
-        </div>
-        @endhasrole
+
+            <x-slot name="footer" class="flex justify-end gap-x-4">
+                <x-wireui-button flat label="Cancelar" x-on:click="$wire.userModal = false" />
+                <x-wireui-button primary label="Guardar Usuario" wire:click="save" spinner="save" />
+            </x-slot>
+        </x-wireui-modal-card>
+    </div>
 </div>

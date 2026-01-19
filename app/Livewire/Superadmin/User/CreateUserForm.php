@@ -13,29 +13,14 @@ class CreateUserForm extends Component
     use InteractsWithBanner;
     use AuthorizesRequests;
     public bool $isOpen = false;
-    public $name;
-    public $last_name;
-    public $email;
-    public $confirm_email;
-    public $password;
-    public $confirm_password;
-    public $role;
 
-    public $roles= [];
-    public $is_active = false;
 
-    protected $messages = [
-    'email.unique' => 'Este correo ya está registrado.',
-    'name.same' => 'Ingrese el nombre.',
-    'last_name.same' => 'Ingrese un apellido.',
-    'password.same' => 'La contraseña debe ser de mas de 8 caracteres.',
-    ];
 
-    public function mount()
-    {
-        //autorizacion de la accion create con el form
-        $this->authorize("create", User::class);
-    }
+
+
+
+
+
 
     protected function rules()
     {
@@ -61,19 +46,10 @@ class CreateUserForm extends Component
         $this->resetValidation();
     }
 
-    public function resetForm()
-    {
-        $this->reset(['name', 'last_name', 'email', 'password', 'confirm_password', 'role']);
 
-
-    }
 
     //funcion para generar passwored aleatorio y seguros
-    public function generatePassword()
-    {
-        $this->password = bin2hex(random_bytes(8)); // Genera un password aleatorio de 16 caracteres
-        $this->confirm_password = $this->password; // Asegura que la confirmación del password sea igual
-    }
+
 
     public function store()
     {
