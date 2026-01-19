@@ -1,9 +1,10 @@
 <div class="py-6">
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex justify-center items-center">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __("Lista de modelos") }}
             </h2>
+            <x-badge-title />
         </div>
     </x-slot>
 
@@ -25,7 +26,7 @@
                             icon="plus"
                             wire:click="create" {{-- Mejor llamar al método create del controlador --}}
                             primary
-                            class="w-full sm:px-6 ml-2"
+                            class="w-full sm:w-auto sm:px-6 sm:ml-2"
                         />
                     @endif
                 </div>
