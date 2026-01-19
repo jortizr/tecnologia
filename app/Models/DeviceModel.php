@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use \Illuminate\Database\Eloquent\Casts\Attribute;
 class DeviceModel extends Model
 {
     /** @use HasFactory<\Database\Factories\DeviceModelFactory> */
@@ -12,13 +12,22 @@ class DeviceModel extends Model
     protected $fillable =[
         'name',
         'brand_id',
+        'created_by',
+        'updated_by',
     ];
 
-    public function brand(){
-        return $this->belongsTo(Brand::class);
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => strtoupper(trim($value)),
+        );
     }
 
-    public function create(){
+    public function brand(){
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    public function creator(){
         return $this->belongsTo(User::class, 'created_by');
     }
 

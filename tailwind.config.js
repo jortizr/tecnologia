@@ -21,6 +21,14 @@ export default {
 
     theme: {
         extend: {
+            colors:{
+                'custom-dark': {
+                '50': '#f6f7f9',
+                '500': '#374151', // bg-gray-700 aproximado
+                '600': '#1f2937',
+                '700': '#b91c1c',
+                }
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },

@@ -7,7 +7,13 @@
                 {{ __("Lista de marcas") }}
             </h2>
             @if($canManage)
-                <x-wireui-button label="Nueva Marca" icon="plus" x-on:click="$openModal('brandModal')" class="mr-2"  primary />
+                <x-buttons.btn-3d
+                    label="Nueva Marca"
+                    x-on:click="$openModal('brandModal')">
+                    <x-slot name="icon">
+                        <x-heroicon-c-plus class="w-5 h-5" />
+                    </x-slot>
+                </x-buttons.btn-3d>
             @endif
         </div>
     </x-slot>
@@ -40,8 +46,9 @@
                             <x-wireui-button
                                 xs
                                 circle
-                                primary
+                                secondary
                                 icon="pencil"
+                                class="border-red-700 border-b-2"
                                 wire:click="edit({{ $brand->id }})"
                             />
                             <x-wireui-button
