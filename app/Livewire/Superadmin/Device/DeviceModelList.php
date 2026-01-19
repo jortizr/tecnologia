@@ -11,7 +11,7 @@ use WireUi\Traits\WireUiActions;
 use Livewire\Attributes\Computed;
 use App\Models\Brand;
 use App\Traits\WithSearch;//trait para el input de busquedas
-
+use Livewire\Attributes\On;
 
 class DeviceModelList extends Component
 {
@@ -36,9 +36,7 @@ class DeviceModelList extends Component
             ->orWhereHas('brand', function ($q){
                 $q->where('name', 'like', '%' . $this->search . '%');
             });
-        })
-
-        ->paginate(10);
+        })->paginate(10);
     }
     #[Computed]
     public function brands()
@@ -96,14 +94,13 @@ class DeviceModelList extends Component
         $this->reset(['name', 'brand_id', 'isEditing']); // Limpiar después de guardar
     }
 
-        public function delete($deviceModelId)
+    public function delete($deviceModelId)
     {
         try {
             $deviceModel = DeviceModel::findOrFail($deviceModelId);
             // $this->authorize('delete', $deviceModel);
 
             $deviceModel->delete();
-
             // Notificación estilo WireUI (versión 2.x)
             $this->notification()->success( 'Notificacion', 'Modelo eliminado con éxito');
 
@@ -114,5 +111,10 @@ class DeviceModelList extends Component
                 'description' => 'No se pudo eliminar: ' . $e->getMessage(),
             ]);
         }
+    }
+    #[On('model-updated')]
+    public function refreshComponent()
+    {
+        // Este método vacío forzará el re-renderizado de los Computed Properties
     }
 }

@@ -1,13 +1,10 @@
 <div class="py-6">
-    <x-slot name="header">
         <div class="flex justify-center items-center">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __("Lista de modelos") }}
             </h2>
-            <x-badge-title />
+            <x-badge-title :count="$this->deviceModels->total()" />
         </div>
-    </x-slot>
-
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <x-data-table :data="$this->deviceModels">
             <x-slot name="toolbar">
@@ -52,17 +49,20 @@
                     @if($canManage)
                     <td class="px-4 py-2 flex gap-2 justify-center">
                         <x-wireui-button xs circle primary icon="pencil" wire:click="edit({{ $deviceModel->id }})" />
-                        <x-wireui-button xs circle negative icon="trash" wire:loading.attr="disabled"
-                            wire:loading.class="opacity-50" x-on:click="$confirm({
-                                            title: '¿Eliminar modelo?',
-                                            description: 'Esta acción no se puede deshacer',
-                                            icon: 'error',
-                                            accept: {
-                                                label: 'Sí, eliminar',
-                                                method: 'delete',
-                                                params: {{ $deviceModel->id }}
-                                            }
-                                        })" />
+
+                        <x-wireui-button xs circle negative
+                                icon="trash"
+                                x-on:confirm="{
+                                    title: '¿Estás seguro?',
+                                    description: 'Esta acción eliminará la marca permanentemente.',
+                                    icon: 'question',
+                                    accept: {
+                                        label: 'Sí, eliminar',
+                                        method: 'delete',
+                                        params: {{ $deviceModel->id }}
+                                    }
+                                }"
+                            />
                     </td>
                     @endif
                 </tr>
