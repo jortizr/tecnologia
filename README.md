@@ -114,3 +114,9 @@ este es una libreria que permite la creacion de permisos en laravel, para poder 
 ```
 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 ```
+
+### 10. Problemas de lentitud
+En caso de ejecutar el proyecto en local y/o produccion y se ponga lento para ejecutar funcionalidades, se recomienda ejecutar el comando siguiente para eliminar la cache de laravel:
+```
+php artisan optimize
+```
