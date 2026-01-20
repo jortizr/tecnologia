@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Superadmin\Collaborator;
+namespace App\Livewire\Collaborators;
 
 use Livewire\Component;
 use Spatie\SimpleExcel\SimpleExcelReader;
@@ -129,6 +129,6 @@ class CollaboratorImport extends Component
 
     public function render()
     {
-        return view('livewire.superadmin.collaborator.collaborator-import');
+        return view('livewire.collaborators.collaborator-import');
     }
 }

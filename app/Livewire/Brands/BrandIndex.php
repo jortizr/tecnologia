@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Superadmin\Brand;
+namespace App\Livewire\Brands;
 
 use Livewire\Component;
 use Laravel\Jetstream\InteractsWithBanner;
@@ -11,7 +11,7 @@ use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
 use Livewire\Attributes\Computed;
 
-class BrandList extends Component
+class BrandIndex extends Component
 {
     use WithPagination, InteractsWithBanner, AuthorizesRequests, WireUiActions;
     public bool $brandModal = false;
@@ -31,13 +31,14 @@ class BrandList extends Component
         return Brand::with(['creator:id,name', 'updater:id,name'])->paginate(10);
     }
 
+
     public function render()
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false;
 
-        return view('livewire.superadmin.brand.brand-list', [
+        return view('livewire.brands.brand-index', [
             'canManage' => $this->canManage,
         ]);
     }

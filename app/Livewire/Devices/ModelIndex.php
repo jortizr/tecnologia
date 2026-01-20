@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Superadmin\Device;
+namespace App\Livewire\Devices;
 
 use Livewire\Component;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -11,9 +11,8 @@ use WireUi\Traits\WireUiActions;
 use Livewire\Attributes\Computed;
 use App\Models\Brand;
 use App\Traits\WithSearch;//trait para el input de busquedas
-use Livewire\Attributes\On;
 
-class DeviceModelList extends Component
+class ModelIndex extends Component
 {
     use WithPagination, AuthorizesRequests, WireUiActions, WithSearch;
     public bool $deviceModelModal = false;
@@ -50,7 +49,7 @@ class DeviceModelList extends Component
         $user = Auth::user();
 
         $canManage = $user ? $user->hasAnyRole(['Superadmin', 'Manage']) : false;
-        return view('livewire.superadmin.device.device-model', [
+        return view('livewire.devices.model-index', [
             'canManage' => $canManage
         ]);
     }

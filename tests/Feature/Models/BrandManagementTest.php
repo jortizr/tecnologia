@@ -8,7 +8,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Brand;
 use Livewire\Livewire;
-use App\Livewire\Superadmin\Brand\BrandList;
+use App\Livewire\Brands\BrandIndex;
 
 
 class BrandManagementTest extends TestCase
@@ -34,7 +34,7 @@ class BrandManagementTest extends TestCase
 
     public function test_a_superadmin_can_view_the_brand_list(){
         Livewire::actingAs($this->superadmin)
-            ->test(BrandList::class)
+            ->test(BrandIndex::class)
             ->assertStatus(200)
             ->assertSeeText('Lista de marcas');
     }
@@ -42,12 +42,12 @@ class BrandManagementTest extends TestCase
     public function test_a_manager_and_viewer_can_view_the_brand_list(){
 
         Livewire::actingAs($this->manager)
-            ->test(BrandList::class)
+            ->test(BrandIndex::class)
             ->assertOk()
             ->assertSee('Lista de marcas');
 
         Livewire::actingAs($this->viewer)
-            ->test(BrandList::class)
+            ->test(BrandIndex::class)
             ->assertOk()
             ->assertSee('Lista de marcas');
     }

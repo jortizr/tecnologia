@@ -1,12 +1,11 @@
 <div class="py-6">
-    <x-slot name="header">
-        <div class="flex justify-center items-center" x-data x-on:model-updated.window="$wire.$refresh()">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+    <div class="flex justify-center items-center" x-data x-on:model-updated.window="$wire.$refresh()">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Lista de Usuarios') }}
-            </h2>
-            <x-badge-title :count="$this->users->total()" />
-        </div>
-    </x-slot>
+        </h2>
+        <x-badge-title :count="$this->users->total()" />
+    </div>
+
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <x-data-table :data="$this->users">
@@ -78,15 +77,11 @@
                             <div class="flex justify-center">
                                 <x-wireui-toggle
                                     positive
-                                    {{-- Atributo vital para que Livewire no se confunda de fila --}}
-                                    wire:key="user-status-{{ $user->id }}-{{ $user->is_active }}"
-                                    {{-- Estado real de la DB --}}
+                                    wire:key="user-status-{{ $user->id }}-{{ (int)$user->is_active }}"
                                     :checked="$user->is_active"
-                                    {{-- Acción inmediata --}}
-                                    wire:click="toggleStatus({{ $user->id }})"
-                                    {{-- UI: Desactivar mientras procesa para evitar doble clic --}}
+                                    x-on:click="$dispatch('toggleStatus', { userId: {{ $user->id }} })"
                                     wire:loading.attr="disabled"
-                                    wire:target="toggleStatus({{ $user->id }})"
+                                    wire:target="toggleStatus"
                                 />
                             </div>
                         </td>

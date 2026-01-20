@@ -1,13 +1,11 @@
 <?php
 
-use App\Livewire\Superadmin\Brand\BrandList;
+use App\Livewire\Brands\BrandIndex;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Superadmin\User\UserList;
-use App\Livewire\Superadmin\User\EditUser;
-use App\Livewire\Superadmin\Collaborator\CollaboratorList;
-use App\Livewire\Superadmin\Collaborator\CollaboratorEdit;
-use App\Livewire\Superadmin\Collaborator\CollaboratorImport;
-use App\Livewire\Superadmin\Device\DeviceModelList;
+use App\Livewire\Users\UserIndex;
+use App\Livewire\Collaborators\CollaboratorIndex;
+use App\Livewire\Collaborators\CollaboratorImport;
+use App\Livewire\Devices\ModelIndex;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,22 +21,17 @@ Route::middleware([
         return view('/dashboard');
     })->name('dashboard');
 
-    Route::get('dashboard/users/show', UserList::class)
+    Route::get('dashboard/users/show', UserIndex::class)
                 ->name('dashboard.users.show');
 
-    Route::get('dashboard/users/{user}/edit', EditUser::class)
-                ->name('dashboard.users.edit');
-
-    Route::get('dashboard/collaborators/show',CollaboratorList::class )
+    Route::get('dashboard/collaborators/show',CollaboratorIndex::class )
     ->name('dashboard.collaborators.show');
-
-    Route::get('dashboard/collaborators/{collaborator}/edit', CollaboratorEdit::class)->name('dashboard.collaborators.edit');
 
     Route::get('dashboard/collaborators/import', CollaboratorImport::class)->name('dashboard.collaborators.import');
 
-    Route::get('dashboard/brands/show', BrandList::class)->name('dashboard.brands.show');
+    Route::get('dashboard/brands/show', BrandIndex::class)->name('dashboard.brands.show');
 
-    Route::get('dashboard/devicemodels/show', DeviceModelList::class)->name('dashboard.devicemodels.show');
+    Route::get('dashboard/devicemodels/show', ModelIndex::class)->name('dashboard.devicemodels.show');
 
 });
 

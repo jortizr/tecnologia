@@ -1,5 +1,5 @@
 <?php
-namespace App\Livewire\Superadmin\User;
+namespace App\Livewire\Users;
 
 use Livewire\Component;
 use App\Models\User;
@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Traits\WithSearch;
 use WireUi\Traits\WireUiActions;
 
-class UserList extends Component
+class UserIndex extends Component
 {
     use WithPagination, AuthorizesRequests, WireUiActions, WithSearch;
 
@@ -20,8 +20,11 @@ class UserList extends Component
     public $canManage;
     public $filterStatus = '';
 
+    protected $casts = [
+    'is_active' => 'boolean',
+    ];
     // Propiedades del formulario
-    public $name, $last_name, $email, $password, $role, $is_active = true;
+    public $name, $last_name, $email, $password, $role, $is_active;
 
     #[Locked]
     public $userId;
@@ -108,24 +111,32 @@ class UserList extends Component
         $this->notification()->success('Usuario eliminado');
     }
 
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        $this->userId = $id;
+        $this->name = $user->name;
+        $this->last_name = $user->last_name;
+        $this->email = $user->email;
+        $this->is_active = $user->is_active;
+        $this->role = $user->roles->first()?->id;
+        $this->isEditing = true;
+        $this->userModal = true;
+    }
+
+#[On('toggleStatus')]
 public function toggleStatus($userId)
 {
     try {
         $user = User::findOrFail($userId);
-
+        $this->authorize('update', $user);
         // Cambiamos el estado explícitamente
-        $nuevoEstado = !$user->is_active;
+        $user->is_active = !$user->is_active;
+        $user->save();
 
-        // Usamos update para asegurar la persistencia inmediata
-        $user->update([
-            'is_active' => $nuevoEstado
-        ]);
-
-        // Forzamos el refresco de la propiedad computada 'users'
         unset($this->users);
 
-        // Notificación profesional de WireUI
-        if ($nuevoEstado) {
+        if ($user->is_active){
             $this->notification()->success(
                 title: 'Usuario Activado',
                 description: "{$user->name} ahora tiene acceso al sistema."
@@ -150,7 +161,7 @@ public function toggleStatus($userId)
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false;
-        return view('livewire.superadmin.user.user-list', [
+        return view('livewire.users.user-index', [
             'canManage' => $this->canManage,
         ]);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Superadmin\Collaborator;
+namespace App\Livewire\Collaborators;
 
 use App\Models\Collaborator;
 use Laravel\Jetstream\InteractsWithBanner;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use App\Models\User;
 
-class CollaboratorList extends Component
+class CollaboratorIndex extends Component
 {
     use InteractsWithBanner, AuthorizesRequests;
 
@@ -38,7 +38,7 @@ class CollaboratorList extends Component
     #[On(['collaboratorCreated', 'collaborator-updated'])]
     public function render()
     {
-        return view('livewire.superadmin.collaborator.collaborator-list', [
+        return view('livewire.collaborators.collaborator-index', [
             'collaborators'=> Collaborator::with(['regional', 'department', 'occupation'])->paginate(10),
         ]);
     }
