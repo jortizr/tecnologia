@@ -32,6 +32,7 @@
                         option-label="name"
                         option-value="id"
                         shadow="flat"
+                        class="bg-white dark:bg-secondary-800 md:ml-2 md:max-w-40 sm:max-w-40"
                     />
                 </div>
                 <div class="w-full sm:w-auto">
