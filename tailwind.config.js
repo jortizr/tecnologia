@@ -21,19 +21,20 @@ export default {
 
     theme: {
         extend: {
-            colors:{
-                'custom-dark': {
-                '50': '#f6f7f9',
-                '500': '#374151', // bg-gray-700 aproximado
-                '600': '#1f2937',
-                '700': '#b91c1c',
+            colors: {
+                'brand': {
+                    'primary': '#b91c1c', // Tu rojo corporativo
+                    'dark': '#1f2937',    // Tu gris oscuro 600
+                    'soft': '#f6f7f9',    // Tu 50 para fondos claros
+                },
+                // O puedes mantener tu estructura pero dándole nombres lógicos
+                'custom': {
+                    'dark-bg': '#1f2937',
+                    'dark-header': '#374151',
+                    'red': '#b91c1c',
                 }
-            },
-            fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
         },
     },
-
     plugins: [forms, typography],
 };

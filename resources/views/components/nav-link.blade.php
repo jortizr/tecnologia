@@ -1,17 +1,24 @@
 @props(['active'])
 
 @php
-// Clases para el enlace ACTIVO
-$activeClasses = 'bg-gray-900 text-white group flex items-center p-2 text-sm font-medium rounded-lg hover:bg-gray-700';
-// Clases para el enlace INACTIVO
-$inactiveClasses = 'flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group';
+$baseClasses = 'group flex items-center p-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out';
 
+// Estado ACTIVO: Fondo Rojo Corporativo (#b91c1c), Texto Blanco
+$activeClasses = 'text-brand-primary text-dark shadow-md dark:bg-custom-dark-700';
 
+// Estado INACTIVO: Texto Gris Oscuro (#374151) / Texto Claro en Dark (#f6f7f9)
+$inactiveClasses = 'text-custom-dark-500 dark:text-custom-dark-50 hover:bg-gray-700 dark:hover:bg-custom-dark-500 hover:text-custom-dark-700 dark:hover:text-white';
 
+$classes = ($active ?? false) ? "$baseClasses $activeClasses" : "$baseClasses $inactiveClasses";
 
-$classes = ($active ?? false) ? $activeClasses : $inactiveClasses;
+// Forzamos que el contenido (icono y texto) sea blanco solo si está activo
+$contentClasses = ($active ?? false)
+    ? 'text-dark flex items-center w-full'
+    : 'flex items-center w-full';
 @endphp
 
 <a {{ $attributes->merge(['class' => $classes]) }}>
-    {{ $slot }}
+    <div class="{{ $contentClasses }}">
+        {{ $slot }}
+    </div>
 </a>
