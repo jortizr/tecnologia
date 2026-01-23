@@ -7,7 +7,7 @@ $baseClasses = 'group flex items-center p-2 text-sm font-medium rounded-lg trans
 $activeClasses = 'text-brand-primary text-dark shadow-md dark:bg-custom-dark-700';
 
 // Estado INACTIVO: Texto Gris Oscuro (#374151) / Texto Claro en Dark (#f6f7f9)
-$inactiveClasses = 'text-custom-dark-500 dark:text-custom-dark-50 hover:bg-gray-700 dark:hover:bg-custom-dark-500 hover:text-custom-dark-700 dark:hover:text-white';
+$inactiveClasses = 'text-custom-dark-500 dark:text-custom-dark-50 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-custom-dark-700 dark:hover:text-white';
 
 $classes = ($active ?? false) ? "$baseClasses $activeClasses" : "$baseClasses $inactiveClasses";
 

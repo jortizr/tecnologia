@@ -6,7 +6,6 @@
         <x-badge-title :count="$this->users->total()" />
     </div>
 
-
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <x-data-table :data="$this->users">
             {{-- TOOLBAR: Buscador y Botón Nuevo --}}
@@ -16,7 +15,7 @@
                         wire:model.live.debounce.500ms="search"
                         icon="magnifying-glass"
                         placeholder="Buscar usuario por nombre, email o rol..."
-                        class="bg-white dark:bg-secondary-800 md:max-w-80"
+                        class="bg-white dark:bg-custom-dark-header border-gray-300 dark:border-gray-600"
                     />
                 </div>
 
@@ -32,10 +31,9 @@
                         option-label="name"
                         option-value="id"
                         shadow="flat"
-                        class="bg-white dark:bg-secondary-800 md:ml-2 md:max-w-40 sm:max-w-40"
+                        class="dark:bg-custom-dark-header"
                     />
                 </div>
-                <div class="w-full sm:w-auto">
                     @if($canManage)
                         <x-wireui-button
                             label="Nuevo Usuario"
@@ -45,39 +43,38 @@
                             class="w-full sm:w-auto sm:px-6 sm:ml-2"
                         />
                     @endif
-                </div>
             </x-slot>
 
             {{-- HEADERS --}}
             <x-slot name="headers">
-                <tr class="bg-gray-800 text-gray-100">
-                    <th class="px-4 py-3 text-left">Usuario</th>
-                    <th class="px-4 py-3 text-left">Email</th>
-                    <th class="px-4 py-3 text-center">Rol</th>
-                    <th class="px-4 py-3 text-center">Estado</th>
-                    <th class="px-4 py-3 text-center">Acciones</th>
+                <tr class="text-custom-dark-bg dark:text-gray-200 uppercase text-xs tracking-wider">
+                    <th class="px-6 py-4 text-left">Usuario</th>
+                    <th class="px-6 py-4 text-left">Email</th>
+                    <th class="px-6 py-4 text-center">Rol</th>
+                    <th class="px-6 py-4 text-center">Estado</th>
+                    <th class="px-6 py-4 text-center">Acciones</th>
                 </tr>
             </x-slot>
 
             {{-- BODY --}}
             <x-slot name="dataTBody">
                 @forelse($this->users as $user)
-                    <tr class="border-b border-gray-700 hover:bg-gray-800/50 transition-colors" wire:key="user-{{ $user->id }}">
+                    <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors duration-200" wire:key="user-{{ $user->id }}">
                         <td class="px-4 py-3">
-                            <div class="flex flex-col">
-                                <span class="font-bold text-gray-200">{{ $user->name }} {{ $user->last_name }}</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100">{{ $user->name }} {{ $user->last_name }}</span>
                             </div>
                         </td>
-                        <td class="px-4 py-3 text-gray-300">{{ $user->email }}</td>
+                        <td class="px-4 py-3 text-gray-600 dark:text-gray-300">{{ $user->email }}</td>
                         <td class="px-4 py-3 text-center">
                             @foreach($user->roles as $role)
-                                <x-wireui-badge flat primary :label="$role->name" />
+                                <x-wireui-badge flat primary class="bg-brand-soft text-brand-primary" :label="$role->name" />
                             @endforeach
                         </td>
                         <td class="px-4 py-3 text-center">
-                            <div class="flex justify-center">
+                            <div class="flex justify-center items-center">
                                 <x-wireui-toggle
                                     positive
+                                    class=""
                                     wire:key="user-status-{{ $user->id }}-{{ (int)$user->is_active }}"
                                     :checked="$user->is_active"
                                     x-on:click="$dispatch('toggleStatus', { userId: {{ $user->id }} })"
@@ -85,9 +82,11 @@
                                     wire:target="toggleStatus"
                                 />
                             </div>
+
                         </td>
-                        <td class="px-4 py-3 flex gap-2 justify-center">
-                            <x-wireui-button xs circle primary icon="pencil" wire:click="edit({{ $user->id }})" />
+                        <td class="px-4 py-2 text-center align-middle">
+                            <div class="flex justify-center items-center gap-2">
+                            <x-wireui-button xs circle secondary icon="pencil" wire:click="edit({{ $user->id }})" />
                             <x-wireui-button
                                 xs circle negative icon="trash"
                                 x-on:confirm="{
@@ -97,6 +96,7 @@
                                     accept: { label: 'Eliminar', method: 'delete', params: {{ $user->id }} }
                                 }"
                             />
+                            </div>
                         </td>
                     </tr>
                 @empty

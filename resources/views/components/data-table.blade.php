@@ -1,36 +1,30 @@
-@props([
-    'data' => collect(),
-])
+@props(['data' => collect()])
 
-<div class="py-12">
-    <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-            <div class="bg-gray-900 text-gray-100 p-6 rounded-lg shadow-xl">
-
-                {{-- BARRA DE HERRAMIENTAS (Buscador y Botones) --}}
+<div class="py-4"> <div class="max-w-8xl mx-auto">
+        <div class="bg-white dark:bg-custom-dark-bg overflow-hidden shadow-xl sm:rounded-lg border-t-4 border-brand-primary">
+            <div class="p-6">
                 @if(isset($toolbar))
-                    <div class="flex flex-col gap-y-4 sm:flex-row sm:items-end sm:justify-between mb-4">
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                         {{ $toolbar }}
                     </div>
                 @endif
 
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-700">
-                        <thead>
+                <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-200 dark:bg-custom-dark-header">
                             {{ $headers }}
                         </thead>
-                        <tbody class="divide-y divide-gray-700">
+                        <tbody class="bg-white dark:bg-custom-dark-bg divide-y divide-gray-200 dark:divide-gray-700">
                             {{ $dataTBody }}
                         </tbody>
                     </table>
-
-                    {{-- Paginación --}}
-                    @if ($data instanceof \Illuminate\Pagination\AbstractPaginator)
-                        <div class="mt-4">
-                            {{ $data->links() }}
-                        </div>
-                    @endif
                 </div>
+
+                @if ($data instanceof \Illuminate\Pagination\AbstractPaginator)
+                    <div class="mt-4">
+                        {{ $data->links() }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>

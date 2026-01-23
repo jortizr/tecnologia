@@ -13,10 +13,10 @@
                         wire:model.live.debounce.500ms="search"
                         icon="magnifying-glass"
                         placeholder="Buscar modelo..."
-                        class="bg-white dark:bg-secondary-800 md:max-w-80"
+                        class="bg-white dark:bg-custom-dark-header border-gray-300 dark:border-gray-600"
                     />
                 </div>
-                <div class="w-full sm:w-auto">
+                <div class="w-full sm:w-48">
                     @if($canManage)
                         <x-wireui-button
                             label="Nuevo modelo"
@@ -29,13 +29,13 @@
                 </div>
             </x-slot>
             <x-slot name="headers">
-                <tr class="bg-gray-800 text-gray-100">
-                    <th class="px-4 py-2">Modelo</th>
-                    <th class="px-4 py-2">Marca</th>
-                    <th class="px-4 py-2">Creado por</th>
-                    <th class="px-4 py-2">Actualizado por</th>
+                <tr class="text-custom-dark-bg dark:text-gray-200 uppercase text-xs tracking-wider">
+                    <th class="px-6 py-4">Modelo</th>
+                    <th class="px-6 py-4">Marca</th>
+                    <th class="px-6 py-4">Creado por</th>
+                    <th class="px-6 py-4">Actualizado por</th>
                     @if($canManage)
-                    <th class="px-4 py-2">Acciones</th>
+                    <th class="px-6 py-4">Acciones</th>
                     @endif
                 </tr>
             </x-slot>
@@ -47,9 +47,9 @@
                     <td class="px-4 py-2 text-center">{{ $deviceModel->creator?->name ?? 'sin movimiento' }}</td>
                     <td class="px-4 py-2 text-center">{{ $deviceModel->updater?->name ?? 'sin actualizacion' }}</td>
                     @if($canManage)
-                    <td class="px-4 py-2 flex gap-2 justify-center">
+                    <td class="px-4 py-2 text-center align-middle">
+                        <div class="flex justify-center items-center gap-2">
                         <x-wireui-button xs circle primary icon="pencil" wire:click="edit({{ $deviceModel->id }})" />
-
                         <x-wireui-button xs circle negative
                                 icon="trash"
                                 x-on:confirm="{
@@ -63,6 +63,7 @@
                                     }
                                 }"
                             />
+                        </div>
                     </td>
                     @endif
                 </tr>

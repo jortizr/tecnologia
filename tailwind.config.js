@@ -32,6 +32,22 @@ export default {
                     'dark-bg': '#1f2937',
                     'dark-header': '#374151',
                     'red': '#b91c1c',
+                },
+                // Esto mapea el color 'primary' de WireUI a tu rojo
+                primary: {
+                    50: '#fef2f2',
+                    100: '#fee2e2',
+                    200: '#fecaca',
+                    300: '#fca5a5',
+                    400: '#f87171',
+                    500: '#b91c1c', // Tu rojo
+                    600: '#991b1b',
+                    700: '#7f1d1d',
+                    800: '#450a0a',
+                    900: '#450a0a',
+                },
+                secondary: {
+                    600: '#374151',
                 }
             },
         },

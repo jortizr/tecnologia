@@ -4,7 +4,7 @@
     {{-- Botón Principal --}}
     <button type="button"
         @click="open = !open"
-        class="flex items-center w-full p-2 text-base font-medium transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $active ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+        class="flex items-center w-full p-2 text-base font-medium transition duration-75 rounded-lg group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700 {{ $active ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
 
         {{-- Icono dinámico --}}
         @if(isset($icon))
