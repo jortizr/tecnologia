@@ -1,10 +1,10 @@
 <div class="py-6">
-        <div class="flex justify-center items-center">
+    <div class="flex justify-center items-center">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __("Lista de modelos") }}
             </h2>
             <x-badge-title :count="$this->deviceModels->total()" />
-        </div>
+    </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <x-data-table :data="$this->deviceModels">
             <x-slot name="toolbar">
