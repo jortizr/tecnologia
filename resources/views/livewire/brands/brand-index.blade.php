@@ -5,7 +5,6 @@
         </h2>
         <x-badge-title :count="$this->brands->total()" />
     </div>
-brandModal
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <x-data-table :data="$this->brands">
             <x-slot name="toolbar">
@@ -52,7 +51,6 @@ brandModal
                                     circle
                                     secondary
                                     icon="pencil"
-                                    class="border-red-700 border-b-2"
                                     wire:click="edit({{ $brand->id }})"
                                 />
                                 <x-wireui-button

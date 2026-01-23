@@ -3,17 +3,17 @@
 namespace App\Livewire\Brands;
 
 use Livewire\Component;
-use Laravel\Jetstream\InteractsWithBanner;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Brand;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
 use Livewire\Attributes\Computed;
+use App\Traits\WithSearch;
 
 class BrandIndex extends Component
 {
-    use WithPagination, InteractsWithBanner, AuthorizesRequests, WireUiActions;
+    use WithPagination,  WithSearch, AuthorizesRequests, WireUiActions;
     public bool $brandModal = false;
     public ?Brand $brand = null;//instancia de la marca a editar
     public $name;
@@ -28,7 +28,11 @@ class BrandIndex extends Component
     public function brands()
     {
         // La consulta se queda aquí para ser eficiente
-        return Brand::with(['creator:id,name', 'updater:id,name'])->paginate(10);
+        return Brand::with(['creator:id,name', 'updater:id,name'])
+            ->when($this->search, function($query){
+                $query->where('name', 'like', '%' . $this->search . '%');
+            })
+            ->paginate(10);
     }
 
 
