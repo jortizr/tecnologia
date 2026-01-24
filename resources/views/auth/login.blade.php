@@ -1,13 +1,22 @@
 <x-guest-layout>
     <x-authentication-card>
-
         <x-slot name="logo">
-            <x-authentication-card-logo />
+            {{-- Personalizando el logo con tu color corporativo --}}
+            <div class="flex items-center gap-2">
+                <a href="/">
+                        <img src="https://envia.co/images/header_logo.png" alt="Envia Logo" class="h-10 w-auto">
+                </a>
+                <x-wireui-icon name="cpu-chip" class="w-12 h-12 text-brand-primary" />
+                <span class="text-2xl font-bold tracking-tight text-brand-dark uppercase">Tech<span class="text-brand-primary">Stock</span></span>
+            </div>
         </x-slot>
+
+        <div class="mb-4 text-center text-sm text-gray-600 dark:text-gray-400">
+            {{ __('Bienvenido de nuevo. Por favor, ingresa tus credenciales para acceder al inventario.') }}
+        </div>
 
         <x-validation-errors class="mb-4" />
         <x-flash-message />
-
 
         @session('status')
             <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
@@ -15,36 +24,54 @@
             </div>
         @endsession
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('login') }}" class="space-y-4">
             @csrf
 
-            <div>
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            </div>
+            {{-- Input de Email con WireUI --}}
+            <x-wireui-input
+                icon="home"
+                label="Correo Electrónico"
+                placeholder="tu@empresa.com"
+                id="email"
+                type="email"
+                name="email"
+                :value="old('email')"
+                required
+                autofocus
+            />
 
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Contraseña') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            </div>
+            {{-- Input de Contraseña con WireUI (permite ver/ocultar) --}}
+            <x-wireui-password
+                label="Contraseña"
+                id="password"
+                name="password"
+                required
+                autocomplete="current-password"
+            />
 
-            <div class="block mt-4">
-                <label for="remember_me" class="flex items-center">
-                    <x-checkbox id="remember_me" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Recuerdame') }}</span>
-                </label>
-            </div>
+            <div class="flex items-center justify-between">
+                <x-wireui-checkbox
+                    id="remember_me"
+                    name="remember"
+                    label="Recuérdame"
+                />
 
-            <div class="flex items-center justify-end mt-4">
                 @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                        {{ __('Olvidaste tu contraseña?') }}
+                    <a class="text-sm text-brand-primary hover:text-brand-dark transition-colors" href="{{ route('password.request') }}">
+                        {{ __('¿Olvidaste tu contraseña?') }}
                     </a>
                 @endif
+            </div>
 
-                <x-button class="ms-4">
-                    {{ __('Iniciar sesion') }}
-                </x-button>
+            <div class="pt-2">
+                <x-wireui-button
+                    type="submit"
+                    primary
+                    lg
+                    fluid
+                    label="Iniciar Sesión"
+                    right-icon="arrow-right"
+                />
             </div>
         </form>
     </x-authentication-card>
