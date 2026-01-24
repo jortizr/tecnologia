@@ -14,7 +14,7 @@ class Collaborator extends Model
     /** @use HasFactory<\Database\Factories\CollaboratorFactory> */
     use HasFactory;
 
-       protected $fillable = [
+    protected $fillable = [
         'names',
         'last_name',
         'identification',
@@ -23,7 +23,6 @@ class Collaborator extends Model
         'regional_id',
         'occupation_id',
         'is_active',
-
     ];
 
     public function department(){
