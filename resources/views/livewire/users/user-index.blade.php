@@ -44,25 +44,22 @@
                         />
                     @endif
             </x-slot>
-
-            {{-- HEADERS --}}
             <x-slot name="headers">
                 <tr class="text-custom-dark-bg dark:text-gray-200 uppercase text-xs tracking-wider">
                     <th class="px-6 py-4 text-left">Usuario</th>
                     <th class="px-6 py-4 text-left">Email</th>
                     <th class="px-6 py-4 text-center">Rol</th>
                     <th class="px-6 py-4 text-center">Estado</th>
+                     @if($canManage)
                     <th class="px-6 py-4 text-center">Acciones</th>
+                    @endif
                 </tr>
             </x-slot>
-
-            {{-- BODY --}}
             <x-slot name="dataTBody">
                 @forelse($this->users as $user)
                     <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors duration-200" wire:key="user-{{ $user->id }}">
                         <td class="px-4 py-3">
                             <span class="font-bold text-gray-900 dark:text-gray-100">{{ $user->name }} {{ $user->last_name }}</span>
-                            </div>
                         </td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-300">{{ $user->email }}</td>
                         <td class="px-4 py-3 text-center">
@@ -74,7 +71,6 @@
                             <div class="flex justify-center items-center">
                                 <x-wireui-toggle
                                     positive
-                                    class=""
                                     wire:key="user-status-{{ $user->id }}-{{ (int)$user->is_active }}"
                                     :checked="$user->is_active"
                                     x-on:click="$dispatch('toggleStatus', { userId: {{ $user->id }} })"

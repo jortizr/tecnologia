@@ -6,7 +6,6 @@
         <x-badge-title :count="$this->collaborators->total()" />
     </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        @can('viewAny', App\Models\Collaborator::class)
         <x-data-table :data="$this->collaborators">
             <x-slot name="toolbar">
                 <div class="w-full sm:flex-1 sm:max-w-md">
@@ -32,8 +31,7 @@
 
             <x-slot name="headers">
                 <tr class="text-custom-dark-bg dark:text-gray-200 uppercase text-xs tracking-wider">
-                    <th class="px-6 py-4">Nombres</th>
-                    <th class="px-6 py-4">Apellidos</th>
+                    <th class="px-6 py-4">Nombres y Apellidos</th>
                     <th class="px-6 py-4">Identificacion</th>
                     <th class="px-6 py-4">Codigo de nomina</th>
                     <th class="px-6 py-4">Area</th>
@@ -46,26 +44,95 @@
                 </tr>
             </x-slot>
             <x-slot name="dataTBody">
-                @foreach($this->collaborators as $collaborator)
-                    <tr class="border-b border-gray-700" wire:key="model-{{ $collaborator->id }}">
-                        <td class="px-4 py-2">{{ $collaborator->names}}</td>
-                            <td class="px-4 py-2">{{$collaborator->last_name}}</td>
-                            <td class="px-4 py-2">{{ $collaborator->identification }}</td>
-                                                <td class="px-4 py-2">{{ $collaborator->payroll_code }}</td>
-                                                <td class="px-4 py-2">{{ $collaborator->department?->name ?? 'Sin area' }}</td>
-                                                <td class="px-4 py-2">{{ $collaborator->occupation?->name ?? 'Sin cargo' }}</td>
-                                                <td class="px-4 py-2">{{ $collaborator->regional?->name ?? 'Sin regional' }}</td>
-                                                <td class="px-4 py-2">
-                                                    <x-buttons.toggle-status toggleId="{{ $collaborator->id }}" :isActive="$collaborator->is_active" keyName="collaboratorId"/>
-                                                </td>
-                                                <td class="px-4 py-2">
-                                                    botones
-                                                </td>
+                @forelse($this->collaborators as $collaborator)
+                    <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors duration-200" wire:key="collaborator-{{ $collaborator->id }}">
+                        <td class="px-4 py-2">
+                            <span class="font-bold text-gray-900 dark:text-gray-100">{{ $collaborator->names}} {{$collaborator->last_name}}</span>
+                        </td>
+                        <td class="px-4 py-2">{{ $collaborator->identification }}</td>
+                        <td class="px-4 py-2">{{ $collaborator->payroll_code }}</td>
+                        <td class="px-4 py-2">{{ $collaborator->department?->name ?? 'Sin area' }}</td>
+                        <td class="px-4 py-2">{{ $collaborator->occupation?->name ?? 'Sin cargo' }}</td>
+                        <td class="px-4 py-2">{{ $collaborator->regional?->name ?? 'Sin regional' }}</td>
+                        <td class="px-4 py-2">
+                            <x-wireui-toggle positive
+                                wire:key="collaborator-status-{{ $collaborator->id }}-{{(int) $collaborator->is_active}}"
+                                :checked="$collaborator->is_active"
+                                x-on:click="$dispatch('toggleStatus', {collaboratorId: {{ $collaborator->id }}})"
+                                wire:loading.attr="disabled"
+                                wire:target="toggleStatus"
+                            />
+                        </td>
+                        @if($canManage)
+                        <td class="px-4 py-2 text-center align-middle">
+                            <div class="flex justify-center items-center gap-2">
+                                <x-wireui-button xs circle secondary icon="pencil" wire:click="edit({{ $collaborator->id }})" />
+                                <x-wireui-button
+                                    xs circle negative icon="trash"
+                                    x-on:confirm="{
+                                        title: '¿Eliminar colaborador?',
+                                        description: 'Esta acción no se puede deshacer.',
+                                        icon: 'error',
+                                        accept: {
+                                            label: 'Eliminar',
+                                            method: 'delete',
+                                            params: {{ $collaborator->id }}
+                                            }
+                                    }"
+                                />
+                            </div>
+                        </td>
+                        @endif
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="8" class="py-12 text-center text-gray-500">
+                            <x-wireui-icon name="users" class="w-12 h-12 mx-auto mb-2 opacity-20" />
+                            <p>No se encontraron colaboradores que coincidan.</p>
+                        </td>
+                    </tr>
+                @endforelse
             </x-slot>
         </x-data-table>
-        @endcan
-    </div>
 
+        <x-wireui-modal-card title="{{ $isEditing ? 'Editar Colaborador':'Nuevo Colaborador' }}" wire:model.defer="collaboratorModal">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <x-wireui-input label="Nombres" wire:model.defer="names" />
+                <x-wireui-input label="Apellidos" wire:model.defer="last_name"/>
+                <x-wireui-input label="Identificacion" wire:model.defer="identification"/>
+                <x-wireui-input label="Cod. Nomina" wire:model.defer="payroll_code"/>
+                <x-wireui-select
+                    label="Asignar Area"
+                    placeholder="Selecciona una area"
+                    wire:model.defer="department_id"
+                    :options="$this->departments"
+                    option-label="name"
+                    option-value="id"
+                />
+                <x-wireui-select
+                    label="Asignar Cargo"
+                    placeholder="Selecciona un cargo"
+                    wire:model.defer="occupation_id"
+                    :options="$this->occupations"
+                    option-label="name"
+                    option-value="id"
+                />
+                <x-wireui-select
+                    label="Asignar Regional"
+                    placeholder="Selecciona una regional"
+                    wire:model.defer="regional_id"
+                    :options="$this->regionals"
+                    option-label="name"
+                    option-value="id"
+                />
+                <div class="flex items-center pt-6">
+                    <x-wireui-toggle label="¿Colaborador contratado?" wire:model.defer="is_active" />
+                </div>
+            </div>
+            <x-slot name="footer" class="flex justify-end gap-x-4">
+                <x-wireui-button flat label="Cancelar" x-on:click="$wire.collaboratorModal = false"/>
+                <x-wireui-button primary label="Guardar Colaborador" wire:click="save" spinner="save" />
+            </x-slot>
+        </x-wireui-modal-card>
+    </div>
 </div>
