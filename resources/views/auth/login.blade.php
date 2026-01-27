@@ -1,13 +1,14 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            {{-- Personalizando el logo con tu color corporativo --}}
-            <div class="flex items-center gap-2">
+            <div class="flex flex-col items-center gap-2">
                 <a href="/">
                         <img src="https://envia.co/images/header_logo.png" alt="Envia Logo" class="h-10 w-auto">
                 </a>
+                <div class="flex items-center gap-2">
                 <x-wireui-icon name="cpu-chip" class="w-12 h-12 text-brand-primary" />
-                <span class="text-2xl font-bold tracking-tight text-brand-dark uppercase">Tech<span class="text-brand-primary">Stock</span></span>
+                <span class="text-2xl font-bold tracking-tight text-brand-dark uppercase">Inventario <span class="text-brand-primary">Tech</span></span>
+                </div>
             </div>
         </x-slot>
 
@@ -45,8 +46,11 @@
                 label="Contraseña"
                 id="password"
                 name="password"
+                :value="old('password')"
+                placeholder="Contraseña"
+
+                autofocus
                 required
-                autocomplete="current-password"
             />
 
             <div class="flex items-center justify-between">

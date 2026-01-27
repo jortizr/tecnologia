@@ -58,16 +58,8 @@
                                     circle
                                     negative
                                     icon="trash"
-                                    x-on:confirm="{
-                                        title: '¿Estás seguro?',
-                                        description: 'Esta acción eliminará la marca permanentemente.',
-                                        icon: 'question',
-                                        accept: {
-                                            label: 'Sí, eliminar',
-                                            method: 'delete',
-                                            params: {{ $brand->id }}
-                                        }
-                                    }"
+                                    wire:click="confirmDelete({{ $brand->id }})"
+                                    wire:loading.attr="disabled"
                                 />
                             </td>
                         @endif

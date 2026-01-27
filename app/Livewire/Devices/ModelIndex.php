@@ -93,6 +93,23 @@ class ModelIndex extends Component
         $this->reset(['name', 'brand_id', 'isEditing']); // Limpiar después de guardar
     }
 
+    public function confirmDelete($modelId)
+    {
+        $this->dialog()->confirm([
+            'title'       => '¿Eliminar colaborador?',
+            'description' => 'Esta acción no se puede deshacer.',
+            'icon'        => 'error',
+            'accept'      => [
+                'label'  => 'Eliminar',
+                'method' => 'delete', // Llama a tu función delete existente
+                'params' => $modelId,
+            ],
+            'reject' => [
+                'label'  => 'Cancelar',
+            ],
+        ]);
+    }
+
     public function delete($deviceModelId)
     {
         try {

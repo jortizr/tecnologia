@@ -29,6 +29,7 @@
         </style>
     </head>
     <body class="font-sans antialiased text-gray-900 dark:text-gray-100">
+        @persist('sidebar-principal')
         <div x-data="{ sidebarOpen: false }" class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <aside class="hidden lg:block bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-64 border-r border-gray-200 dark:border-gray-700 space-y-6 py-7 px-2 fixed inset-y-0 left-0 z-20 transition-colors duration-300">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 px-4 mb-6">
@@ -77,15 +78,15 @@
                     </div>
                 </div>
                 </header>
-                        <main class="p-6">
-                            <x-wireui-notifications />
-                            <x-wireui-dialog />
-                            {{ $slot }}
-                        </main>
+                    <main class="p-6">
+                        <x-wireui-notifications />
+                        <x-wireui-dialog />
+                        {{ $slot }}
+                    </main>
             </div>
 
         </div>
-
+        @endpersist
         @stack('modals')
         @livewireScripts
     </body>

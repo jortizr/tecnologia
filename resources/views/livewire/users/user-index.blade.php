@@ -84,13 +84,12 @@
                             <div class="flex justify-center items-center gap-2">
                             <x-wireui-button xs circle secondary icon="pencil" wire:click="edit({{ $user->id }})" />
                             <x-wireui-button
-                                xs circle negative icon="trash"
-                                x-on:confirm="{
-                                    title: '¿Eliminar usuario?',
-                                    description: 'Esta acción no se puede deshacer.',
-                                    icon: 'error',
-                                    accept: { label: 'Eliminar', method: 'delete', params: {{ $user->id }} }
-                                }"
+                                    xs
+                                    circle
+                                    negative
+                                    icon="trash"
+                                    wire:click="confirmDelete({{ $deviceModel->id }})"
+                                    wire:loading.attr="disabled"
                             />
                             </div>
                         </td>

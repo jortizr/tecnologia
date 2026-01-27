@@ -103,6 +103,23 @@ class UserIndex extends Component
         $this->dispatch('model-updated'); // Actualiza el badge del header
     }
 
+    public function confirmDelete($userId)
+    {
+        $this->dialog()->confirm([
+            'title'       => '¿Eliminar colaborador?',
+            'description' => 'Esta acción no se puede deshacer.',
+            'icon'        => 'error',
+            'accept'      => [
+                'label'  => 'Eliminar',
+                'method' => 'delete', // Llama a tu función delete existente
+                'params' => $userId,
+            ],
+            'reject' => [
+                'label'  => 'Cancelar',
+            ],
+        ]);
+    }
+
     public function delete($id)
     {
         User::findOrFail($id)->delete();

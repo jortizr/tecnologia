@@ -50,19 +50,14 @@
                     <td class="px-4 py-2 text-center align-middle">
                         <div class="flex justify-center items-center gap-2">
                         <x-wireui-button xs circle secondary icon="pencil" wire:click="edit({{ $deviceModel->id }})" />
-                        <x-wireui-button xs circle negative
-                                icon="trash"
-                                x-on:confirm="{
-                                    title: '¿Estás seguro?',
-                                    description: 'Esta acción eliminará la marca permanentemente.',
-                                    icon: 'question',
-                                    accept: {
-                                        label: 'Sí, eliminar',
-                                        method: 'delete',
-                                        params: {{ $deviceModel->id }}
-                                    }
-                                }"
-                            />
+                        <x-wireui-button
+                                    xs
+                                    circle
+                                    negative
+                                    icon="trash"
+                                    wire:click="confirmDelete({{ $deviceModel->id }})"
+                                    wire:loading.attr="disabled"
+                        />
                         </div>
                     </td>
                     @endif

@@ -1,27 +1,26 @@
 <?php
-
 namespace App\Livewire\Brands;
 
-use Livewire\Component;
+use App\Models\Brand;
+use App\Traits\WithSearch;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Brand;
+use Livewire\Attributes\Computed;
+use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
-use Livewire\Attributes\Computed;
-use App\Traits\WithSearch;
 
 class BrandIndex extends Component
 {
-    use WithPagination,  WithSearch, AuthorizesRequests, WireUiActions;
+    use WithPagination, WithSearch, AuthorizesRequests, WireUiActions;
     public bool $brandModal = false;
-    public ?Brand $brand = null;//instancia de la marca a editar
+    public ?Brand $brand    = null; //instancia de la marca a editar
     public $name;
-    public $isEditing = false;
+    public $isEditing      = false;
     public bool $canManage = false;
 
-    protected $rules =[
-        'name'=> 'required|min:3|max:50|unique:brands,name',
+    protected $rules = [
+        'name' => 'required|min:3|max:50|unique:brands,name',
     ];
 
     #[Computed]
@@ -29,17 +28,16 @@ class BrandIndex extends Component
     {
         // La consulta se queda aquí para ser eficiente
         return Brand::with(['creator:id,name', 'updater:id,name'])
-            ->when($this->search, function($query){
+            ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
             })
             ->paginate(10);
     }
 
-
     public function render()
     {
         /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user            = Auth::user();
         $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false;
 
         return view('livewire.brands.brand-index', [
@@ -47,30 +45,32 @@ class BrandIndex extends Component
         ]);
     }
 
-    public function create(){
+    public function create()
+    {
         $this->brandModal = true;
         $this->reset(['name', 'isEditing', 'brand']);
     }
 
     //abrir el modal para editar
-    public function edit(Brand $brand){
-        $this->brand = $brand;
-        $this->name = $brand->name;
-        $this->isEditing = true;
+    public function edit(Brand $brand)
+    {
+        $this->brand      = $brand;
+        $this->name       = $brand->name;
+        $this->isEditing  = true;
         $this->brandModal = true;
     }
 
     public function save()
     {
-            // Validamos según si es edición o creación
+        // Validamos según si es edición o creación
         $this->validate($this->isEditing ? [
-            'name' => 'required|min:3|max:50|unique:brands,name,' . $this->brand->id
+            'name' => 'required|min:3|max:50|unique:brands,name,' . $this->brand->id,
         ] : $this->rules);
 
         if ($this->isEditing) {
             $this->brand->update([
                 'name'       => $this->name,
-                'updater_id' => Auth::user()->id
+                'updater_id' => Auth::user()->id,
             ]);
             $this->notification()->success('Marca actualizada', 'Los cambios se guardaron con éxito');
         } else {
@@ -85,6 +85,23 @@ class BrandIndex extends Component
 
         $this->brandModal = false;
         $this->reset(['name', 'isEditing', 'brand']); // Limpiar después de guardar
+    }
+
+    public function confirmDelete($brandId)
+    {
+        $this->dialog()->confirm([
+            'title'       => '¿Eliminar colaborador?',
+            'description' => 'Esta acción no se puede deshacer.',
+            'icon'        => 'error',
+            'accept'      => [
+                'label'  => 'Eliminar',
+                'method' => 'delete', // Llama a tu función delete existente
+                'params' => $brandId,
+            ],
+            'reject'      => [
+                'label' => 'Cancelar',
+            ],
+        ]);
     }
 
     public function delete($brandId)

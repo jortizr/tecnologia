@@ -76,8 +76,9 @@ class CollaboratorIndex extends Component
         $this->collaboratorModal = true;
     }
 
-    public function edit(Collaborator $collaborator){
-        $this->collaborator = $collaborator;
+    public function edit($id){
+        $collaborator = Collaborator::findOrFail($id);
+        $this->collaboratorId = $id;
         $this->names = $collaborator->names;
         $this->last_name = $collaborator->last_name;
         $this->identification = $collaborator->identification;
@@ -86,7 +87,6 @@ class CollaboratorIndex extends Component
         $this->regional_id = $collaborator->regional_id;
         $this->occupation_id = $collaborator->occupation_id;
         $this->is_active = $collaborator->is_active;
-
         $this->isEditing = true;
         $this->collaboratorModal = true;
     }
@@ -134,6 +134,22 @@ public function save()
         $this->dispatch('model-updated');
     }
 
+    public function confirmDelete($collaboratorId)
+    {
+        $this->dialog()->confirm([
+            'title'       => '¿Eliminar colaborador?',
+            'description' => 'Esta acción no se puede deshacer.',
+            'icon'        => 'error',
+            'accept'      => [
+                'label'  => 'Eliminar',
+                'method' => 'delete', // Llama a tu función delete existente
+                'params' => $collaboratorId,
+            ],
+            'reject' => [
+                'label'  => 'Cancelar',
+            ],
+        ]);
+    }
     public function delete($collaboratorId)
     {
         $collaborator = Collaborator::findOrFail($collaboratorId);
@@ -142,8 +158,8 @@ public function save()
         try {
             $collaborator->delete();
             unset($this->collaborators);
-            $this->dispatch('model-updated');
             $this->notification()->success( 'Eliminado', 'Colaborador eliminado con éxito');
+            $this->dispatch('model-updated');
         } catch (\Exception $e) {
             $this->notification()->send([
                 'icon'        => 'error',
