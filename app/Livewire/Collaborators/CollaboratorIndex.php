@@ -18,6 +18,11 @@ class CollaboratorIndex extends Component
 {
     use WithPagination, AuthorizesRequests, WireUiActions, WithSearch;
     public bool $collaboratorModal = false;
+    public bool $importModal = false;
+    protected $listeners=[
+        'toggleStatus',
+        'import-finished' => 'handleImportFinished'
+    ];
     public bool $isEditing = false;
     public ?Collaborator $collaborator = null;
     public $canManage;
@@ -91,7 +96,13 @@ class CollaboratorIndex extends Component
         $this->collaboratorModal = true;
     }
 
-public function save()
+    public function handleImportFinished(){
+        $this->importModal = false;
+        unset($this->collaborators);
+        $this->dispatch('model-updated');
+    }
+
+    public function save()
     {
         $rules = [
             'names'         => 'required|string|min:3|max:50',

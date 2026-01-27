@@ -8,24 +8,37 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <x-data-table :data="$this->collaborators">
             <x-slot name="toolbar">
-                <div class="w-full sm:flex-1 sm:max-w-md">
-                    <x-wireui-input
-                        wire:model.live.debounce.500ms="search"
-                        icon="magnifying-glass"
-                        placeholder="Buscar colaborador..."
-                        class="bg-white dark:bg-custom-dark-header border-gray-300 dark:border-gray-600"
-                    />
-                </div>
-                <div class="w-full sm:w-48">
-                    @if($canManage)
-                        <x-wireui-button
-                            label="Nuevo colaborador"
-                            icon="plus"
-                            wire:click="create"
-                            primary
-                            class="w-full sm:w-auto sm:px-6 sm:ml-2"
+                <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4">
+
+                    <div class="w-full sm:flex-1 sm:max-w-md">
+                        <x-wireui-input
+                            wire:model.live.debounce.500ms="search"
+                            icon="magnifying-glass"
+                            placeholder="Buscar colaborador por nombre, codigo..."
+                            class="bg-white dark:bg-custom-dark-header border-gray-300 dark:border-gray-600"
                         />
-                    @endif
+                    </div>
+
+                    <div class="flex w-full sm:w-auto justify-end gap-2">
+                        @if($canManage)
+                            <x-wireui-button
+                                label="Importar datos"
+                                icon="arrow-up-tray"
+                                wire:click="$set('importModal', true)"
+                                secondary
+                                class="w-full sm:w-auto"
+                            />
+
+                            <x-wireui-button
+                                label="Agregar colaborador"
+                                icon="plus"
+                                wire:click="create"
+                                primary
+                                class="w-full sm:w-auto"
+                            />
+                        @endif
+                    </div>
+
                 </div>
             </x-slot>
 
@@ -127,6 +140,16 @@
             <x-slot name="footer" class="flex justify-end gap-x-4">
                 <x-wireui-button flat label="Cancelar" x-on:click="$wire.collaboratorModal = false"/>
                 <x-wireui-button primary label="Guardar Colaborador" wire:click="save" spinner="save" />
+            </x-slot>
+        </x-wireui-modal-card>
+
+        <x-wireui-modal-card title="Importar Colaboradores" wire:model.defer="importModal" max-width="4xl">
+            <livewire:collaborators.collaborator-import wire:key="import-comp-{{ $importModal ? 'open' : 'closed' }}" />
+
+            <x-slot name="footer">
+                <div class="flex justify-end">
+                    <x-wireui-button flat label="Cerrar" x-on:click="close" />
+                </div>
             </x-slot>
         </x-wireui-modal-card>
     </div>
