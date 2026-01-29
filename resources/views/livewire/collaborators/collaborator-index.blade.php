@@ -9,7 +9,6 @@
         <x-data-table :data="$this->collaborators">
             <x-slot name="toolbar">
                 <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4">
-
                     <div class="w-full sm:flex-1 sm:max-w-md">
                         <x-wireui-input
                             wire:model.live.debounce.500ms="search"
@@ -68,13 +67,14 @@
                         <td class="px-4 py-2">{{ $collaborator->occupation?->name ?? 'Sin cargo' }}</td>
                         <td class="px-4 py-2">{{ $collaborator->regional?->name ?? 'Sin regional' }}</td>
                         <td class="px-4 py-2">
-                            <x-wireui-toggle positive
-                                wire:key="collaborator-status-{{ $collaborator->id }}-{{(int) $collaborator->is_active}}"
-                                :checked="$collaborator->is_active"
-                                x-on:click="$dispatch('toggleStatus', {collaboratorId: {{ $collaborator->id }}})"
-                                wire:loading.attr="disabled"
-                                wire:target="toggleStatus"
-                            />
+                        <x-wireui-toggle
+                            positive
+                            wire:key="collaborator-status-{{ $collaborator->id }}-{{(int) $collaborator->is_active }}"
+                            :checked="$collaborator->is_active"
+                            x-on:click="$dispatch('toggleStatus', { collaboratorId: {{ $collaborator->id }} })"
+                            wire:loading.attr="disabled"
+                            wire:target="toggleStatus"
+                        />
                         </td>
                         @if($canManage)
                         <td class="px-4 py-2 text-center align-middle">
@@ -134,7 +134,7 @@
                     option-value="id"
                 />
                 <div class="flex items-center pt-6">
-                    <x-wireui-toggle label="¿Colaborador contratado?" wire:model.defer="is_active" />
+                    <x-wireui-toggle label="¿Está activo?" lg wire:model.defer="is_active" />
                 </div>
             </div>
             <x-slot name="footer" class="flex justify-end gap-x-4">

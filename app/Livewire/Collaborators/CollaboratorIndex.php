@@ -20,11 +20,11 @@ class CollaboratorIndex extends Component
     public bool $collaboratorModal = false;
     public bool $importModal = false;
     protected $listeners=[
-        'toggleStatus',
         'import-finished' => 'handleImportFinished'
     ];
+
     public bool $isEditing = false;
-    public ?Collaborator $collaborator = null;
+    public ?Collaborator $collaborator;
     public $canManage;
     public $names, $last_name, $identification, $payroll_code, $department_id, $regional_id, $occupation_id, $is_active;
     protected $casts = ['is_active' => 'boolean',];
@@ -45,11 +45,12 @@ class CollaboratorIndex extends Component
 
     #[Computed]
     public function collaborators(){
-        return Collaborator::query()->with(['department:id,name','regional:id,name','occupation:id,name','creator:id,name','updater:id,name'])
+        return Collaborator::query()->with(['department:id,name','regional:id,name','occupation:id,name'])
         ->when($this->search, function($query){
-            $query->where('names', 'like', '%' . $this->search . '%')
-                ->orWhere('last_name', 'like', "%{$this->search}%")
-                ->orWhere('payroll_code', 'like', "%{$this->search}%")
+            $query->where('names', 'like', "%{$this->search}%")
+            ->orWhere('last_name', 'like', "%{$this->search}%")
+            ->orWhere('payroll_code', 'like', "%{$this->search}%")
+            ->orWhere('identification', 'like', "%{$this->search}%")
             ;
         })
         ->latest()
@@ -110,7 +111,6 @@ class CollaboratorIndex extends Component
             'department_id' => 'required|exists:departments,id',
             'regional_id'   => 'required|exists:regionals,id',
             'occupation_id' => 'required|exists:occupations,id',
-            'is_active'     => 'boolean',
             // Validaciones unique ignorando el ID actual si es edición
             'identification'=> 'required|min:5|max:15|unique:collaborators,identification,' . ($this->collaboratorId ?? 'NULL'),
             'payroll_code'  => 'required|min:3|max:50|unique:collaborators,payroll_code,' . ($this->collaboratorId ?? 'NULL'),
@@ -181,33 +181,36 @@ class CollaboratorIndex extends Component
     }
 
 
-    #[On('toggleStatus')]
-    public function toggleStatus($collaboratorId){
-        try{
-            $collaborator = Collaborator::findOrFail($collaboratorId);
-            $this->authorize('update', $collaborator);
-            $collaborator->is_active = !$collaborator->is_active;
-            $collaborator->save();
-            unset($this->collaborators);
+#[On('toggleStatus')]
+public function toggleStatus($collaboratorId)
+{
+    try {
+        $collaborator = Collaborator::findOrFail($collaboratorId);
+        $this->authorize('update', $collaborator);
 
-            if($collaborator->is_active){
-                $this->notification()->success(
-                    title: 'Colaborador Activado',
-                    description: "{$collaborator->name} ya esta activado."
-                );
-            } else {
-                $this->notification()->warning(
-                    title: 'Colaborador Desactivado',
-                    description: "{$collaborator->name} ya no estara visible en las asignaciones."
-                );
-            }
-        } catch(\Exception $e){
-            $this->notification()->error(
-                title: 'Error de sistema',
-                description: 'No se pudo actualizar el estado.'
+        // Invertimos el estado
+        $newStatus = !$collaborator->is_active;
+        $collaborator->update(['is_active' => $newStatus]);
+
+        // Limpiamos la caché del Computed Property para refrescar la tabla
+        unset($this->collaborators);
+
+        // Disparamos la notificación basada en el nuevo estado real
+        if ($newStatus) {
+            $this->notification()->success(
+                title: 'Colaborador Activado',
+                description: "{$collaborator->names} ahora está activo."
+            );
+        } else {
+            $this->notification()->warning(
+                title: 'Colaborador Desactivado',
+                description: "{$collaborator->names} ha sido desactivado."
             );
         }
+    } catch (\Exception $e) {
+        $this->notification()->error('Error', 'No se pudo actualizar el estado.');
     }
+}
 
 
     public function render()

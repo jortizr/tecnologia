@@ -1,14 +1,16 @@
 <?php
 namespace App\Livewire\Users;
 
-use Livewire\Component;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Livewire\Attributes\{On, Computed, Locked};
-use Illuminate\Support\Facades\{Auth, Hash};
-use Livewire\WithPagination;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Traits\WithSearch;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
+use Livewire\Component;
+use Spatie\Permission\Models\Role;
 use WireUi\Traits\WireUiActions;
 
 class UserIndex extends Component
@@ -21,7 +23,7 @@ class UserIndex extends Component
     public $filterStatus = '';
 
     protected $casts = [
-    'is_active' => 'boolean',
+        'is_active' => 'boolean',
     ];
     // Propiedades del formulario
     public $name, $last_name, $email, $password, $role, $is_active;
@@ -34,10 +36,10 @@ class UserIndex extends Component
     {
         return User::query()
             ->with(['roles'])
-            ->when($this->filterStatus !== '', function($query) {
-            $query->where('is_active', $this->filterStatus);
+            ->when($this->filterStatus !== '', function ($query) {
+                $query->where('is_active', $this->filterStatus);
             })
-            ->when($this->search, function($query) {
+            ->when($this->search, function ($query) {
                 $query->where('name', 'like', "%{$this->search}%")
                     ->orWhere('last_name', 'like', "%{$this->search}%")
                     ->orWhere('email', 'like', "%{$this->search}%")
@@ -70,7 +72,7 @@ class UserIndex extends Component
             'is_active' => 'boolean',
         ];
 
-        if (!$this->isEditing) {
+        if (! $this->isEditing) {
             $rules['password'] = 'required|min:8';
         }
 
@@ -91,7 +93,7 @@ class UserIndex extends Component
                 'name'      => $this->name,
                 'last_name' => $this->last_name,
                 'email'     => $this->email,
-                'password'  => Hash::make($this->password),
+                'password'  => $this->password,
                 'is_active' => $this->is_active,
             ]);
             $user->assignRole(Role::find($this->role)->name);
@@ -99,7 +101,7 @@ class UserIndex extends Component
         }
 
         $this->userModal = false;
-        unset($this->users); // Limpiar caché de propiedad computada
+        unset($this->users);              // Limpiar caché de propiedad computada
         $this->dispatch('model-updated'); // Actualiza el badge del header
     }
 
@@ -114,8 +116,8 @@ class UserIndex extends Component
                 'method' => 'delete', // Llama a tu función delete existente
                 'params' => $userId,
             ],
-            'reject' => [
-                'label'  => 'Cancelar',
+            'reject'      => [
+                'label' => 'Cancelar',
             ],
         ]);
     }
@@ -130,53 +132,53 @@ class UserIndex extends Component
 
     public function edit($id)
     {
-        $user = User::findOrFail($id);
-        $this->userId = $id;
-        $this->name = $user->name;
+        $user            = User::findOrFail($id);
+        $this->userId    = $id;
+        $this->name      = $user->name;
         $this->last_name = $user->last_name;
-        $this->email = $user->email;
+        $this->email     = $user->email;
         $this->is_active = $user->is_active;
-        $this->role = $user->roles->first()?->id;
+        $this->role      = $user->roles->first()?->id;
         $this->isEditing = true;
         $this->userModal = true;
     }
 
-#[On('toggleStatus')]
-public function toggleStatus($userId)
-{
-    try {
-        $user = User::findOrFail($userId);
-        $this->authorize('update', $user);
-        // Cambiamos el estado explícitamente
-        $user->is_active = !$user->is_active;
-        $user->save();
+    #[On('toggleStatus')]
+    public function toggleStatus($userId)
+    {
+        try {
+            $user = User::findOrFail($userId);
+            $this->authorize('update', $user);
+            // Cambiamos el estado explícitamente
+            $user->is_active = ! $user->is_active;
+            $user->save();
 
-        unset($this->users);
+            unset($this->users);
 
-        if ($user->is_active){
-            $this->notification()->success(
-                title: 'Usuario Activado',
-                description: "{$user->name} ahora tiene acceso al sistema."
-            );
-        } else {
-            $this->notification()->warning(
-                title: 'Usuario Desactivado',
-                description: "{$user->name} ya no podrá iniciar sesión."
+            if ($user->is_active) {
+                $this->notification()->success(
+                    title: 'Usuario Activado',
+                    description: "{$user->name} ahora tiene acceso al sistema."
+                );
+            } else {
+                $this->notification()->warning(
+                    title: 'Usuario Desactivado',
+                    description: "{$user->name} ya no podrá iniciar sesión."
+                );
+            }
+
+        } catch (\Exception $e) {
+            $this->notification()->error(
+                title: 'Error de sistema',
+                description: 'No se pudo actualizar el estado.'
             );
         }
-
-    } catch (\Exception $e) {
-        $this->notification()->error(
-            title: 'Error de sistema',
-            description: 'No se pudo actualizar el estado.'
-        );
     }
-}
 
     public function render()
     {
         /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user            = Auth::user();
         $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false;
         return view('livewire.users.user-index', [
             'canManage' => $this->canManage,

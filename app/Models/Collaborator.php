@@ -43,4 +43,11 @@ class Collaborator extends Model
     public function updater(){
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
 }

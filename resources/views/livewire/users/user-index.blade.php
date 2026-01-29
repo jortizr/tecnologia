@@ -88,7 +88,7 @@
                                     circle
                                     negative
                                     icon="trash"
-                                    wire:click="confirmDelete({{ $deviceModel->id }})"
+                                    wire:click="confirmDelete({{ $user->id }})"
                                     wire:loading.attr="disabled"
                             />
                             </div>
