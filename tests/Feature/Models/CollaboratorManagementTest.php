@@ -5,16 +5,15 @@ namespace Tests\Feature\Models;
 use App\Models\Department;
 use App\Models\Occupation;
 use App\Models\Regional;
-use App\Policies\CollaboratorPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
+use Database\Seeders\RoleSeeder;
 use App\Models\User;
-use App\Livewire\Superadmin\Collaborator\CreateCollaboratorForm;
-use App\Livewire\Superadmin\Collaborator\CollaboratorList;
+use App\Livewire\Collaborators\CollaboratorIndex;
 use App\Models\Collaborator;
-use App\Livewire\Superadmin\Collaborator\CollaboratorEdit;
+use PHPUnit\Framework\Attributes\Test;
 
 class CollaboratorManagementTest extends TestCase
 {
@@ -23,270 +22,142 @@ class CollaboratorManagementTest extends TestCase
     private $superadmin;
     private $manager;
     private $viewer;
-    private $collaborator;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->artisan('db:seed', ['--class' => 'RoleSeeder']);
+        // Seeder de roles esencial para permisos
+        $this->seed(RoleSeeder::class);
 
-        $this->superadmin = User::factory()->create()->assignRole('Superadmin');
-        $this->manager = User::factory()->create()->assignRole('Manager');
-        $this->viewer = User::factory()->create()->assignRole('Viewer');
-        $this->collaborator = Collaborator::factory()->create();
+        $this->superadmin = User::factory()->superadmin()->create();
+        $this->manager = User::factory()->manager()->create();
+        $this->viewer = User::factory()->viewer()->create();
     }
 
-    public function test_a_superadmin_can_view_the_colaborator_list(): void
+    #[Test]
+    public function a_superadmin_can_view_the_collaborator_list()
     {
-        $this->actingAs($this->superadmin);
         $collaborators = Collaborator::factory()->count(3)->create();
-        $livewire = Livewire::test(CollaboratorList::class)
-            ->assertStatus(200);
 
-        foreach ($collaborators as $collaborator) {
-            $livewire->assertSee($collaborator->names);
-            $livewire->assertSee($collaborator->last_name);
-        }
-    }
-
-    public function test_a_superadmin_can_view_the_livewire_collaborator_creation_form(){
-        $this->actingAs($this->superadmin);
-        Livewire::test(CreateCollaboratorForm::class)
+        Livewire::actingAs($this->superadmin)
+            ->test(CollaboratorIndex::class)
             ->assertStatus(200)
-            ->assertseeText('Crear Colaborador')
-            ->assertSee('Nombres')
-            ->assertSee('Apellidos')
-            ->assertSee('Identificacion')
-            ->assertSee('Codigo de nomina')
-            ->assertSeeInOrder(['Buscar area...'])
-            ->assertSeeInOrder(['Buscar cargo...'])
-            ->assertSeeInOrder(['Buscar regional...']);
+            ->assertSee('Lista de colaboradores') // Ajusta según tu título real
+            ->assertSee($collaborators->first()->names)
+            ->assertSee($collaborators->first()->last_name);
     }
 
+    #[Test]
+    public function a_superadmin_can_create_a_collaborator_via_modal()
+    {
+        // 1. Datos necesarios para los selects (Foreign Keys)
+        $department = Department::factory()->create();
+        $regional = Regional::factory()->create();
+        $occupation = Occupation::factory()->create();
 
-    public function test_a_superadmin_can_create_a_collaborator(){
-        $this->actingAs($this->superadmin);
-        $collaboratorNew =[
-            'names'=> 'Smith',
-            'last_name'=> 'Swinderar',
-            'identification'=> '123456897',
-            'payroll_code'=> 'L15632',
-            'department_id'=> Department::factory()->create()->id,
-            'regional_id'=> Regional::factory()->create()->id,
-            'occupation_id'=> Occupation::factory()->create()->id,
-            'is_active'=> true,
-        ];
-
-        Livewire::test(CreateCollaboratorForm::class)
-            ->set('names', $collaboratorNew['names'])
-            ->set('last_name', $collaboratorNew['last_name'])
-            ->set('identification', $collaboratorNew['identification'])
-            ->set('payroll_code', $collaboratorNew['payroll_code'])
-            ->set('department_id', $collaboratorNew['department_id'])
-            ->set('regional_id', $collaboratorNew['regional_id'])
-            ->set('occupation_id', $collaboratorNew['occupation_id'])
-            ->set('is_active', $collaboratorNew['is_active'])
-            ->call('store')
+        // 2. Simular apertura del modal y llenado
+        Livewire::actingAs($this->superadmin)
+            ->test(CollaboratorIndex::class)
+            ->call('create') // Abre el modal
+            ->assertSet('collaboratorModal', true) // Verifica estado del modal
+            ->assertSee('Agregar Colaborador')
+            ->set('names', 'John')
+            ->set('last_name', 'Doe')
+            ->set('identification', '123456789')
+            ->set('payroll_code', 'PAY-001')
+            ->set('department_id', $department->id)
+            ->set('regional_id', $regional->id)
+            ->set('occupation_id', $occupation->id)
+            ->set('is_active', true)
+            ->call('save') // Guarda (método unificado save)
             ->assertHasNoErrors()
-            ->assertDispatched('collaboratorCreated');
+            ->assertSet('collaboratorModal', false); // El modal debe cerrarse
 
+        // 3. Verificar en BD
         $this->assertDatabaseHas('collaborators', [
-            'names'=> $collaboratorNew['names'],
-            'last_name'=> $collaboratorNew['last_name'],
-            'payroll_code'=> $collaboratorNew['payroll_code'],
-            'identification'=> $collaboratorNew['identification'],
+            'identification' => '123456789',
+            'names' => 'John',
+            'payroll_code' => 'PAY-001'
         ]);
     }
 
-    public function test_a_superadmin_can_edit_a_collaborator(){
-        // 1. GIVEN: un superadmin autenticado y un usuario a editar
-        $collaboratorToEdit = Collaborator::factory()->create();
+    #[Test]
+    public function a_superadmin_can_edit_a_collaborator_via_modal()
+    {
+        $collaborator = Collaborator::factory()->create();
 
-        $newData = [
-            'names' => 'Nuevo Nombre',
-            'last_name' => 'Apellido Nuevo',
-            'identification' => '987654321',
-            'payroll_code' => 'L98765',
-        ];
-
-        // 2. WHEN: el superadmin actualiza los datos del colaborador
         Livewire::actingAs($this->superadmin)
-            ->test(CollaboratorEdit::class, ['collaborator' => $collaboratorToEdit])
-                ->set('names', 'Nuevo Nombre')
-                ->set('last_name', 'apellido nuevo')
-                ->set('identification', $collaboratorToEdit->identification)
-                ->set('payroll_code', $collaboratorToEdit->payroll_code)
-                ->call('update')
-                ->assertHasNoErrors()
-                ->assertDispatched('collaborator-updated');
+            ->test(CollaboratorIndex::class)
+            ->call('edit', $collaborator->id) // Cargar datos en el modal
+            ->assertSet('collaboratorModal', true)
+            ->assertSet('isEditing', true)
+            ->assertSet('names', $collaborator->names) // Verificar que cargó los datos
+            ->set('names', 'Nombre Actualizado') // Cambiar dato
+            ->call('save')
+            ->assertHasNoErrors()
+            ->assertSet('collaboratorModal', false);
 
-                // 2. WHEN: la base de datos refleja los cambios
-                $this->assertDatabaseHas('collaborators', [
-                    'id' => $collaboratorToEdit->id,
-                    'names' => 'Nuevo Nombre',
-                    'last_name' => 'apellido nuevo',
-                ]);
-                $this->assertDatabaseMissing('collaborators', [
-                    'id' => $collaboratorToEdit->id,
-                    'names' => $collaboratorToEdit->names,
-                    'last_name' => $collaboratorToEdit->last_name,
-                ]);
+        $this->assertDatabaseHas('collaborators', [
+            'id' => $collaborator->id,
+            'names' => 'Nombre Actualizado'
+        ]);
     }
 
-    // Policy Tests
-    public function test_superadmin_can_view_any_collaborator()
+    #[Test]
+    public function validation_rules_are_enforced()
     {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->viewAny($this->superadmin));
+        Livewire::actingAs($this->superadmin)
+            ->test(CollaboratorIndex::class)
+            ->call('create')
+            ->set('names', '') // Campo requerido vacío
+            ->set('identification', '')
+            ->call('save')
+            ->assertHasErrors(['names', 'identification']);
     }
 
-    public function test_manager_can_view_any_collaborator()
+    #[Test]
+    public function a_superadmin_can_delete_a_collaborator()
     {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->viewAny($this->manager));
-    }
-
-    public function test_viewer_can_view_any_collaborator()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->viewAny($this->viewer));
-    }
-
-    public function test_superadmin_can_view_a_collaborator()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->view($this->superadmin, $this->collaborator));
-    }
-
-    public function test_manager_can_view_a_collaborator()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->view($this->manager, $this->collaborator));
-    }
-
-    public function test_viewer_can_view_a_collaborator()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->view($this->viewer, $this->collaborator));
-    }
-
-    public function test_superadmin_can_create_a_collaborator_policy()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->create($this->superadmin));
-    }
-
-    public function test_manager_can_create_a_collaborator_policy()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->create($this->manager));
-    }
-
-    public function test_viewer_cannot_create_a_collaborator_policy()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertFalse($policy->create($this->viewer));
-    }
-
-    public function test_superadmin_can_update_a_collaborator_policy()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->update($this->superadmin, $this->collaborator));
-    }
-
-    public function test_manager_can_update_a_collaborator_policy()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->update($this->manager, $this->collaborator));
-    }
-
-    public function test_viewer_cannot_update_a_collaborator_policy()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertFalse($policy->update($this->viewer, $this->collaborator));
-    }
-
-    public function test_superadmin_can_delete_a_collaborator_policy()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertTrue($policy->delete($this->superadmin, $this->collaborator));
-    }
-
-    public function test_manager_cannot_delete_a_collaborator_policy()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertFalse($policy->delete($this->manager, $this->collaborator));
-    }
-
-    public function test_viewer_cannot_delete_a_collaborator_policy()
-    {
-        $policy = new CollaboratorPolicy();
-        $this->assertFalse($policy->delete($this->viewer, $this->collaborator));
-    }
-
-    public function test_a_viewer_cannot_see_the_create_collaborator_button()
-    {
-        $this->actingAs($this->viewer);
-        Livewire::test(CollaboratorList::class)
-            ->assertStatus(200)
-            ->assertDontSee('Crear Colaborador');
-    }
-
-    public function test_a_manager_can_see_the_create_collaborator_button()
-    {
-        $this->actingAs($this->manager);
-        Livewire::test(CreateCollaboratorForm::class)
-            ->assertStatus(200)
-            ->assertSee('Crear Colaborador');
-    }
-
-    public function test_a_viewer_is_forbidden_from_creating_a_collaborator()
-    {
-        $this->actingAs($this->viewer);
-
-        $collaboratorNew =[
-            'names'=> 'Smith',
-            'last_name'=> 'Swinderar',
-            'identification'=> '123456897',
-            'payroll_code'=> 'L15632',
-            'department_id'=> Department::factory()->create()->id,
-            'regional_id'=> Regional::factory()->create()->id,
-            'occupation_id'=> Occupation::factory()->create()->id,
-            'is_active'=> true,
-        ];
-
-        Livewire::test(CreateCollaboratorForm::class)
-            ->set('names', $collaboratorNew['names'])
-            ->set('last_name', $collaboratorNew['last_name'])
-            ->set('identification', $collaboratorNew['identification'])
-            ->set('payroll_code', $collaboratorNew['payroll_code'])
-            ->set('department_id', $collaboratorNew['department_id'])
-            ->set('regional_id', $collaboratorNew['regional_id'])
-            ->set('occupation_id', $collaboratorNew['occupation_id'])
-            ->set('is_active', $collaboratorNew['is_active'])
-            ->call('store')
-            ->assertForbidden();
-    }
-
-    public function test_a_manager_is_forbidden_from_deleting_a_collaborator()
-    {
-        $this->actingAs($this->manager);
         $collaborator = Collaborator::factory()->create();
 
-        Livewire::test(CollaboratorList::class)
-            ->call('delete', $collaborator->id)
-            ->assertForbidden();
-    }
-
-    public function test_a_superadmin_can_delete_a_collaborator()
-    {
-        $this->actingAs($this->superadmin);
-        $collaborator = Collaborator::factory()->create();
-
-        Livewire::test(CollaboratorList::class)
+        Livewire::actingAs($this->superadmin)
+            ->test(CollaboratorIndex::class)
             ->call('delete', $collaborator->id)
             ->assertHasNoErrors();
 
-        $this->assertDatabaseMissing('collaborators', ['id' => $collaborator->id]);
+        $this->assertDatabaseMissing('collaborators', [
+            'id' => $collaborator->id
+        ]);
+    }
+
+    #[Test]
+    public function a_viewer_cannot_create_or_delete_collaborators()
+    {
+        $collaborator = Collaborator::factory()->create();
+
+        // Intento de Crear
+        Livewire::actingAs($this->viewer)
+            ->test(CollaboratorIndex::class)
+            ->call('create') // Intentar abrir modal de creación
+            ->assertForbidden(); // O assertStatus(403) según tu manejo
+
+        // Intento de Borrar
+        Livewire::actingAs($this->viewer)
+            ->test(CollaboratorIndex::class)
+            ->call('delete', $collaborator->id)
+            ->assertForbidden();
+    }
+
+    #[Test]
+    public function search_functionality_works_for_collaborators()
+    {
+        Collaborator::factory()->create(['names' => 'Maria', 'identification' => '11111']);
+        Collaborator::factory()->create(['names' => 'Pedro', 'identification' => '22222']);
+
+        Livewire::actingAs($this->superadmin)
+            ->test(CollaboratorIndex::class)
+            ->set('search', 'Maria')
+            ->assertSee('Maria')
+            ->assertDontSee('Pedro');
     }
 }

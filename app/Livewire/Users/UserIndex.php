@@ -55,6 +55,12 @@ class UserIndex extends Component
         return Role::select('id', 'name')->orderBy('name')->get();
     }
 
+    public function mount()
+    {
+        // ESTO FALTABA: Bloquea la entrada si no tiene permiso 'viewAny'
+        $this->authorize('viewAny', User::class);
+    }
+
     public function create()
     {
         $this->reset(['name', 'last_name', 'email', 'password', 'role', 'userId', 'isEditing']);

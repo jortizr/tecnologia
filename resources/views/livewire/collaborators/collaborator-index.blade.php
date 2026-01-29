@@ -29,7 +29,7 @@
                             />
 
                             <x-wireui-button
-                                label="Agregar colaborador"
+                                label="Agregar Colaborador"
                                 icon="plus"
                                 wire:click="create"
                                 primary
