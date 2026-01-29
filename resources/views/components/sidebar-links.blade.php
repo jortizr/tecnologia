@@ -1,9 +1,8 @@
 <ul class="space-y-2 font-medium text-gray-900 dark:text-white">
-    {{-- Dashboard Simple --}}
     <li>
         <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                    <x-heroicon-m-squares-plus class="w-5 h-5 shrink-0"/>
-                    <span class="ms-3">{{ __('Dashboard') }}</span>
+            <x-heroicon-m-squares-plus class="w-5 h-5 shrink-0"/>
+            <span class="ms-3">{{ __('Dashboard') }}</span>
         </x-nav-link>
     </li>
     <hr class="my-2 border-gray-200 dark:border-gray-700">

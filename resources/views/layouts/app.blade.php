@@ -32,11 +32,13 @@
         @persist('sidebar-principal')
         <div x-data="{ sidebarOpen: false }" class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <aside class="hidden lg:block bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-64 border-r border-gray-200 dark:border-gray-700 space-y-6 py-7 px-2 fixed inset-y-0 left-0 z-20 transition-colors duration-300">
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 px-4 mb-6">
-                    <x-application-mark class="block h-9 w-auto" />
+                <div class="flex flex-col items-center gap-2">
+                <a href="{{ route('dashboard') }}" class="flex flex-col items-center space-x-2 px-4 mb-6">
+                    <x-application-mark class="h-12 w-auto" />
                     <span class="text-xl font-bold dark:text-white text-gray-800">Inventario IT</span>
-            </a>
                 </a>
+                </a>
+                </div>
                 @include('components.sidebar-links')
             </aside>
             <aside
@@ -49,10 +51,12 @@
                 x-transition:leave-start="translate-x-0"
                 x-transition:leave-end="-translate-x-full"
                 class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 z-30 lg:hidden border-r border-gray-200 dark:border-gray-700">
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 px-4">
-                    <x-application-mark class="block h-9 w-auto" />
-                    <span class="text-2xl font-extrabold">Inventario</span>
+
+                <a href="{{ route('dashboard') }}" class="flex flex-col items-center space-x-2 px-4">
+                    <x-application-mark class="h-12 w-auto" />
+                    <span class="text-2xl font-extrabold text-center">Inventario IT</span>
                 </a>
+
                 @include('components.sidebar-links')
             </aside>
             <div class="lg:ml-64 min-h-screen flex flex-col">
