@@ -12,6 +12,10 @@
             <x-heroicon-s-users class="w-5 h-5 shrink-0"/>
             <span class="ms-3">{{ __('Usuarios') }}</span>
         </x-nav-link>
+        <x-nav-link href="{{ route('dashboard.roles.show') }}" :active="request()->routeIs('dashboard.roles.show')">
+            <x-heroicon-s-users class="w-5 h-5 shrink-0"/>
+            <span class="ms-3">{{ __('Roles') }}</span>
+        </x-nav-link>
         @endhasrole
     </li>
     <li>

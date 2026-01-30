@@ -14,93 +14,51 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         //creamos los roles necesarios
-       $superadminRole = Role::create(['name'=> 'Superadmin']);
-       $managerRole = Role::create(['name'=> 'Manager']);
-       $viewerRole = Role::create(['name'=> 'Viewer']);
+       $superadmin = Role::create(['name'=> 'Superadmin']);
+       $manager = Role::create(['name'=> 'Manager']);
+       $viewer = Role::create(['name'=> 'Viewer']);
 
-       Permission::create(['name'=> 'dashboard'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.users.show'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.users.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.users.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.users.update'])->syncRoles([$superadminRole]);
+       $dashboardPermission = Permission::firstOrCreate(['name' => 'dashboard']);
+       $dashboardPermission->syncRoles([$superadmin]);
 
-       Permission::create(['name'=> 'dashboard.clausule.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.clausule.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.clausule.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.clausule.update'])->syncRoles([$superadminRole]);
+    $modules = [
+        'users'              => ['admins' => [$superadmin], 'viewers' => []],
+        'clausule'           => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
+        'devices'            => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
+        'accesories'         => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
+        'simcards'           => ['admins' => [$superadmin], 'viewers' => []],
+        'loans'              => ['admins' => [$superadmin, $manager], 'viewers' => [$viewer]],
+        'support'            => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
+        'reports'            => ['admins' => [$superadmin, $manager], 'viewers' => [$viewer]],
+        'failures'           => ['admins' => [$superadmin, $manager], 'viewers' => [$viewer]],
+        'collaborators'      => ['admins' => [$superadmin, $manager], 'viewers' => [$viewer]],
+        'assignments'        => ['admins' => [$superadmin], 'viewers' => [$manager]],
+        'physical.states'    => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
+        'operational.states' => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
+        'accesories.states'  => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
+        'failure.types'      => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
+        'brands'             => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
+    ];
 
-       Permission::create(['name'=> 'dashboard.devices.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.devices.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.devices.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.devices.update'])->syncRoles([$superadminRole]);
+       $actions = ['show', 'create', 'update', 'delete'];
 
-       Permission::create(['name'=> 'dashboard.accesories.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.accesories.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.accesories.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.accesories.update'])->syncRoles([$superadminRole, $managerRole]);
+       foreach($modules as $module =>$roles){
+            [$adminRoles, $viewRoles] = $roles;
 
-       Permission::create(['name'=> 'dashboard.simcards.show'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.simcards.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.simcards.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.simcards.update'])->syncRoles([$superadminRole]);
+            foreach ($actions as $action) {
+            $permissionName = "dashboard.{$module}.{$action}";
+            $permission = Permission::firstOrCreate(['name' => $permissionName]);
 
-       Permission::create(['name'=> 'dashboard.loans.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.loans.create'])->syncRoles([$superadminRole, $managerRole]);
-       Permission::create(['name'=> 'dashboard.loans.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.loans.update'])->syncRoles([$superadminRole, $managerRole]);
-
-       Permission::create(['name'=> 'dashboard.support.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.support.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.support.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.support.update'])->syncRoles([$superadminRole]);
-
-       Permission::create(['name'=> 'dashboard.reports.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.reports.create'])->syncRoles([$superadminRole, $managerRole]);
-       Permission::create(['name'=> 'dashboard.reports.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.reports.update'])->syncRoles([$superadminRole, $managerRole]);
-
-       Permission::create(['name'=> 'dashboard.failures.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.failures.create'])->syncRoles([$superadminRole, $managerRole]);
-       Permission::create(['name'=> 'dashboard.failures.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.failures.update'])->syncRoles([$superadminRole, $managerRole]);
-
-       Permission::create(['name'=> 'dashboard.collaborators.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.collaborators.create'])->syncRoles([$superadminRole, $managerRole]);
-       Permission::create(['name'=> 'dashboard.collaborators.delete'])->syncRoles([$superadminRole]);
-        Permission::create(['name'=> 'dashboard.collaborators.update'])->syncRoles([$superadminRole, $managerRole]);
-
-       Permission::create(['name'=> 'dashboard.assignments.show'])->syncRoles([$superadminRole, $managerRole]);
-       Permission::create(['name'=> 'dashboard.assignments.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.assignments.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.assignments.update'])->syncRoles([$superadminRole, $managerRole]);
-
-       Permission::create(['name'=> 'dashboard.physical.states.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.physical.states.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.physical.states.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.physical.states.update'])->syncRoles([$superadminRole, $managerRole]);
-
-       Permission::create(['name'=> 'dashboard.operational.states.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.operational.states.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.operational.states.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.operational.states.update'])->syncRoles([$superadminRole]);
-
-       Permission::create(['name'=> 'dashboard.accesories.states.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.accesories.states.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.accesories.states.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.accesories.states.update'])->syncRoles([$superadminRole]);
-
-       Permission::create(['name'=> 'dashboard.failure.types.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.failure.types.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.failure.types.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.failure.types.update'])->syncRoles([$superadminRole]);
-
-       Permission::create(['name'=> 'dashboard.brands.show'])->syncRoles([$superadminRole, $managerRole, $viewerRole]);
-       Permission::create(['name'=> 'dashboard.brands.create'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.brands.delete'])->syncRoles([$superadminRole]);
-       Permission::create(['name'=> 'dashboard.brands.update'])->syncRoles([$superadminRole]);
-
-
+            if ($action === 'show') {
+                // Todos los asignados (admins + viewers) pueden ver
+                $permission->syncRoles(array_merge($roles['admins'], $roles['viewers']));
+            } else {
+                // Solo los de nivel admin/manager pueden crear, editar o borrar
+               $permission->syncRoles($roles['admins']);
+            }
+        }
+       }
     }
-
 }

@@ -6,6 +6,8 @@ use App\Livewire\Users\UserIndex;
 use App\Livewire\Collaborators\CollaboratorIndex;
 use App\Livewire\Collaborators\CollaboratorImport;
 use App\Livewire\Devices\ModelIndex;
+use App\Livewire\Roles\RoleIndex;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +34,8 @@ Route::middleware([
     Route::get('dashboard/brands/show', BrandIndex::class)->name('dashboard.brands.show');
 
     Route::get('dashboard/devicemodels/show', ModelIndex::class)->name('dashboard.devicemodels.show');
+
+    Route::get('dashboard/roles/show', RoleIndex::class)->name('dashboard.roles.show');
 
 });
 
