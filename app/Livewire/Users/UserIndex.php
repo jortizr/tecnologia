@@ -36,14 +36,16 @@ class UserIndex extends Component
     {
         return User::query()
             ->with(['roles'])
-            ->when($this->filterStatus !== '', function ($query) {
-                $query->where('is_active', $this->filterStatus);
+            ->when(filled($this->filterStatus), function ($query) {
+                $query->where('is_active', (bool) $this->filterStatus);
             })
             ->when($this->search, function ($query) {
-                $query->where('name', 'like', "%{$this->search}%")
+                $query->where(function($q){
+                    $q->where('name', 'like', "%        {$this->search}%")
                     ->orWhere('last_name', 'like', "%{$this->search}%")
                     ->orWhere('email', 'like', "%{$this->search}%")
-                    ->orWhereHas('roles', fn($q) => $q->where('name', 'like', "%{$this->search}%"));
+                    ->orWhereHas('roles', fn($qr) => $qr->where('name', 'like', "%{$this->search}%"));
+                });
             })
             ->latest()
             ->paginate(10);

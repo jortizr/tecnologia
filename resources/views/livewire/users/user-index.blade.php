@@ -24,7 +24,7 @@
                         placeholder="Estado: Todos"
                         wire:model.live="filterStatus"
                         :options="[
-                            ['name' => 'Todos', 'id' => ''],
+                            ['name' => 'Todos', 'id' => null],
                             ['name' => 'Solo Activos', 'id' => '1'],
                             ['name' => 'Solo Inactivos', 'id' => '0'],
                         ]"
