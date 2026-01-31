@@ -64,9 +64,10 @@
                             <div class="flex justify-center items-center gap-2">
                             <x-wireui-button xs circle secondary icon="pencil" wire:click="edit({{ $role->id }})" />
                             <x-wireui-button
+                                xs
+                                circle
+                                negative
                                 icon="trash"
-                                red
-                                flat
                                 x-on:confirm="{
                                     title: '¿Eliminar Rol?',
                                     description: 'Esta acción es irreversible',

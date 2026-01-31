@@ -97,15 +97,15 @@ class UserIndex extends Component
             $user->syncRoles([Role::find($this->role)->name]);
             $this->notification()->success('Usuario actualizado');
         } else {
-            $user = User::create([
-                'name'      => $this->name,
-                'last_name' => $this->last_name,
-                'email'     => $this->email,
-                'password'  => $this->password,
-                'is_active' => $this->is_active,
-            ]);
-            $user->assignRole(Role::find($this->role)->name);
-            $this->notification()->success('Usuario creado');
+                $user = User::create([
+                    'name'      => $this->name,
+                    'last_name' => $this->last_name,
+                    'email'     => $this->email,
+                    'password'  => $this->password,
+                    'is_active' => $this->is_active,
+                    ]);
+                $user->assignRole(Role::find($this->role)->name);
+                $this->notification()->success('Usuario creado');
         }
 
         $this->userModal = false;
@@ -115,16 +115,15 @@ class UserIndex extends Component
 
     public function confirmDelete($userId)
     {
-        $this->dialog()->confirm([
-            'title'       => '¿Eliminar colaborador?',
-            'description' => 'Esta acción no se puede deshacer.',
-            'icon'        => 'error',
-            'accept'      => [
-                'label'  => 'Eliminar',
-                'method' => 'delete', // Llama a tu función delete existente
-                'params' => $userId,
-            ],
-            'reject'      => [
+        $this->dialog()->confirm([                                            'title'       => '¿Eliminar colaborador?',
+        'description' => 'Esta acción no se puede deshacer.',
+        'icon'        => 'error',
+        'accept'      => [
+            'label'  => 'Eliminar',
+            'method' => 'delete', // Llama a tu función delete existente
+            'params' => $userId,
+        ],
+            'reject' => [
                 'label' => 'Cancelar',
             ],
         ]);

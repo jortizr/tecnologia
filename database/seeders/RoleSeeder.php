@@ -25,6 +25,7 @@ class RoleSeeder extends Seeder
 
     $modules = [
         'users'              => ['admins' => [$superadmin], 'viewers' => []],
+        'roles'              => ['admins' => [$superadmin], 'viewers' => []],
         'clausule'           => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
         'devices'            => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
         'accesories'         => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
@@ -45,18 +46,17 @@ class RoleSeeder extends Seeder
        $actions = ['show', 'create', 'update', 'delete'];
 
        foreach($modules as $module =>$roles){
-            [$adminRoles, $viewRoles] = $roles;
+            $adminRoles = $roles['admins'];
+            $viewRoles  = $roles['viewers'];
 
             foreach ($actions as $action) {
             $permissionName = "dashboard.{$module}.{$action}";
             $permission = Permission::firstOrCreate(['name' => $permissionName]);
 
             if ($action === 'show') {
-                // Todos los asignados (admins + viewers) pueden ver
-                $permission->syncRoles(array_merge($roles['admins'], $roles['viewers']));
+                $permission->syncRoles(array_merge($adminRoles, $viewRoles));
             } else {
-                // Solo los de nivel admin/manager pueden crear, editar o borrar
-               $permission->syncRoles($roles['admins']);
+               $permission->syncRoles($adminRoles);
             }
         }
        }
