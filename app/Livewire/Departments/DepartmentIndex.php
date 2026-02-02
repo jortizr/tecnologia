@@ -3,9 +3,9 @@
 namespace App\Livewire\Departments;
 
 use Livewire\Component;
-use WireUI\Traits\WireUiActions;
+use WireUi\Traits\WireUiActions;
 use App\Models\Department;
-use Livewire\Attributes\Computed;
+use Livewire\Attributes\{Locked, Computed};
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -13,11 +13,12 @@ use App\Traits\WithSearch;
 
 class DepartmentIndex extends Component
 {
-    use WireUiActions, WithSearch;
+    use WithPagination, AuthorizesRequests, WireUiActions, WithSearch;
     public bool $departmentModal = false;
+    public bool $isEditing = false;
     public ?Department $department = null;
     public $name;
-    public bool $isEditing = false;
+    #[Locked]
     public $departmentId;
     public $canManage;
 
@@ -32,13 +33,22 @@ class DepartmentIndex extends Component
             ->paginate(10);
     }
 
+    public function render()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false;
+        return view('livewire.departments.department-index');
+    }
+
     public function create(){
-        $this->reset(['name', 'isEditing']);
+        $this->reset(['name', 'isEditing', 'departmentId']);
         $this->departmentModal = true;
     }
 
-    public function edit(Department $department){
-        $this->department = $department;
+    public function edit($id){
+        $department = Department::findOrFail($id);
+        $this->departmentId = $id;
         $this->name = $department->name;
         $this->isEditing = true;
         $this->departmentModal = true;
@@ -46,22 +56,25 @@ class DepartmentIndex extends Component
 
     public function store(){
         $rules =[
-        'name'=> 'required|min:3|max:50|unique:departments,name',
+        'name'=> 'required|min:3|max:50|unique:departments,name' . ($this->isEditing ? $this->department->id : 'NULL'),
         ];
 
         $this->validate($rules);
-        $data = ['name' => $this->name];
 
         if($this->isEditing){
             $department = Department::findOrFail($this->departmentId);
             $this->authorize('update', $department);
-            $data['updated_by'] = Auth::user()->id;
-            $this->department->update($data);
+            $this->department->update([
+                'name' => $this->name,
+                'updated_by' => Auth::id()
+            ]);
             $this->notification()->success('Actualizado', 'Departamento actualizado con éxito');
         } else {
             $this->authorize('create', Department::class);
-            $data['created_by'] = Auth::user()->id;
-            Department::create($data);
+            Department::create([
+                'name'=> $this->name,
+                'created_by' => Auth::id()
+            ]);
             $this->notification()->success('Creado', 'Nuevo departamento registrado');
         }
 
@@ -101,14 +114,5 @@ class DepartmentIndex extends Component
                 'description' => 'No se pudo eliminar: ' . $e->getMessage(),
             ]);
         }
-    }
-
-
-    public function render()
-    {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage', 'Viewer']) ?? false;
-        return view('livewire.departments.department-index');
     }
 }
