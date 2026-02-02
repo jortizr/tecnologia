@@ -7,6 +7,7 @@ use App\Livewire\Collaborators\CollaboratorIndex;
 use App\Livewire\Collaborators\CollaboratorImport;
 use App\Livewire\Devices\ModelIndex;
 use App\Livewire\Roles\RoleIndex;
+use App\Livewire\Departments\DepartmentIndex;
 
 
 Route::get('/', function () {
@@ -36,6 +37,7 @@ Route::middleware([
     Route::get('dashboard/devicemodels/show', ModelIndex::class)->name('dashboard.devicemodels.show');
 
     Route::get('dashboard/roles/show', RoleIndex::class)->name('dashboard.roles.show');
+    Route::get('dashboard/departments/show', DepartmentIndex::class)->name('dashboard.departments.show');
 
 });
 

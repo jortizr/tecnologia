@@ -24,6 +24,12 @@
             <span class="ms-3">{{ __('Colaboradores') }}</span>
         </x-nav-link>
     </li>
+    <li>
+        <x-nav-link href="{{ route('dashboard.departments.show') }}" :active="request()->routeIs('dashboard.departments.show')">
+            <x-wireui-icon name="building-office" class="w-5 h-5 shrink-0"/>
+            <span class="ms-3">{{ __('Areas') }}</span>
+        </x-nav-link>
+    </li>
     <hr class="my-2 border-gray-200 dark:border-gray-700">
     {{-- Dropdown de Configuración de Equipos --}}
     <li>

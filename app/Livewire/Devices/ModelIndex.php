@@ -113,11 +113,8 @@ class ModelIndex extends Component
     public function delete($deviceModelId)
     {
         try {
-            $deviceModel = DeviceModel::findOrFail($deviceModelId);
-            // $this->authorize('delete', $deviceModel);
-
+            $deviceModel = DeviceModel::findOrFail($deviceModelId);$this->authorize('delete', $deviceModel);
             $deviceModel->delete();
-            // Notificación estilo WireUI (versión 2.x)
             $this->notification()->success( 'Notificacion', 'Modelo eliminado con éxito');
 
         } catch (\Exception $e) {
