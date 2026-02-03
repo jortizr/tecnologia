@@ -15,12 +15,17 @@ class DepartmentIndex extends Component
 {
     use WithPagination, AuthorizesRequests, WireUiActions, WithSearch;
     public bool $departmentModal = false;
-    public bool $isEditing = false;
     public ?Department $department = null;
+    public bool $isEditing = false;
     public $name;
+    public $canManage;
+
     #[Locked]
     public $departmentId;
-    public $canManage;
+
+    public function mount(){
+        $this->authorize('viewAny', Department::class);
+    }
 
 
     #[Computed]
@@ -29,8 +34,7 @@ class DepartmentIndex extends Component
         return Department::query()->with(['creator:id,name', 'updater:id,name'])
             ->when($this->search, function($query){
                 $query->where('name', 'like', "%{$this->search}%");
-            })
-            ->paginate(10);
+            })->latest()->paginate(10);
     }
 
     public function render()
@@ -55,25 +59,26 @@ class DepartmentIndex extends Component
     }
 
     public function store(){
-        $rules =[
-        'name'=> 'required|min:3|max:50|unique:departments,name' . ($this->isEditing ? $this->department->id : 'NULL'),
-        ];
+        $this->isEditing
+        ? $this->authorize('update', $this->departmentInstance)
+        : $this->authorize('create', Department::class);
 
-        $this->validate($rules);
+       $this->validate([
+        'name'=> 'required|min:3|max:50|unique:departments,name,' . ($this->isEditing ? $this->departmentId : 'NULL'),
+        ]);
 
         if($this->isEditing){
             $department = Department::findOrFail($this->departmentId);
+
             $this->authorize('update', $department);
-            $this->department->update([
-                'name' => $this->name,
-                'updated_by' => Auth::id()
-            ]);
+
+            $department->update(['name' => $this->name]);
+
             $this->notification()->success('Actualizado', 'Departamento actualizado con éxito');
         } else {
             $this->authorize('create', Department::class);
             Department::create([
-                'name'=> $this->name,
-                'created_by' => Auth::id()
+                'name' => $this->name
             ]);
             $this->notification()->success('Creado', 'Nuevo departamento registrado');
         }
@@ -101,7 +106,15 @@ class DepartmentIndex extends Component
 
     public function delete($departmentId){
         try{
-            $department = Department::findOrFail($departmentId);
+            $department = Department::withCount('collaborator')->findOrFail($departmentId);
+            
+            if($department->collaborator_count > 0){
+                $this->notification()->error(
+                    'Accion denegada',
+                    "No puedes eliminar esta área porque tiene {$department->collaborator_count} colaboradores asignados."
+                );
+                return;
+            }
             $this->authorize('delete', $department);
             $department->delete();
             $this->notification()->success('Eliminado', 'Departamento eliminado con éxito');

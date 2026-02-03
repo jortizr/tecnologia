@@ -12,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use App\Policies\UserPolicy;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use App\Traits\HasAuditColumns;
 
 #[UsePolicy(UserPolicy::class)]
 class User extends Authenticatable
@@ -23,7 +24,7 @@ class User extends Authenticatable
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
-    use TwoFactorAuthenticatable;
+    use TwoFactorAuthenticatable, HasAuditColumns;
 
     protected $guard_name = 'web';
 

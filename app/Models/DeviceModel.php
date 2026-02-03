@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Traits\HasAuditColumns;
 class DeviceModel extends Model
 {
     /** @use HasFactory<\Database\Factories\DeviceModelFactory> */
-    use HasFactory;
+    use HasFactory, HasAuditColumns;
     protected $fillable =[
         'name',
         'brand_id',

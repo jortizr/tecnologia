@@ -5,30 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\HasAuditColumns;
 
 class Brand extends Model
 {
     /** @use HasFactory<\Database\Factories\BrandFactory> */
-    use HasFactory;
+    use HasFactory, HasAuditColumns;
     protected $fillable = [
         'name', 'created_by', 'updated_by'
     ];
 
-    protected static function booted()
-    {
-        static::updating(function ($brand) {
-            if (Auth::check()) {
-                $brand->updated_by = Auth::id();
-            }
-        });
-
-        static::creating(function ($brand) {
-            if (Auth::check()) {
-                $brand->created_by = Auth::id();
-                $brand->updated_by = Auth::id();
-            }
-        });
-    }
     public function device_model(){
         return $this->hasMany(DeviceModel::class);
     }

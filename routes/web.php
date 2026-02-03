@@ -25,19 +25,31 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('dashboard/users/show', UserIndex::class)
-                ->name('dashboard.users.show');
+        ->middleware('permission:dashboard.users.show')
+        ->name('dashboard.users.show');
 
     Route::get('dashboard/collaborators/show',CollaboratorIndex::class )
-    ->name('dashboard.collaborators.show');
+        ->middleware('permission:dashboard.collaborators.show')
+        ->name('dashboard.collaborators.show');
 
-    Route::get('dashboard/collaborators/import', CollaboratorImport::class)->name('dashboard.collaborators.import');
+    Route::get('dashboard/collaborators/import', CollaboratorImport::class)
+        ->middleware('permission:dashboard.collaborators.import')
+    ->name('dashboard.collaborators.import');
 
-    Route::get('dashboard/brands/show', BrandIndex::class)->name('dashboard.brands.show');
+    Route::get('dashboard/brands/show', BrandIndex::class)
+        ->middleware('permission:dashboard.brands.show')
+        ->name('dashboard.brands.show');
 
-    Route::get('dashboard/devicemodels/show', ModelIndex::class)->name('dashboard.devicemodels.show');
+    Route::get('dashboard/devicemodels/show', ModelIndex::class)
+        ->middleware('permission:dashboard.devicemodels.show')
+        ->name('dashboard.devicemodels.show');
 
-    Route::get('dashboard/roles/show', RoleIndex::class)->name('dashboard.roles.show');
-    Route::get('dashboard/departments/show', DepartmentIndex::class)->name('dashboard.departments.show');
+    Route::get('dashboard/roles/show', RoleIndex::class)
+        ->middleware('permission:dashboard.roles.show')
+        ->name('dashboard.roles.show');
+    Route::get('dashboard/departments/show', DepartmentIndex::class)
+    ->middleware('permission:dashboard.departments.show')
+        ->name('dashboard.departments.show');
 
 });
 

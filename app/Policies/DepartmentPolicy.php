@@ -9,27 +9,38 @@ use Illuminate\Auth\Access\Response;
 class DepartmentPolicy
 {
     /**
+     * El "before" es un truco profesional:
+     * Si es Superadmin, autoriza todo automáticamente.
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->hasRole('Superadmin')) {
+            return true;
+        }
+    }
+
+    /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole(['Superadmin', 'Manager', 'Viewer']);;
+        return $user->can('dashboard.departments.show');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Department $department): bool
-    {
-        return $user->hasAnyRole(['Superadmin', 'Manage']);;
-    }
+    // public function view(User $user, Department $department): bool
+    // {
+    //     return $user->can('dashboard.departments.create');
+    // }
 
     /**
      * Determine whether the user can create models.
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['Superadmin', 'Manage']);
+        return $user->can('dashboard.departments.create');
     }
 
     /**
@@ -37,7 +48,7 @@ class DepartmentPolicy
      */
     public function update(User $user, Department $department): bool
     {
-        return $user->hasAnyRole(['Superadmin', 'Manage']);
+        return $user->can('dashboard.departments.update');
     }
 
     /**
@@ -45,6 +56,6 @@ class DepartmentPolicy
      */
     public function delete(User $user, Department $department): bool
     {
-        return $user->hasAnyRole(['Superadmin']);
+        return $user->can('dashboard.departments.delete');
     }
 }

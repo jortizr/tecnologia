@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasAuditColumns;
 
 class PhysicalState extends Model
 {
     /** @use HasFactory<\Database\Factories\PhysicalStateFactory> */
-    use HasFactory;
+    use HasFactory, HasAuditColumns;
 
     protected $fillable =[
         'name',

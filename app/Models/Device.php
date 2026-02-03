@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasAuditColumns;
 
 class Device extends Model
 {
     /** @use HasFactory<\Database\Factories\DeviceFactory> */
-    use HasFactory;
+    use HasFactory, HasAuditColumns;
     protected $fillable = [
         'device_model_id',
         'device_type_id',

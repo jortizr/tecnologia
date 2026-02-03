@@ -17,7 +17,7 @@
                     />
                 </div>
                 <div class="w-full sm:w-48">
-                    @if($canManage)
+                    @can('dashboard.departments.create')
                         <x-wireui-button
                             label="Nueva Area"
                             icon="plus"
@@ -25,7 +25,7 @@
                             primary
                             class="w-full sm:w-auto sm:px-6 sm:ml-2"
                         />
-                    @endif
+                    @endcan
                 </div>
             </x-slot>
             <x-slot name="headers">
@@ -33,9 +33,9 @@
                     <th class="px-6 py-4">Area</th>
                     <th class="px-6 py-4">Creado por</th>
                     <th class="px-6 py-4">Actualizado por</th>
-                    @if($canManage)
+                    @can('dashboard.departments.create')
                     <th class="px-6 py-4">Acciones</th>
-                    @endif
+                    @endcan
                 </tr>
             </x-slot>
             <x-slot name="dataTBody" lazy>
@@ -44,7 +44,7 @@
                     <td class="px-4 py-2">{{ $department->name}}</td>
                     <td class="px-4 py-2 text-center">{{ $department->creator?->name ?? 'sin movimiento' }}</td>
                     <td class="px-4 py-2 text-center">{{ $department->updater?->name ?? 'sin actualizacion' }}</td>
-                    @if($canManage)
+                    @can('dashboard.departments.create')
                     <td class="px-4 py-2 text-center align-middle">
                         <div class="flex justify-center items-center gap-2">
                         <x-wireui-button xs circle secondary icon="pencil" wire:click="edit({{ $department->id }})" />
@@ -58,7 +58,7 @@
                         />
                         </div>
                     </td>
-                    @endif
+                    @endcan
                 </tr>
                 @endforeach
                 @if($this->departments->isEmpty())

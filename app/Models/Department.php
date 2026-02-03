@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasAuditColumns;
+
 
 class Department extends Model
 {
     /** @use HasFactory<\Database\Factories\DepartmentFactory> */
-    use HasFactory;
+    use HasFactory, HasAuditColumns;
+    protected $fillable=['name', 'created_by', 'updated_by'];
 
     public function collaborator(){
         return $this->hasMany(Collaborator::class);

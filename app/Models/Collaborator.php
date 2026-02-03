@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Observers\CollaboratorObserver;
+use App\Traits\HasAuditColumns;
 
 #[ObservedBy([CollaboratorObserver::class])]
 class Collaborator extends Model
 {
     /** @use HasFactory<\Database\Factories\CollaboratorFactory> */
-    use HasFactory;
+    use HasFactory, HasAuditColumns;
 
     protected $fillable = [
         'names',
