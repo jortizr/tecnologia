@@ -41,6 +41,7 @@ class RoleSeeder extends Seeder
         'accesories.states'  => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
         'failure.types'      => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
         'brands'             => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
+        'departments'        => ['admins' => [$superadmin], 'viewers' => []],
     ];
 
        $actions = ['show', 'create', 'update', 'delete'];
@@ -51,10 +52,13 @@ class RoleSeeder extends Seeder
 
             foreach ($actions as $action) {
             $permissionName = "dashboard.{$module}.{$action}";
-            $permission = Permission::firstOrCreate(['name' => $permissionName]);
+            $permission = Permission::firstOrCreate(
+                ['name' => $permissionName,
+                'guard_name' => 'web'
+                ]);
 
             if ($action === 'show') {
-                $permission->syncRoles(array_merge($adminRoles, $viewRoles));
+                $permission->syncRoles(array_unique(array_merge($adminRoles, $viewRoles)));
             } else {
                $permission->syncRoles($adminRoles);
             }
