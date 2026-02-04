@@ -16,7 +16,7 @@
                         class="bg-white dark:bg-custom-dark-header border-gray-300 dark:border-gray-600"
                     />
                 </div>
-                    @if($canManage)
+                    @can('dashboard.brands.create')
                         <x-wireui-button
                             label="Nueva Marca"
                             icon="plus"
@@ -24,7 +24,7 @@
                             primary
                             class="w-full sm:w-auto sm:px-6 sm:ml-2"
                         />
-                    @endif
+                    @endcan
             </x-slot>
 
             <x-slot name="headers">
@@ -32,9 +32,9 @@
                     <th class="px-6 py-4 text-left">Nombre</th>
                     <th class="px-6 py-4 text-center">Creado por</th>
                     <th class="px-6 py-4 text-center">Actualizado por</th>
-                    @if($canManage)
+                    @can('dashboard.departments.update')
                     <th class="px-6 py-4 text-center">Acciones</th>
-                    @endif
+                    @endcan
                 </tr>
             </x-slot>
 
@@ -44,7 +44,7 @@
                         <td class="px-4 py-2">{{ $brand->name}}</td>
                         <td class="px-4 py-2 text-center">{{ $brand->creator?->name ?? 'sin movimiento' }}</td>
                         <td class="px-4 py-2 text-center">{{ $brand->updater?->name ?? 'sin actualizacion' }}</td>
-                        @if($canManage)
+                        @can('dashboard.brands.update')
                             <td class="px-4 py-2 flex gap-2 justify-center">
                                 <x-wireui-button
                                     xs
@@ -62,12 +62,25 @@
                                     wire:loading.attr="disabled"
                                 />
                             </td>
-                        @endif
+                        @endcan
                     </tr>
                 @endforeach
+                @if($this->brands->isEmpty())
+                <tr>
+                    <td colspan="5" class="py-12">
+                        <div class="flex flex-col items-center justify-center text-secondary-500">
+                            <x-wireui-icon name="face-frown" class="w-12 h-12 mb-2 outline-none" />
+                            <p class="text-lg font-semibold">No se encontro la marca
+                            <p>
+                            <p class="text-sm">Intenta con otros términos de búsqueda.
+                            <p>
+                        </div>
+                    </td>
+                </tr>
+                @endif
             </x-slot>
         </x-data-table>
-
+        @can('dashboard.brands.create')
         <x-wireui-modal-card title="{{ $isEditing ? 'Editar Marca' : 'Nueva Marca' }}" name="brandModal" wire:model.defer="brandModal">
             <div class="grid grid-cols-1 gap-4">
                 <x-wireui-input
@@ -79,8 +92,9 @@
 
             <x-slot name="footer" class="flex justify-end gap-x-4">
                 <x-wireui-button flat label="Cancelar" x-on:click="$wire.brandModal = false"/>
-                <x-wireui-button primary label="Guardar" wire:click="save" wire:loading.attr="disabled" />
+                <x-wireui-button primary label="Guardar" wire:click="store" wire:loading.attr="disabled" />
             </x-slot>
         </x-wireui-modal-card>
+        @endcan
     </div>
 </div>

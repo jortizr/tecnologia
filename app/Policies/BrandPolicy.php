@@ -10,12 +10,24 @@ use Illuminate\Auth\Access\Response;
 class BrandPolicy
 {
     use HandlesAuthorization;
+
+        /**
+     * El "before" es un truco profesional:
+     * Si es Superadmin, autoriza todo automáticamente.
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->hasRole('Superadmin')) {
+            return true;
+        }
+    }
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['Superadmin', 'Manager', 'Viewer']);
+        return $user->can('dashboard.brands.show');
     }
 
     /**
@@ -23,7 +35,7 @@ class BrandPolicy
      */
     public function view(User $user, Brand $brand): bool
     {
-        return $user->hasAnyRole(['Superadmin', 'Manager', 'Viewer']);
+       return $user->can('dashboard.brands.show');
     }
 
     /**
@@ -31,7 +43,7 @@ class BrandPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyRole('Superadmin');
+        return $user->can('dashboard.brands.create');
     }
 
     /**
@@ -39,7 +51,7 @@ class BrandPolicy
      */
     public function update(User $user, Brand $brand): bool
     {
-        return $user->hasAnyRole('Superadmin');
+        return $user->can('dashboard.brands.update');
     }
 
     /**
@@ -47,7 +59,6 @@ class BrandPolicy
      */
     public function delete(User $user, Brand $brand): bool
     {
-        return $user->hasAnyRole('Superadmin');
+        return $user->can('dashboard.brands.delete');
     }
-
 }

@@ -18,7 +18,6 @@ class DepartmentIndex extends Component
     public ?Department $department = null;
     public bool $isEditing = false;
     public $name;
-    public $canManage;
 
     #[Locked]
     public $departmentId;
@@ -39,9 +38,6 @@ class DepartmentIndex extends Component
 
     public function render()
     {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false;
         return view('livewire.departments.department-index');
     }
 
@@ -107,7 +103,7 @@ class DepartmentIndex extends Component
     public function delete($departmentId){
         try{
             $department = Department::withCount('collaborator')->findOrFail($departmentId);
-            
+
             if($department->collaborator_count > 0){
                 $this->notification()->error(
                     'Accion denegada',

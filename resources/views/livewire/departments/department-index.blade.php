@@ -88,6 +88,6 @@
                 <x-wireui-button primary label="Guardar" wire:click="store" wire:loading.attr="disabled" />
             </x-slot>
         </x-wireui-modal-card>
-        @endcand
+        @endcan
     </div>
 </div>

@@ -5,7 +5,7 @@ use App\Models\Brand;
 use App\Traits\WithSearch;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Computed;
+use Livewire\Attributes\{Locked, Computed};
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
@@ -17,11 +17,14 @@ class BrandIndex extends Component
     public ?Brand $brand    = null; //instancia de la marca a editar
     public $name;
     public $isEditing      = false;
-    public bool $canManage = false;
 
-    protected $rules = [
-        'name' => 'required|min:3|max:50|unique:brands,name',
-    ];
+    #[Locked]
+    public $brandId;
+
+    public function mount(){
+         $this->authorize('viewAny', Brand::class);
+    }
+
 
     #[Computed]
     public function brands()
@@ -30,61 +33,61 @@ class BrandIndex extends Component
         return Brand::with(['creator:id,name', 'updater:id,name'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
-            })
+            })->latest()
             ->paginate(10);
     }
 
     public function render()
     {
-        /** @var \App\Models\User $user */
-        $user            = Auth::user();
-        $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false;
-
-        return view('livewire.brands.brand-index', [
-            'canManage' => $this->canManage,
-        ]);
+        return view('livewire.brands.brand-index');
     }
 
     public function create()
     {
-        $this->brandModal = true;
         $this->reset(['name', 'isEditing', 'brand']);
+        $this->brandModal = true;
     }
 
     //abrir el modal para editar
-    public function edit(Brand $brand)
+    public function edit($id)
     {
-        $this->brand      = $brand;
-        $this->name       = $brand->name;
+        $brand = Brand::findOrFail($id);
+        $this->brandId = $id;
+        $this->name = $brand->name;
         $this->isEditing  = true;
         $this->brandModal = true;
     }
 
-    public function save()
+    public function store()
     {
-        // Validamos según si es edición o creación
-        $this->validate($this->isEditing ? [
-            'name' => 'required|min:3|max:50|unique:brands,name,' . $this->brand->id,
-        ] : $this->rules);
+        $this->isEditing
+        ? $this->authorize('update', $this->brandInstance)
+        : $this->authorize('create', Brand::class);
+
+
+        $this->validate([
+            'name' => 'required|min:3|max:50|unique:brands,name,' . ($this->isEditing ? $this->brandId : 'NULL'),
+        ]);
 
         if ($this->isEditing) {
-            $this->brand->update([
-                'name'       => $this->name,
-                'updater_id' => Auth::user()->id,
-            ]);
-            $this->notification()->success('Marca actualizada', 'Los cambios se guardaron con éxito');
+           $brand = Brand::findOrFail($this->brandId);
+
+           $this->authorize('update', $brand);
+
+           $brand->update(['name' => $this->name]);
+
+            $this->notification()->success('Actualizado', 'Los cambios se guardaron con éxito');
         } else {
-            // LÓGICA PARA CREAR QUE FALTABA:
+            $this->authorize('create', Brand::class);
             Brand::create([
                 'name'       => $this->name,
-                'creator_id' => Auth::user()->id,
-                'updater_id' => Auth::user()->id,
             ]);
             $this->notification()->success('Marca creada', 'Nueva marca registrada con éxito');
         }
 
         $this->brandModal = false;
-        $this->reset(['name', 'isEditing', 'brand']); // Limpiar después de guardar
+        unset($this->departments);
+        $this->dispatch('model-updated');
     }
 
     public function confirmDelete($brandId)
