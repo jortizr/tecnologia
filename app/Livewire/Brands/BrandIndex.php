@@ -61,7 +61,7 @@ class BrandIndex extends Component
     public function store()
     {
         $this->isEditing
-        ? $this->authorize('update', $this->brandInstance)
+        ? $this->authorize('update', $this->brand)
         : $this->authorize('create', Brand::class);
 
 

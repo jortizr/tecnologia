@@ -56,7 +56,7 @@ class DepartmentIndex extends Component
 
     public function store(){
         $this->isEditing
-        ? $this->authorize('update', $this->departmentInstance)
+        ? $this->authorize('update', $this->department)
         : $this->authorize('create', Department::class);
 
        $this->validate([
