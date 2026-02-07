@@ -78,7 +78,6 @@ class CollaboratorIndex extends Component
 
     public function create(){
         $this->authorize('create', Collaborator::class);
-
         $this->reset(['names', 'last_name', 'identification', 'payroll_code', 'department_id', 'regional_id', 'occupation_id', 'is_active']);
         $this->is_active = true;
         $this->collaboratorModal = true;

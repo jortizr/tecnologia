@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Collaborators;
 
+use App\Models\Department;
 use Livewire\Component;
 use Spatie\SimpleExcel\SimpleExcelReader;
 use Illuminate\Support\Collection;
@@ -24,6 +25,7 @@ class CollaboratorImport extends Component
 
     public function mount()
     {
+        $this->authorizw('dashboard.collaborators.import');
         $this->errorsImport = collect();
     }
 
@@ -77,6 +79,7 @@ class CollaboratorImport extends Component
         }
 
         try {
+             $this->authorize('create', Department::class);
             $departments = \App\Models\Department::all()->keyBy(fn($item) => strtoupper($item->name));
             $regionals   = \App\Models\Regional::all()->keyBy(fn($item) => strtoupper($item->name));
             $occupations = \App\Models\Occupation::all()->keyBy(fn($item) => strtoupper($item->name));
