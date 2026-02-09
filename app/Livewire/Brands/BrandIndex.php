@@ -60,22 +60,15 @@ class BrandIndex extends Component
 
     public function save()
     {
-        $this->isEditing
-        ? $this->authorize('update', $this->brand)
-        : $this->authorize('create', Brand::class);
-
-
         $this->validate([
             'name' => 'required|min:3|max:50|unique:brands,name,' . ($this->isEditing ? $this->brandId : 'NULL'),
         ]);
 
         if ($this->isEditing) {
            $brand = Brand::findOrFail($this->brandId);
-
            $this->authorize('update', $brand);
 
            $brand->update(['name' => $this->name]);
-
             $this->notification()->success('Actualizado', 'Los cambios se guardaron con éxito');
         } else {
             $this->authorize('create', Brand::class);
@@ -86,7 +79,7 @@ class BrandIndex extends Component
         }
 
         $this->brandModal = false;
-        unset($this->departments);
+        unset($this->brands);
         $this->dispatch('model-updated');
     }
 
@@ -110,24 +103,22 @@ class BrandIndex extends Component
     public function delete($brandId)
     {
         try {
-            $brand = Brand::findOrFail($brandId);
+            $brand = Brand::withCount('deviceModels')->findOrFail($brandId);
             // Si usas Policies de Spatie/Laravel
             $this->authorize('delete', $brand);
+
+            if($brand->device_models_count > 0){
+                $this->notification()->error('Accion denegada', "No puedes eliminar esta marca porque tiene {$brand->device_models_count} modelos asociados. modelos asociados.");
+                return;
+            }
             $brand->delete();
+            $this->notification()->success('Éxito', 'Fabricante eliminado correctamente');
+            unset($this->brands);
 
-            // Notificación estilo WireUI (versión 2.x)
-            $this->notification()->send([
-                'icon'        => 'success',
-                'title'       => 'Fabricante eliminado',
-                'description' => 'El registro se borró correctamente.',
-            ]);
-
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            $this->notification()->error('Acceso denegado', 'No tienes permisos para realizar esta acción.');
         } catch (\Exception $e) {
-            $this->notification()->send([
-                'icon'        => 'error',
-                'title'       => 'Error',
-                'description' => 'No se pudo eliminar: ' . $e->getMessage(),
-            ]);
+            $this->notification()->error('Error', 'Ocurrió un error inesperado.');
         }
     }
 }

@@ -32,7 +32,7 @@
                     <th class="px-6 py-4 text-left">Nombre</th>
                     <th class="px-6 py-4 text-center">Creado por</th>
                     <th class="px-6 py-4 text-center">Actualizado por</th>
-                    @can('dashboard.departments.update')
+                    @can('dashboard.brands.update')
                     <th class="px-6 py-4 text-center">Acciones</th>
                     @endcan
                 </tr>
