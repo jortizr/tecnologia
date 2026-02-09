@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Collaborators;
 
+use App\Models\Collaborator;
 use App\Models\Department;
 use App\Models\Regional;
 use App\Models\Occupation;
@@ -82,27 +83,27 @@ class CollaboratorImport extends Component
         }
 
         try {
-             $this->authorize('create', Department::class);
             $departments = Department::all()->keyBy(fn($item) => strtoupper($item->name));
             $regionals   = Regional::all()->keyBy(fn($item) => strtoupper($item->name));
             $occupations = Occupation::all()->keyBy(fn($item) => strtoupper($item->name));
 
-            $reader = SimpleExcelReader::create($this->excel->getRealPath())    ->getRows();
+            $reader = SimpleExcelReader::create($this->excel->getRealPath())->getRows();
             $index = 1;
 
             $reader->each(function(array $row) use ($departments, $regionals, $occupations, &$index){
                 $index++;
 
-                $identificacion = trim($row['Identificacion']);
-                $nombreCompleto = trim($row['Nombres']);
-                $cargoNombre = strtoupper(trim(trim($row['Cargo'])));
-                $areaNombre = strtoupper(trim($row['CC']));
-                $ciudadNombre = strtoupper(trim($row['Ciudad']));
-                $codigoNomina = trim($row['Codigo']);
+                $row = array_change_key_case($row, CASE_LOWER);
+                $identificacion = trim($row['identificacion']);
+                $nombreCompleto = trim($row['nombres']);
+                $cargoNombre = strtoupper(trim(trim($row['cargo'])));
+                $areaNombre = strtoupper(trim($row['cc']));
+                $ciudadNombre = strtoupper(trim($row['ciudad']));
+                $codigoNomina = trim($row['codigo']);
 
                 if(empty($identificacion)) return;
 
-                if(\App\Models\Collaborator::where('identification', $identificacion)->exists()){
+                if(Collaborator::where('identification', $identificacion)->exists()){
                     $this->errorsImport->push(['row' => $index, 'msg' => "La ID $identificacion ya existe."]);
                     return;
                 }
@@ -112,21 +113,32 @@ class CollaboratorImport extends Component
                 $occupation = $occupations->get($cargoNombre);
 
                 if (!$department) {
-                    $this->errorsImport->push(['row' => $index, 'msg' => "El área '$areaNombre' no existe en sistema."]);
+                    $this->errorsImport->push([
+                        'row' => $index,
+                        'msg' => "El Área (CC) '{$areaNombre}' no está registrada en el sistema."
+                    ]);
                     return;
                 }
+
                 if (!$regional) {
-                    $this->errorsImport->push(['row' => $index, 'msg' => "La regional '$ciudadNombre' no existe."]);
+                    $this->errorsImport->push([
+                        'row' => $index,
+                        'msg' => "La Ciudad/Regional '{$ciudadNombre}' no existe en el catálogo."
+                    ]);
                     return;
                 }
+
                 if (!$occupation) {
-                    $this->errorsImport->push(['row' => $index, 'msg' => "El cargo '$cargoNombre' no existe."]);
+                    $this->errorsImport->push([
+                        'row' => $index,
+                        'msg' => "El Cargo '{$cargoNombre}' no existe. Debes crearlo primero."
+                    ]);
                     return;
                 }
 
                 $nameParts = $this->splitName($nombreCompleto);
 
-                \App\Models\Collaborator::create([
+                Collaborator::create([
                     'names'          => $nameParts['names'],
                     'last_name'      => $nameParts['last_name'],
                     'identification' => $identificacion,
@@ -139,43 +151,37 @@ class CollaboratorImport extends Component
             });
 
             if($this->errorsImport->isEmpty()){
-                $this->notification()->success('Proceso finalizado', 'Carga masiva completada con éxito.');
+                $this->notification()->success('Exito', 'Importacion completada.');
                 $this->reset('excel', 'preview');
                 $this->dispatch('import-finished');
             } else {
-                $this->notification()->warning('Atención', 'Se importaron algunos registros, pero hubo errores');
-                
+                $this->notification()->warning('Completa con errores', 'Algunos registros fallaron.');
             }
         } catch (\Exception $e) {
-            $this->addError('excel', 'Ocurrió un error durante la importación: ' . $e->getMessage());
+            $this->addError('excel', 'Error crítico: ' . $e->getMessage());
         }
     }
 
     protected function splitName($fullName){
-        $fullName = trim($fullName);
-        $parts = explode(' ', $fullName);
+        $parts = explode(' ', trim($fullName));
         $count = count($parts);
 
-        $names = '';
-        $last_name = '';
+        if($count === 1) return ['names' => Str::title($parts[0]), 'last_name' => ''];
 
-        if($count === 1){
-            $names = $parts[0];//para una palabra
-            $last_name = '';
-        } elseif($count === 2){//para 1 apellidos y 1 nombre
-            $last_name = $parts[0] . ' ' . $parts[1];
-            $names = $parts[1];
-        } elseif ($count === 3) {//para 2 apellidos y 1 nombre
-            $last_name = $parts[0] . ' ' . $parts[1];
-            $names = $parts[2];
-        }else {//para 2 apellidos y 2 nombres
-            $last_name = $parts[0] . ' ' . $parts[1];
+        // Caso común: 2 nombres y 2 apellidos (o similar)
+        // Intentamos separar los últimos dos como apellidos
+        if($count >= 4) {
+            $last_names = $parts[0] . ' ' . $parts[1];
             $names = implode(' ', array_slice($parts, 2));
+        } else {
+            // Caso de 2 o 3 palabras: el primero es nombre, el resto apellidos
+            $names = $parts[0];
+            $last_names = implode(' ', array_slice($parts, 1));
         }
 
         return [
             'names' => Str::title($names),
-            'last_name' => Str::title($last_name),
+            'last_name' => Str::title($last_names),
         ];
 
     }
