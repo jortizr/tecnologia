@@ -19,7 +19,7 @@
                     </div>
 
                     <div class="flex w-full sm:w-auto justify-end gap-2">
-                        @if($canManage)
+                        @can('dashboard.collaborators.import.show')
                             <x-wireui-button
                                 label="Importar datos"
                                 icon="arrow-up-tray"
@@ -35,7 +35,7 @@
                                 primary
                                 class="w-full sm:w-auto"
                             />
-                        @endif
+                        @endcan
                     </div>
 
                 </div>
@@ -50,9 +50,9 @@
                     <th class="px-6 py-4">Cargo</th>
                     <th class="px-6 py-4">Regional</th>
                     <th class="px-6 py-4">Estado</th>
-                    @if($canManage)
+                    @can('dashboard.collaborators.update')
                     <th class="px-6 py-4">Acciones</th>
-                    @endif
+                    @endcan
                 </tr>
             </x-slot>
             <x-slot name="dataTBody">
@@ -76,7 +76,7 @@
                             wire:target="toggleStatus"
                         />
                         </td>
-                        @if($canManage)
+                        @can('dashboard.collaborators.update')
                         <td class="px-4 py-2 text-center align-middle">
                             <div class="flex justify-center items-center gap-2">
                                 <x-wireui-button xs circle secondary icon="pencil" wire:click="edit({{ $collaborator->id }})" />
@@ -90,7 +90,7 @@
                                 />
                             </div>
                         </td>
-                        @endif
+                        @endcan
                     </tr>
                 @empty
                     <tr>
@@ -102,7 +102,7 @@
                 @endforelse
             </x-slot>
         </x-data-table>
-
+        @can('dashboard.collaborators.update')
         <x-wireui-modal-card title="{{ $isEditing ? 'Editar Colaborador':'Nuevo Colaborador' }}" wire:model.defer="collaboratorModal">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <x-wireui-input label="Nombres" wire:model.defer="names" />
@@ -142,8 +142,9 @@
                 <x-wireui-button primary label="Guardar Colaborador" wire:click="save" spinner="save" />
             </x-slot>
         </x-wireui-modal-card>
-
-        <x-wireui-modal-card title="Importar Colaboradores" wire:model.defer="importModal" max-width="4xl">
+        @endcan
+        @can('dashboard.collaborators.import.show')
+        <x-wireui-modal-card title="Importar Colaboradores" wire:model.defer="importModal" max-width="4xl" x-on:close="$wire.dispatch('import-finished')">
             <livewire:collaborators.collaborator-import wire:key="import-comp-{{ $importModal ? 'open' : 'closed' }}" />
 
             <x-slot name="footer">
@@ -152,5 +153,6 @@
                 </div>
             </x-slot>
         </x-wireui-modal-card>
+        @endcan
     </div>
 </div>

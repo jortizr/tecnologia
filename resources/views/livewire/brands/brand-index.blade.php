@@ -92,7 +92,7 @@
 
             <x-slot name="footer" class="flex justify-end gap-x-4">
                 <x-wireui-button flat label="Cancelar" x-on:click="$wire.brandModal = false"/>
-                <x-wireui-button primary label="Guardar" wire:click="store" wire:loading.attr="disabled" />
+                <x-wireui-button primary label="Guardar" wire:click="save" wire:loading.attr="disabled" />
             </x-slot>
         </x-wireui-modal-card>
         @endcan

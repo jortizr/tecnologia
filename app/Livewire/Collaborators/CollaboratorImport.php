@@ -3,6 +3,8 @@
 namespace App\Livewire\Collaborators;
 
 use App\Models\Department;
+use App\Models\Regional;
+use App\Models\Occupation;
 use Livewire\Component;
 use Spatie\SimpleExcel\SimpleExcelReader;
 use Illuminate\Support\Collection;
@@ -25,7 +27,7 @@ class CollaboratorImport extends Component
 
     public function mount()
     {
-        $this->authorizw('dashboard.collaborators.import');
+        $this->authorize('dashboard.collaborators.import');
         $this->errorsImport = collect();
     }
 
@@ -70,6 +72,7 @@ class CollaboratorImport extends Component
 
     public function importExcel()
     {
+        $this->authorize('dashboard.collaborators.import');
         $this->validate();
         $this->errorsImport = collect();
 
@@ -80,9 +83,9 @@ class CollaboratorImport extends Component
 
         try {
              $this->authorize('create', Department::class);
-            $departments = \App\Models\Department::all()->keyBy(fn($item) => strtoupper($item->name));
-            $regionals   = \App\Models\Regional::all()->keyBy(fn($item) => strtoupper($item->name));
-            $occupations = \App\Models\Occupation::all()->keyBy(fn($item) => strtoupper($item->name));
+            $departments = Department::all()->keyBy(fn($item) => strtoupper($item->name));
+            $regionals   = Regional::all()->keyBy(fn($item) => strtoupper($item->name));
+            $occupations = Occupation::all()->keyBy(fn($item) => strtoupper($item->name));
 
             $reader = SimpleExcelReader::create($this->excel->getRealPath())    ->getRows();
             $index = 1;
@@ -100,7 +103,7 @@ class CollaboratorImport extends Component
                 if(empty($identificacion)) return;
 
                 if(\App\Models\Collaborator::where('identification', $identificacion)->exists()){
-                    // $this->errorsImport->push(['row' => $index, 'msg' => "La ID $identificacion ya existe."]);
+                    $this->errorsImport->push(['row' => $index, 'msg' => "La ID $identificacion ya existe."]);
                     return;
                 }
 
@@ -132,7 +135,6 @@ class CollaboratorImport extends Component
                     'regional_id'    => $regional->id,
                     'occupation_id'  => $occupation->id,
                     'is_active'      => true,
-                    'created_by'     => Auth::id(),
                 ]);
             });
 
@@ -142,6 +144,7 @@ class CollaboratorImport extends Component
                 $this->dispatch('import-finished');
             } else {
                 $this->notification()->warning('Atención', 'Se importaron algunos registros, pero hubo errores');
+                
             }
         } catch (\Exception $e) {
             $this->addError('excel', 'Ocurrió un error durante la importación: ' . $e->getMessage());
@@ -161,7 +164,7 @@ class CollaboratorImport extends Component
             $last_name = '';
         } elseif($count === 2){//para 1 apellidos y 1 nombre
             $last_name = $parts[0] . ' ' . $parts[1];
-            $names = $parts[2];
+            $names = $parts[1];
         } elseif ($count === 3) {//para 2 apellidos y 1 nombre
             $last_name = $parts[0] . ' ' . $parts[1];
             $names = $parts[2];

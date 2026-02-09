@@ -58,7 +58,7 @@ class BrandIndex extends Component
         $this->brandModal = true;
     }
 
-    public function store()
+    public function save()
     {
         $this->isEditing
         ? $this->authorize('update', $this->brand)

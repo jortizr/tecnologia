@@ -98,10 +98,12 @@ class CollaboratorIndex extends Component
         $this->collaboratorModal = true;
     }
 
+    #[On('import-finished')]
     public function handleImportFinished(){
         $this->importModal = false;
         unset($this->collaborators);
         $this->dispatch('model-updated');
+        $this->notification()->success('Lista Actualizada', 'Los datos importados ya son visibles.');
     }
 
     public function save()

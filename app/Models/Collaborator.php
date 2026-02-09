@@ -24,6 +24,8 @@ class Collaborator extends Model
         'regional_id',
         'occupation_id',
         'is_active',
+        'created_by', 
+        'updated_by'
     ];
 
     public function department(){
