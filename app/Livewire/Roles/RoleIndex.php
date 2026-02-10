@@ -9,15 +9,16 @@ use WireUi\Traits\WireUiActions;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Illuminate\Support\Facades\Auth;
+use Livewire\WithPagination;
 
 class RoleIndex extends Component
 {
-    use WireUiActions;
+    use WireUiActions, WithPagination;
 
     public bool $roleModal = false;
     public bool $isEditing = false;
     public $name;
-    public $canManage;
+    public $description;
     public array $selectedPermissions = [];
 
     #[Locked]
@@ -29,75 +30,98 @@ class RoleIndex extends Component
     }
 
     public function create(){
-        $this->reset(['name', 'roleId', 'selectedPermissions', 'isEditing']);
+        $this->reset(['name', 'description', 'roleId', 'selectedPermissions', 'isEditing']);
         $this->roleModal = true;
     }
 
     public function edit($id){
-        $role = Role::where('id', $id)->firstOrFail();
-        $this->reset(['name', 'roleId', 'selectedPermissions']);
+        $role = Role::findOrFail($id);
         $this->roleId = $id;
         $this->name = $role->name;
+        $this->description = $role->description;
         $this->selectedPermissions = $role->permissions->pluck('name')->toArray();
         $this->isEditing = true;
         $this->roleModal = true;
     }
 
-    public function delete($id){
-        $role = Role::where('id', $id)->firstOrFail();
+    public function confirmDelete($id)
+    {
+        $this->dialog()->confirm([
+            'title'       => '¿Eliminar Rol?',
+            'description' => 'Esta acción no se puede deshacer.',
+            'icon'        => 'error',
+            'accept'      => [
+                'label'  => 'Eliminar',
+                'method' => 'delete',
+                'params' => $id,
+            ],
+            'reject' => [
+                'label'  => 'Cancelar',
+            ],
+        ]);
+    }
 
-        if($role->name === 'Superadmin'){
-            $this->notification()->error('No puedes eliminar el rol Superadmin');
-            return;
+    public function delete($id)
+    {
+        try {
+            $role = Role::findOrFail($id);
+
+            if($role->name === 'Superadmin'){
+                $this->notification()->error('Error', 'No puedes eliminar el rol crítico Superadmin');
+                return;
+            }
+
+            $role->delete();
+            $this->notification()->success('Éxito', 'Rol eliminado correctamente');
+            unset($this->roles);
+
+        } catch (\Exception $e) {
+            $this->notification()->error('Error', 'No se pudo eliminar el rol.');
         }
-
-        $role->delete();
-        unset($this->roles);
-        $this->notification()->success('Rol eliminado con éxito');
     }
 
     public function save(){
-        $rules = [
-            'name' => 'required|string|max:255|unique:roles,name,' . $this->roleId,
-            'selectedPermissions' => 'array'
-        ];
+        $this->name = ucfirst(trim(strtolower($this->name)));
 
-        $this->validate($rules);
+        $this->validate([
+                'name' => 'required|min:3|max:50|unique:roles,name,' . ($this->isEditing ? $this->roleId : 'NULL'),
+                'description' => 'nullable|string|max:255',
+        ]);
 
         if ($this->isEditing) {
-            $role = Role::where('id', $this->roleId)->firstOrFail();
-            $role->update(['name' => $this->name]);
-            $this->notification()->success('Rol actualizado');
-        } else {
-            $role = Role::create([
+            $role = Role::findOrFail($this->roleId);
+            $role->update([
                 'name' => $this->name,
-                'guard_name' => 'web' // Forzamos guard web para evitar errores de Sanctum
+                'description' => $this->description,
+            ]);
+            $this->notification()->success('Actualizado', 'Rol actualizado con éxito');
+        } else {
+            // IMPORTANTE: Spatie requiere 'guard_name', usualmente es 'web'
+            Role::create([
+                'name' => $this->name,
+                'description' => $this->description,
+                'guard_name' => 'web'
             ]);
             $this->notification()->success('Rol creado');
         }
 
         $permissions = Permission::whereIn('name', $this->selectedPermissions)
-                             ->where('guard_name', 'web')
-                             ->get();
+            ->where('guard_name', 'web')
+            ->get();
         $role->syncPermissions($permissions);
         $this->roleModal = false;
         unset($this->roles);
     }
-    
+
     public function render()
     {
-        /** @var \App\Models\User $user */
-        $user            = Auth::user();
-        $this->canManage = $user?->hasAnyRole(['Superadmin']) ?? false;
-
         $groupedPermissions = Permission::all()->groupBy(function($perm) {
-        $parts = explode('.', $perm->name);
-        return $parts[1] ?? 'otros';
+            $parts = explode('.', $perm->name);
+            return $parts[1] ?? 'otros';
         });
 
         return view('livewire.roles.role-index', [
             'permissions' => $groupedPermissions,
-            'canManage' =>$this->canManage,
         ]);
     }
 }

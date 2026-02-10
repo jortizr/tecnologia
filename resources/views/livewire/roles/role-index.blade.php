@@ -1,5 +1,5 @@
 <div class="py-6">
-    <div class="flex justify-center items-center" x-data x-on:model-updated.window="$wire.$refresh()">
+    <div class="flex justify-center items-center">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Gestion de Roles') }}
         </h2>
@@ -8,7 +8,6 @@
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <x-data-table :data="$this->roles">
-            {{-- TOOLBAR: Buscador y Botón Nuevo --}}
             <x-slot name="toolbar">
                 <div class="w-full sm:flex-1 sm:max-w-md">
                    {{-- <x-wireui-input
@@ -64,17 +63,9 @@
                             <div class="flex justify-center items-center gap-2">
                             <x-wireui-button xs circle secondary icon="pencil" wire:click="edit({{ $role->id }})" />
                             <x-wireui-button
-                                xs
-                                circle
-                                negative
+                                xs circle negative
                                 icon="trash"
-                                x-on:confirm="{
-                                    title: '¿Eliminar Rol?',
-                                    description: 'Esta acción es irreversible',
-                                    icon: 'error',
-                                    method: 'delete',
-                                    params: {{ $role->id }}
-                                }"
+                                wire:click="confirmDelete({{ $role->id }})"
                             />
                             </div>
                         </td>
@@ -91,20 +82,27 @@
         </x-data-table>
 
         {{-- MODAL DE CREACIÓN/EDICIÓN --}}
-        <x-wireui-modal-card title="Detalles del Rol"  wire:model.defer="roleModal">
+        <x-wireui-modal-card title="{{ $isEditing ? 'Editar Rol' : 'Nuevo Rol' }}" wire:model.defer="roleModal">
             <div class="grid grid-cols-1 gap-4">
-                <x-wireui-input label="Nombre del Rol" wire:model="name" placeholder="ej. Editor de Contenido" />
+                <x-wireui-input label="Nombre del Rol" wire:model.defer="name" placeholder="ej. Editor de Contenido" />
 
-                <p>Asignar Permisos:</p>
-                <div class="space-y-4 max-h-96 overflow-y-auto p-2">
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Asignar Permisos</span>
+                    <hr class="flex-1 border-gray-200 dark:border-gray-700">
+                </div>
+
+                <div class="space-y-4 max-h-96 overflow-y-auto p-2 border rounded-lg bg-gray-50/50 dark:bg-gray-800/20">
                     @foreach($permissions as $modulo => $items)
-                        <div class="border rounded-lg p-3">
-                            <h3 class="text-sm font-bold uppercase text-gray-500 mb-2 border-b">{{ $modulo }}</h3>
-                            <div class="grid grid-cols-2 gap-2">
+                        <div class="bg-white dark:bg-custom-dark-header border dark:border-gray-700 rounded-lg p-3 shadow-sm">
+                            <h3 class="text-xs font-black uppercase text-primary-600 dark:text-primary-400 mb-3 flex items-center gap-2">
+                                <x-wireui-icon name="chevron-right" class="w-3 h-3" />
+                                {{ $modulo }}
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 @foreach($items as $lp)
                                     <x-wireui-checkbox
                                         id="p-{{ $lp->id }}"
-                                        wire:model="selectedPermissions"
+                                        wire:model.defer="selectedPermissions"
                                         label="{{ str_replace(['dashboard.', $modulo . '.'], '', $lp->name) }}"
                                         value="{{ $lp->name }}"
                                     />
@@ -117,8 +115,8 @@
 
             <x-slot name="footer">
                 <div class="flex justify-end gap-x-4">
-                    <x-wireui-button flat label="Cancelar" x-on:click="close" />
-                    <x-wireui-button primary label="Guardar" wire:click="save" />
+                    <x-wireui-button flat label="Cancelar" x-on:click="$wire.roleModal = false" />
+                    <x-wireui-button primary label="Guardar Datos" wire:click="save" wire:loading.attr="disabled" />
                 </div>
             </x-slot>
         </x-wireui-modal-card>
