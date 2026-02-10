@@ -9,7 +9,7 @@ use Illuminate\Auth\Access\Response;
 class DepartmentPolicy
 {
     /**
-     * El "before" es un truco profesional:
+     *
      * Si es Superadmin, autoriza todo automáticamente.
      */
     public function before(User $user, $ability)
@@ -30,10 +30,10 @@ class DepartmentPolicy
     /**
      * Determine whether the user can view the model.
      */
-    // public function view(User $user, Department $department): bool
-    // {
-    //     return $user->can('dashboard.departments.create');
-    // }
+    public function view(User $user, Department $department): bool
+    {
+        return $user->can('dashboard.departments.show');
+    }
 
     /**
      * Determine whether the user can create models.

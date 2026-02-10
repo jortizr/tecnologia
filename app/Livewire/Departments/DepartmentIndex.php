@@ -7,7 +7,6 @@ use WireUi\Traits\WireUiActions;
 use App\Models\Department;
 use Livewire\Attributes\{Locked, Computed};
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Traits\WithSearch;
 

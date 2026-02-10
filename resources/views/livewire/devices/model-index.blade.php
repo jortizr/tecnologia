@@ -17,7 +17,7 @@
                     />
                 </div>
                 <div class="w-full sm:w-48">
-                    @if($canManage)
+                    @can('dashboard.devicemodels.create')
                         <x-wireui-button
                             label="Nuevo modelo"
                             icon="plus"
@@ -25,7 +25,7 @@
                             primary
                             class="w-full sm:w-auto sm:px-6 sm:ml-2"
                         />
-                    @endif
+                    @endcan
                 </div>
             </x-slot>
             <x-slot name="headers">
@@ -34,9 +34,9 @@
                     <th class="px-6 py-4">Marca</th>
                     <th class="px-6 py-4">Creado por</th>
                     <th class="px-6 py-4">Actualizado por</th>
-                    @if($canManage)
+                    @can('dashboard.devicemodels.update')
                     <th class="px-6 py-4">Acciones</th>
-                    @endif
+                    @endcan
                 </tr>
             </x-slot>
             <x-slot name="dataTBody" lazy>
@@ -46,7 +46,7 @@
                     <td class="px-4 py-2">{{ $deviceModel->brand?->name ?? 'sin marca' }}</td>
                     <td class="px-4 py-2 text-center">{{ $deviceModel->creator?->name ?? 'sin movimiento' }}</td>
                     <td class="px-4 py-2 text-center">{{ $deviceModel->updater?->name ?? 'sin actualizacion' }}</td>
-                    @if($canManage)
+                    @can('dashboard.devicemodels.update')
                     <td class="px-4 py-2 text-center align-middle">
                         <div class="flex justify-center items-center gap-2">
                         <x-wireui-button xs circle secondary icon="pencil" wire:click="edit({{ $deviceModel->id }})" />
@@ -60,7 +60,7 @@
                         />
                         </div>
                     </td>
-                    @endif
+                    @endcan
                 </tr>
                 @endforeach
                 @if($this->deviceModels->isEmpty())
@@ -78,21 +78,22 @@
                 @endif
             </x-slot>
         </x-data-table>
-
-        <x-wireui-modal-card title="{{ $isEditing ? 'Editar Marca' : 'Nueva Marca' }}" name="deviceModelModal"
+        @can('dashboard.devicemodels.create')
+        <x-wireui-modal-card title="{{ $isEditing ? 'Editar Modelo' : 'Nuevo Modelo' }}" name="deviceModelModal"
             wire:model.defer="deviceModelModal">
             <div class="grid grid-cols-1 gap-4">
                 <x-wireui-input label="Nombre del Modelo" placeholder="Ej. Samsung, Apple..." wire:model.defer="name"
                     class="uppercase" />
 
-                <x-wireui-select label="Seleccionar Marca" placeholder="Busca la marca" wire:model.defer="brand_id"
+                <x-wireui-select label="Seleccionar Marca" placeholder="Busca la marca" wire:model.defer="brandId"
                     :options="$this->brands" option-label="name" option-value="id" />
             </div>
 
             <x-slot name="footer" class="flex justify-end gap-x-4">
                 <x-wireui-button flat label="Cancelar" x-on:click="$wire.deviceModelModal = false" />
-                <x-wireui-button primary label="Guardar" wire:click="store" wire:loading.attr="disabled" />
+                <x-wireui-button primary label="Guardar" wire:click="save" wire:loading.attr="disabled" />
             </x-slot>
         </x-wireui-modal-card>
+        @endcan
     </div>
 </div>
