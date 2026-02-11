@@ -7,7 +7,7 @@ use App\Models\Role;
 
 class RolePolicy
 {
-/**
+    /**
      * El método before permite al Superadmin saltarse las validaciones.
      */
     public function before(User $user, $ability)

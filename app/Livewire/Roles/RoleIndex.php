@@ -4,16 +4,16 @@ namespace App\Livewire\Roles;
 
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Spatie\Permission\Models\Permission;
 use WireUi\Traits\WireUiActions;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
-use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
 
 class RoleIndex extends Component
 {
-    use WireUiActions, WithPagination;
+    use WireUiActions, WithPagination, AuthorizesRequests;
 
     public bool $roleModal = false;
     public bool $isEditing = false;
@@ -23,6 +23,10 @@ class RoleIndex extends Component
 
     #[Locked]
     public $roleId;
+
+    public function mount(){
+        $this->authorize('viewAny', Role::class);
+    }
 
     #[Computed]
     public function roles(){
@@ -90,14 +94,17 @@ class RoleIndex extends Component
 
         if ($this->isEditing) {
             $role = Role::findOrFail($this->roleId);
+            $this->authorize('update', $role);
+
             $role->update([
                 'name' => $this->name,
                 'description' => $this->description,
             ]);
             $this->notification()->success('Actualizado', 'Rol actualizado con éxito');
         } else {
-            // IMPORTANTE: Spatie requiere 'guard_name', usualmente es 'web'
-            Role::create([
+            $this->authorize('create', Role::class);
+
+            $role =Role::create([
                 'name' => $this->name,
                 'description' => $this->description,
                 'guard_name' => 'web'
@@ -108,6 +115,7 @@ class RoleIndex extends Component
         $permissions = Permission::whereIn('name', $this->selectedPermissions)
             ->where('guard_name', 'web')
             ->get();
+
         $role->syncPermissions($permissions);
         $this->roleModal = false;
         unset($this->roles);

@@ -4,7 +4,6 @@ namespace App\Livewire\Brands;
 use App\Models\Brand;
 use App\Traits\WithSearch;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Locked, Computed};
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -35,11 +34,6 @@ class BrandIndex extends Component
                 $query->where('name', 'like', '%' . $this->search . '%');
             })->latest()
             ->paginate(10);
-    }
-
-    public function render()
-    {
-        return view('livewire.brands.brand-index');
     }
 
     public function create()
@@ -120,5 +114,10 @@ class BrandIndex extends Component
         } catch (\Exception $e) {
             $this->notification()->error('Error', 'Ocurrió un error inesperado.');
         }
+    }
+
+    public function render()
+    {
+        return view('livewire.brands.brand-index');
     }
 }

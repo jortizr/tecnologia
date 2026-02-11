@@ -19,7 +19,7 @@
                     --}}
                 </div>
 
-                    @if($canManage)
+                    @can('dashboard.roles.create')
                         <x-wireui-button
                             label="Nuevo Rol"
                             icon="user-plus"
@@ -27,15 +27,15 @@
                             primary
                             class="w-full sm:w-auto sm:px-6 sm:ml-2"
                         />
-                    @endif
+                    @endcan
             </x-slot>
             <x-slot name="headers">
                 <tr class="text-custom-dark-bg dark:text-gray-200 uppercase text-xs tracking-wider">
                     <th class="px-6 py-4 text-left">Rol</th>
                     <th class="px-6 py-4 text-left">Permisos</th>
-                     @if($canManage)
+                     @can('dashboard.roles.update')
                     <th class="px-6 py-4 text-center">Acciones</th>
-                    @endif
+                    @endcan
                 </tr>
             </x-slot>
             <x-slot name="dataTBody">
@@ -80,7 +80,7 @@
                 @endforelse
             </x-slot>
         </x-data-table>
-
+        @can('dashboard.roles.create')
         {{-- MODAL DE CREACIÓN/EDICIÓN --}}
         <x-wireui-modal-card title="{{ $isEditing ? 'Editar Rol' : 'Nuevo Rol' }}" wire:model.defer="roleModal">
             <div class="grid grid-cols-1 gap-4">
@@ -120,5 +120,6 @@
                 </div>
             </x-slot>
         </x-wireui-modal-card>
+        @endcan
     </div>
 </div>

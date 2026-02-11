@@ -12,18 +12,22 @@
             <x-heroicon-s-users class="w-5 h-5 shrink-0"/>
             <span class="ms-3">{{ __('Usuarios') }}</span>
         </x-nav-link>
+        @endcan
+        @can('dashboard.roles.show')
         <x-nav-link href="{{ route('dashboard.roles.show') }}" :active="request()->routeIs('dashboard.roles.show')">
             <x-heroicon-s-users class="w-5 h-5 shrink-0"/>
             <span class="ms-3">{{ __('Roles') }}</span>
         </x-nav-link>
         @endcan
     </li>
+    @can('dashboard.collaborators.show')
     <li>
         <x-nav-link href="{{ route('dashboard.collaborators.show') }}" :active="request()->routeIs('dashboard.collaborators.show')">
             <x-heroicon-c-user-group class="w-5 h-5 shrink-0"/>
             <span class="ms-3">{{ __('Colaboradores') }}</span>
         </x-nav-link>
     </li>
+    @endcan
     <li>
         @can('dashboard.departments.show')
         <x-nav-link href="{{ route('dashboard.departments.show') }}" :active="request()->routeIs('dashboard.departments.show')">
@@ -35,7 +39,7 @@
     <hr class="my-2 border-gray-200 dark:border-gray-700">
     {{-- Dropdown de Configuración de Equipos --}}
     <li>
-        @can('dashboard.brands.show')
+
         <x-nav-dropdown
             title="Catálogo Dispositivos"
             :active="request()->routeIs(['dashboard.brands.*', 'dashboard.devicemodels.*'])">
@@ -43,18 +47,22 @@
             <x-slot name="icon">
                 <x-heroicon-o-cog-6-tooth class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white "/>
             </x-slot>
+            @can('dashboard.brands.show')
             <li>
                 <x-nav-link href="{{ route('dashboard.brands.show') }}" :active="request()->routeIs('dashboard.brands.show')">
                     <span class="ms-3">{{ __('Marcas') }}</span>
                 </x-nav-link>
             </li>
+            @endcan
+            @can('dashboard.devicemodels.show')
             <li>
                 <x-nav-link href="{{ route('dashboard.devicemodels.show') }}" :active="request()->routeIs('dashboard.devicemodels.show')">
                     <span class="ms-3">{{ __('Modelos') }}</span>
                 </x-nav-link>
             </li>
+             @endcan
         </x-nav-dropdown>
-        @endcan
+
     </li>
 
     {{-- Sección de Operaciones --}}
