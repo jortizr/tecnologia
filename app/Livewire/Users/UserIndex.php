@@ -65,7 +65,8 @@ class UserIndex extends Component
 
     public function create()
     {
-        $this->reset(['name', 'last_name', 'email', 'password', 'role', 'userId', 'isEditing']);
+        $this->authorize('create', User::class);
+        $this->reset(['name', 'last_name', 'email', 'password', 'role', 'userId', 'isEditing', 'is_active']);
         $this->is_active = true;
         $this->userModal = true;
     }
@@ -155,40 +156,34 @@ class UserIndex extends Component
     {
         try {
             $user = User::findOrFail($userId);
+
+            if (Auth::id() === $user->id) {
+            $this->notification()->error('Acción no permitida', 'No puedes desactivar tu propia cuenta.');
+            return;
+        }
+
             $this->authorize('update', $user);
             // Cambiamos el estado explícitamente
-            $user->is_active = ! $user->is_active;
-            $user->save();
+            $newStatus = !$user->is_active;
+            $user->update(['is_active' => $newStatus]);
 
             unset($this->users);
 
-            if ($user->is_active) {
-                $this->notification()->success(
-                    title: 'Usuario Activado',
-                    description: "{$user->name} ahora tiene acceso al sistema."
-                );
+            // Disparamos la notificación basada en el nuevo estado real
+            if ($newStatus) {
+                $this->notification()->success('Usuario Activado', "{$user->names} ahora está activo.");
             } else {
-                $this->notification()->warning(
-                    title: 'Usuario Desactivado',
-                    description: "{$user->name} ya no podrá iniciar sesión."
-                );
+                $this->notification()->warning('Usuario Desactivado', "{$user->names} ha sido desactivado.");
             }
 
+
         } catch (\Exception $e) {
-            $this->notification()->error(
-                title: 'Error de sistema',
-                description: 'No se pudo actualizar el estado.'
-            );
+            $this->notification()->error('Error', 'No se pudo actualizar el estado: ' . $e->getMessage());
         }
     }
 
     public function render()
     {
-        /** @var \App\Models\User $user */
-        $user            = Auth::user();
-        $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage']) ?? false;
-        return view('livewire.users.user-index', [
-            'canManage' => $this->canManage,
-        ]);
+        return view('livewire.users.user-index');
     }
 }

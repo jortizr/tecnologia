@@ -39,6 +39,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'is_active',
     ];
 
     /**
@@ -61,6 +62,14 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function creator(){
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updater(){
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 
 
     /**

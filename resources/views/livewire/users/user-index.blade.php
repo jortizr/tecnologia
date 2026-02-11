@@ -34,7 +34,7 @@
                         class="dark:bg-custom-dark-header"
                     />
                 </div>
-                    @if($canManage)
+                    @can('dashboard.users.create')
                         <x-wireui-button
                             label="Nuevo Usuario"
                             icon="user-plus"
@@ -42,17 +42,17 @@
                             primary
                             class="w-full sm:w-auto sm:px-6 sm:ml-2"
                         />
-                    @endif
+                    @endcan
             </x-slot>
             <x-slot name="headers">
                 <tr class="text-custom-dark-bg dark:text-gray-200 uppercase text-xs tracking-wider">
                     <th class="px-6 py-4 text-left">Usuario</th>
                     <th class="px-6 py-4 text-left">Email</th>
                     <th class="px-6 py-4 text-center">Rol</th>
+                    @can('dashboard.users.update')
                     <th class="px-6 py-4 text-center">Estado</th>
-                     @if($canManage)
                     <th class="px-6 py-4 text-center">Acciones</th>
-                    @endif
+                    @endcan
                 </tr>
             </x-slot>
             <x-slot name="dataTBody">
@@ -67,6 +67,7 @@
                                 <x-wireui-badge flat primary class="bg-brand-soft text-brand-primary" :label="$role->name" />
                             @endforeach
                         </td>
+                        @can('dashboard.users.update')
                         <td class="px-4 py-3 text-center">
                             <div class="flex justify-center items-center">
                                 <x-wireui-toggle
@@ -78,7 +79,6 @@
                                     wire:target="toggleStatus"
                                 />
                             </div>
-
                         </td>
                         <td class="px-4 py-2 text-center align-middle">
                             <div class="flex justify-center items-center gap-2">
@@ -93,6 +93,7 @@
                             />
                             </div>
                         </td>
+                        @endcan
                     </tr>
                 @empty
                     <tr>
@@ -104,7 +105,7 @@
                 @endforelse
             </x-slot>
         </x-data-table>
-
+        @can('dashboard.users.create')
         {{-- MODAL DE CREACIÓN/EDICIÓN --}}
         <x-wireui-modal-card title="{{ $isEditing ? 'Editar Usuario' : 'Nuevo Usuario' }}" wire:model.defer="userModal">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -139,5 +140,6 @@
                 <x-wireui-button primary label="Guardar Usuario" wire:click="save" spinner="save" />
             </x-slot>
         </x-wireui-modal-card>
+        @endcan
     </div>
 </div>
