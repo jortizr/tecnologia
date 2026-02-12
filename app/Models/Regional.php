@@ -14,4 +14,11 @@ class Regional extends Model
     public function collaborator(){
         return $this->hasMany(Collaborator::class);
     }
+
+    public function creator(){
+        return $this->belongsTo(User::class, 'created_by');
+    }
+    public function updater(){
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }
