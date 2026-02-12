@@ -8,6 +8,7 @@ use App\Livewire\Collaborators\CollaboratorImport;
 use App\Livewire\Devices\ModelIndex;
 use App\Livewire\Roles\RoleIndex;
 use App\Livewire\Departments\DepartmentIndex;
+use App\Livewire\Regionals\RegionalIndex;
 
 
 Route::get('/', function () {
@@ -50,6 +51,10 @@ Route::middleware([
     Route::get('dashboard/departments/show', DepartmentIndex::class)
     ->middleware('permission:dashboard.departments.show')
         ->name('dashboard.departments.show');
+
+    Route::get('dashboard/regionals/show', RegionalIndex::class)
+        ->middleware('permission:dashboard.regionals.show')
+        ->name('dashboard.regionals.show');
 
 });
 

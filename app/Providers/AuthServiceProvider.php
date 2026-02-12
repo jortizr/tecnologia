@@ -7,11 +7,13 @@ use App\Models\Brand;
 use App\Models\Department;
 use App\Models\DeviceModel;
 use App\Models\User;
+use App\Models\Regional;
 use App\Policies\CollaboratorPolicy;
 use App\Policies\BrandPolicy;
 use App\Policies\DepartmentPolicy;
 use App\Policies\DeviceModelPolicy;
 use App\Policies\UserPolicy;
+use App\Policies\RegionalPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -28,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         Brand::class => BrandPolicy::class,
         DeviceModel::class => DeviceModelPolicy::class,
         User::class => UserPolicy::class,
+        Regional::class => RegionalPolicy::class,
     ];
 
     /**

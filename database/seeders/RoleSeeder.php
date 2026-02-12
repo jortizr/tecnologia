@@ -43,6 +43,7 @@ class RoleSeeder extends Seeder
         'failure.types'      => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
         'brands'             => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
         'departments'        => ['admins' => [$superadmin], 'viewers' => []],
+        'regionals'        => ['admins' => [$superadmin], 'viewers' => []],
     ];
 
        $actions = ['show', 'create', 'update', 'delete'];

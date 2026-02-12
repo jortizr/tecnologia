@@ -20,26 +20,39 @@
         </x-nav-link>
         @endcan
     </li>
-    @can('dashboard.collaborators.show')
+    <hr class="my-2 border-gray-200 dark:border-gray-700">
     <li>
-        <x-nav-link href="{{ route('dashboard.collaborators.show') }}" :active="request()->routeIs('dashboard.collaborators.show')">
-            <x-heroicon-c-user-group class="w-5 h-5 shrink-0"/>
-            <span class="ms-3">{{ __('Colaboradores') }}</span>
-        </x-nav-link>
-    </li>
-    @endcan
-    <li>
-        @can('dashboard.departments.show')
-        <x-nav-link href="{{ route('dashboard.departments.show') }}" :active="request()->routeIs('dashboard.departments.show')">
-            <x-wireui-icon name="building-office" class="w-5 h-5 shrink-0"/>
-            <span class="ms-3">{{ __('Areas') }}</span>
-        </x-nav-link>
-        @endcan
+        <x-nav-dropdown
+            title="Datos Organizacionales"
+            :active="request()->routeIs(['dashboard.collaborators.*', 'dashboard.departments.*', 'dashboard.regionals.*'])">
+            <x-slot name="icon">
+                <x-heroicon-o-circle-stack class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white "/>
+            </x-slot>
+            @can('dashboard.regionals.show')
+            <x-nav-link href="{{ route('dashboard.regionals.show') }}" :active="request()->routeIs('dashboard.regionals.show')">
+                <x-wireui-icon name="globe-americas" class="w-5 h-5 shrink-0"/>
+                <span class="ms-3">{{ __('Regionales') }}</span>
+            </x-nav-link>
+            @endcan
+            @can('dashboard.departments.show')
+            <x-nav-link href="{{ route('dashboard.departments.show') }}" :active="request()->routeIs('dashboard.departments.show')">
+                <x-wireui-icon name="building-office" class="w-5 h-5 shrink-0"/>
+                <span class="ms-3">{{ __('Areas') }}</span>
+            </x-nav-link>
+            @endcan
+            @can('dashboard.collaborators.show')
+            <li>
+                <x-nav-link href="{{ route('dashboard.collaborators.show') }}" :active="request()->routeIs('dashboard.collaborators.show')">
+                    <x-heroicon-c-user-group class="w-5 h-5 shrink-0"/>
+                    <span class="ms-3">{{ __('Colaboradores') }}</span>
+                </x-nav-link>
+            </li>
+            @endcan
+
+        </x-nav-dropdown>
     </li>
     <hr class="my-2 border-gray-200 dark:border-gray-700">
-    {{-- Dropdown de Configuración de Equipos --}}
     <li>
-
         <x-nav-dropdown
             title="Catálogo Dispositivos"
             :active="request()->routeIs(['dashboard.brands.*', 'dashboard.devicemodels.*'])">
@@ -50,6 +63,7 @@
             @can('dashboard.brands.show')
             <li>
                 <x-nav-link href="{{ route('dashboard.brands.show') }}" :active="request()->routeIs('dashboard.brands.show')">
+                    <x-wireui-icon name="tag" class="w-5 h-5 shrink-0"/>
                     <span class="ms-3">{{ __('Marcas') }}</span>
                 </x-nav-link>
             </li>
@@ -57,12 +71,12 @@
             @can('dashboard.devicemodels.show')
             <li>
                 <x-nav-link href="{{ route('dashboard.devicemodels.show') }}" :active="request()->routeIs('dashboard.devicemodels.show')">
+                    <x-wireui-icon name="device-phone-mobile" class="w-5 h-5 shrink-0"/>
                     <span class="ms-3">{{ __('Modelos') }}</span>
                 </x-nav-link>
             </li>
              @endcan
         </x-nav-dropdown>
-
     </li>
 
     {{-- Sección de Operaciones --}}
