@@ -20,7 +20,7 @@ class RegionalPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user, Regional $regional){
+    public function viewAny(User $user): bool {
         return $user->can('dashboard.regionals.show');
     }
 
@@ -29,7 +29,7 @@ class RegionalPolicy
      */
     public function view(User $user, Regional $regional): bool
     {
-        return $user->can('dashboard.departments.show');
+        return $user->can('dashboard.regionals.show');
     }
 
     /**
@@ -37,7 +37,7 @@ class RegionalPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('dashboard.departments.create');
+        return $user->can('dashboard.regionals.create');
     }
 
     /**
@@ -45,7 +45,7 @@ class RegionalPolicy
      */
     public function update(User $user, Regional $regional): bool
     {
-        return $user->can('dashboard.departments.update');
+        return $user->can('dashboard.regionals.update');
     }
 
     /**
@@ -53,7 +53,7 @@ class RegionalPolicy
      */
     public function delete(User $user, Regional $regional): bool
     {
-        return $user->can('dashboard.departments.delete');
+        return $user->can('dashboard.regionals.delete');
     }
 
 }
