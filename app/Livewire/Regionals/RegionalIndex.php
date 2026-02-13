@@ -48,7 +48,7 @@ class RegionalIndex extends Component
 
     public function save(){
         $this->validate([
-            'name' => 'required|min:3|max:50|unique:regionals,name' . ($this->isEditing ? $this->regionalId : 'NULL')
+            'name' => 'required|min:3|max:50|unique:regionals,name,' . ($this->isEditing ? $this->regionalId : 'NULL')
         ]);
 
         if($this->isEditing){
@@ -87,15 +87,15 @@ class RegionalIndex extends Component
         ]);
     }
 
-        public function delete($regionalId)
+    public function delete($regionalId)
     {
         try {
-            $regional = Regional::findOrFail($regionalId);
+            $regional = Regional::withCount('collaborators')->findOrFail($regionalId);
             // Si usas Policies de Spatie/Laravel
             $this->authorize('delete', $regional);
 
-            if($regional->device_models_count > 0){
-                $this->notification()->error('Accion denegada', "No puedes eliminar esta marca porque tiene {$regional->device_models_count} modelos asociados. modelos asociados.");
+            if($regional->collaborators_count > 0){
+                $this->notification()->error('Accion denegada', "No puedes eliminar esta regional porque tiene {$regional->collaborators_count} colaboradores asociados.");
                 return;
             }
             $regional->delete();
@@ -105,7 +105,7 @@ class RegionalIndex extends Component
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
             $this->notification()->error('Acceso denegado', 'No tienes permisos para realizar esta acción.');
         } catch (\Exception $e) {
-            $this->notification()->error('Error', 'Ocurrió un error inesperado.');
+            $this->notification()->error('Error', 'Ocurrió un error inesperado.'. $e);
         }
     }
 

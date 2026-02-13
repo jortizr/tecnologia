@@ -22,7 +22,7 @@ class Regional extends Model
         );
     }
 
-    public function collaborator(){
+    public function collaborators(){
         return $this->hasMany(Collaborator::class);
     }
 
