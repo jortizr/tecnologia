@@ -9,6 +9,7 @@ use App\Livewire\Devices\ModelIndex;
 use App\Livewire\Roles\RoleIndex;
 use App\Livewire\Departments\DepartmentIndex;
 use App\Livewire\Regionals\RegionalIndex;
+use App\Livewire\Occupations\OccupationIndex;
 
 
 Route::get('/', function () {
@@ -55,6 +56,10 @@ Route::middleware([
     Route::get('dashboard/regionals/show', RegionalIndex::class)
         ->middleware('permission:dashboard.regionals.show')
         ->name('dashboard.regionals.show');
+
+    Route::get('dashboard/occupations/show', OccupationIndex::class)
+        ->middleware('permission:dashboard.occupations.show')
+        ->name('dashboard.occupations.show');
 
 });
 

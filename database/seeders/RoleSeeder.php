@@ -36,6 +36,7 @@ class RoleSeeder extends Seeder
         'failures'           => ['admins' => [$superadmin, $manager], 'viewers' => [$viewer]],
         'collaborators'      => ['admins' => [$superadmin, $manager], 'viewers' => [$viewer]],
         'collaborators.import'=> ['admins' => [$superadmin, $manager], 'viewers' => []],
+        'occupations'        => ['admins' => [$superadmin], 'viewers' => [$manager]],
         'assignments'        => ['admins' => [$superadmin], 'viewers' => [$manager]],
         'physical.states'    => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
         'operational.states' => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],

@@ -48,6 +48,14 @@
                 </x-nav-link>
             </li>
             @endcan
+            @can('dashboard.occupations.show')
+            <li>
+                <x-nav-link href="{{ route('dashboard.occupations.show') }}" :active="request()->routeIs('dashboard.occupations.show')">
+                    <x-heroicon-c-briefcase class="w-5 h-5 shrink-0"/>
+                    <span class="ms-3">{{ __('Cargos') }}</span>
+                </x-nav-link>
+            </li>
+            @endcan
 
         </x-nav-dropdown>
     </li>
