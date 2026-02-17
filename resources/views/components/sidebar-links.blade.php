@@ -56,7 +56,6 @@
                 </x-nav-link>
             </li>
             @endcan
-
         </x-nav-dropdown>
     </li>
     <hr class="my-2 border-gray-200 dark:border-gray-700">
@@ -83,17 +82,24 @@
                     <span class="ms-3">{{ __('Modelos') }}</span>
                 </x-nav-link>
             </li>
+            @endcan
+            @can('dashboard.physicalstates.show')
+            <li>
+                <x-nav-link href="{{ route('dashboard.physicalstates.show') }}" :active="request()->routeIs('dashboard.physicalstates.show')">
+                    <x-wireui-icon name="device-tablet" class="w-5 h-5 shrink-0"/>
+                    <span class="ms-3">{{ __('Estado fisico') }}</span>
+                </x-nav-link>
+            </li>
              @endcan
+            @can('dashboard.devices.show')
+            <li>
+                <x-nav-link href="#" :active="request()->routeIs('Dispositivos.*')">
+                    <x-heroicon-o-device-phone-mobile class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
+                    <span class="ms-3">{{ __('Celulares') }}</span>
+                </x-nav-link>
+            </li>
+            @endcan
         </x-nav-dropdown>
     </li>
 
-    {{-- Sección de Operaciones --}}
-    <li>
-        @can('dashboard.devices.show')
-        <x-nav-link href="#" :active="request()->routeIs('Dispositivos.*')">
-            <x-heroicon-o-device-phone-mobile class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
-            <span class="ms-3">{{ __('Celulares') }}</span>
-        </x-nav-link>
-        @endcan
-    </li>
 </ul>

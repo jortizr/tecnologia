@@ -10,7 +10,7 @@ use App\Livewire\Roles\RoleIndex;
 use App\Livewire\Departments\DepartmentIndex;
 use App\Livewire\Regionals\RegionalIndex;
 use App\Livewire\Occupations\OccupationIndex;
-
+use App\Livewire\PhysicalStates\PhysicalStateIndex;
 
 Route::get('/', function () {
     return view('welcome');
@@ -60,6 +60,10 @@ Route::middleware([
     Route::get('dashboard/occupations/show', OccupationIndex::class)
         ->middleware('permission:dashboard.occupations.show')
         ->name('dashboard.occupations.show');
+
+    Route::get('dashboard/physicalstates/show', PhysicalStateIndex::class)
+        ->middleware('permission:dashboard.physicalstates.show')
+        ->name('dashboard.physicalstates.show');
 
 });
 
