@@ -85,6 +85,7 @@
         <x-wireui-modal-card title="{{ $isEditing ? 'Editar Rol' : 'Nuevo Rol' }}" wire:model.defer="roleModal">
             <div class="grid grid-cols-1 gap-4">
                 <x-wireui-input label="Nombre del Rol" wire:model.defer="name" placeholder="ej. Editor de Contenido" />
+                <x-wireui-input label="Descripcion" wire:model.defer="description" placeholder="ej. Editor de Contenido" />
 
                 <div class="flex items-center gap-2 mt-2">
                     <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Asignar Permisos</span>

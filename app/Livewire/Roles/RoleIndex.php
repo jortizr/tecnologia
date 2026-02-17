@@ -18,7 +18,6 @@ class RoleIndex extends Component
     public bool $roleModal = false;
     public bool $isEditing = false;
     public $name;
-    public $description;
     public array $selectedPermissions = [];
 
     #[Locked]
@@ -42,7 +41,6 @@ class RoleIndex extends Component
         $role = Role::findOrFail($id);
         $this->roleId = $id;
         $this->name = $role->name;
-        $this->description = $role->description;
         $this->selectedPermissions = $role->permissions->pluck('name')->toArray();
         $this->isEditing = true;
         $this->roleModal = true;
@@ -97,8 +95,7 @@ class RoleIndex extends Component
             $this->authorize('update', $role);
 
             $role->update([
-                'name' => $this->name,
-                'description' => $this->description,
+                'name' => $this->name
             ]);
             $this->notification()->success('Actualizado', 'Rol actualizado con éxito');
         } else {
