@@ -212,9 +212,12 @@ public function toggleStatus($collaboratorId)
                 description: "{$collaborator->names} ha sido desactivado."
             );
         }
-    } catch (\Exception $e) {
-        $this->notification()->error('Error', 'No se pudo actualizar el estado.');
-    }
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e){
+            $this->notification()->error('Acceso denegado', 'No tienes permisos para realizar esta acción.');
+            $this->dispatch('$refresh');
+        } catch (\Exception $e){
+            $this->notification()->error('Error', 'Ocurrió un error inesperado.' . $e);
+        }
 }
 
 
