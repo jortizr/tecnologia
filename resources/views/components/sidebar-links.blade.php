@@ -92,6 +92,14 @@
                 </x-nav-link>
             </li>
              @endcan
+            @can('dashboard.operationalstates.show')
+            <li>
+                <x-nav-link href="{{ route('dashboard.operationalstates.show') }}" :active="request()->routeIs('dashboard.operationalstates.show')">
+                    <x-wireui-icon name="device-tablet" class="w-5 h-5 shrink-0"/>
+                    <span class="ms-3">{{ __('Estado operacional') }}</span>
+                </x-nav-link>
+            </li>
+             @endcan
             @can('dashboard.devices.show')
             <li>
                 <x-nav-link href="#" :active="request()->routeIs('Dispositivos.*')">

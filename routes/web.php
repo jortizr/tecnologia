@@ -7,6 +7,7 @@ use App\Livewire\Collaborators\CollaboratorIndex;
 use App\Livewire\Collaborators\CollaboratorImport;
 use App\Livewire\Devices\ModelIndex;
 use App\Livewire\Roles\RoleIndex;
+use App\Livewire\OperationalStates\OperationalStateIndex;
 use App\Livewire\Departments\DepartmentIndex;
 use App\Livewire\Regionals\RegionalIndex;
 use App\Livewire\Occupations\OccupationIndex;
@@ -65,5 +66,8 @@ Route::middleware([
         ->middleware('permission:dashboard.physicalstates.show')
         ->name('dashboard.physicalstates.show');
 
+    Route::get('dashboard/operationalstates/show', OperationalStateIndex::class)
+        ->middleware('permission:dashboard.operationalstates.show')
+        ->name('dashboard.operationalstates.show');
 });
 

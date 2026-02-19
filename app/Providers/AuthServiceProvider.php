@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Occupation;
 use App\Models\Department;
 use App\Models\DeviceModel;
+use App\Models\OperationalState;
 use App\Models\PhysicalState;
 use App\Models\User;
 use App\Models\Regional;
@@ -15,6 +16,7 @@ use App\Policies\BrandPolicy;
 use App\Policies\DepartmentPolicy;
 use App\Policies\DeviceModelPolicy;
 use App\Policies\OccupationPolicy;
+use App\Policies\OperationalStatePolicy;
 use App\Policies\PhysicalStatePolicy;
 use App\Policies\UserPolicy;
 use App\Policies\RegionalPolicy;
@@ -37,6 +39,7 @@ class AuthServiceProvider extends ServiceProvider
         Regional::class => RegionalPolicy::class,
         Occupation::class => OccupationPolicy::class,
         PhysicalState::class => PhysicalStatePolicy::class,
+        OperationalState::class => OperationalStatePolicy::class,
     ];
 
     /**
