@@ -34,7 +34,7 @@
                     <th class="px-6 py-4">Regional</th>
                     <th class="px-6 py-4">Creado por</th>
                     <th class="px-6 py-4">Actualizado por</th>
-                    @can('dashboard.departments.update')
+                    @can('dashboard.regionals.update')
                     <th class="px-6 py-4">Acciones</th>
                     @endcan
                 </tr>
@@ -45,7 +45,7 @@
                     <td class="px-4 py-2">{{ $regional->name}}</td>
                     <td class="px-4 py-2 text-center">{{ $regional->creator?->name ?? 'sin movimiento' }}</td>
                     <td class="px-4 py-2 text-center">{{ $regional->updater?->name ?? 'sin actualizacion' }}</td>
-                    @can('dashboard.departments.update')
+                    @can('dashboard.regionals.update')
                     <td class="px-4 py-2 text-center align-middle">
                         <div class="flex justify-center items-center gap-2">
                         <x-wireui-button xs circle secondary icon="pencil" wire:click="edit({{ $regional->id }})" />
