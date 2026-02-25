@@ -25,7 +25,7 @@
     <li>
         <x-nav-dropdown
             title="Datos Organizacionales"
-            :active="request()->routeIs(['dashboard.collaborators.*', 'dashboard.departments.*', 'dashboard.regionals.*'])">
+            :active="request()->routeIs(['dashboard.collaborators.*', 'dashboard.departments.*', 'dashboard.regionals.*', 'dashboard.occupations.*'])">
             <x-slot name="icon">
                 <x-heroicon-o-circle-stack class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white "/>
             </x-slot>
@@ -63,7 +63,7 @@
     <li>
         <x-nav-dropdown
             title="Catálogo Dispositivos"
-            :active="request()->routeIs(['dashboard.brands.*', 'dashboard.devicemodels.*'])">
+            :active="request()->routeIs(['dashboard.brands.*', 'dashboard.devicemodels.*', 'dashboard.physicalstates.*', 'dashboard.operationalstates.*', 'dashboard.devices.*'])">
 
             <x-slot name="icon">
                 <x-heroicon-o-cog-6-tooth class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white "/>
