@@ -9,6 +9,7 @@ use App\Livewire\Devices\ModelIndex;
 use App\Livewire\Roles\RoleIndex;
 use App\Livewire\OperationalStates\OperationalStateIndex;
 use App\Livewire\Departments\DepartmentIndex;
+use App\Livewire\Devices\DeviceIndex;
 use App\Livewire\Regionals\RegionalIndex;
 use App\Livewire\Occupations\OccupationIndex;
 use App\Livewire\PhysicalStates\PhysicalStateIndex;
@@ -69,5 +70,9 @@ Route::middleware([
     Route::get('dashboard/operationalstates/show', OperationalStateIndex::class)
         ->middleware('permission:dashboard.operationalstates.show')
         ->name('dashboard.operationalstates.show');
+
+    Route::get('dashboard/devices/show', DeviceIndex::class)
+        ->middleware('permission:dashboard.devices.show')
+        ->name('dashboard.devices.show');
 });
 
