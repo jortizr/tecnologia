@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAuditColumns;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Device extends Model
 {
@@ -23,30 +24,30 @@ class Device extends Model
         'updated_by',
     ];
 
-    public function device_model(){
+    public function deviceModel():BelongsTo{
         return $this->belongsTo(DeviceModel::class);
     }
 
-    public function device_type(){
+    public function deviceType():BelongsTo{
         return $this->belongsTo(DeviceType::class);
     }
 
-    public function location(){
+    public function location():BelongsTo{
         return $this->belongsTo(Location::class);
     }
 
-    public function operational_state(){
+    public function operationalState():BelongsTo{
         return $this->belongsTo(OperationalState::class);
     }
 
-    public function physical_state(){
+    public function physicalState():BelongsTo {
         return $this->belongsTo(PhysicalState::class);
     }
 
-    public function creator(){
+    public function creator():BelongsTo{
         return $this->belongsTo(User::class, 'created_by');
     }
-    public function updater(){
+    public function updater():BelongsTo{
         return $this->belongsTo(User::class, 'updated_by');
     }
 

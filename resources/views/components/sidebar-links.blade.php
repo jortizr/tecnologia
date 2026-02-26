@@ -102,7 +102,7 @@
              @endcan
             @can('dashboard.devices.show')
             <li>
-                <x-nav-link href="#" :active="request()->routeIs('Dispositivos.*')">
+                <x-nav-link href="{{ route('dashboard.devices.show') }}" :active="request()->routeIs('Dispositivos.*')">
                     <x-heroicon-o-device-phone-mobile class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
                     <span class="ms-3">{{ __('Celulares') }}</span>
                 </x-nav-link>
