@@ -25,7 +25,6 @@ class CollaboratorIndex extends Component
 
     public bool $isEditing = false;
     public ?Collaborator $collaborator;
-    public $canManage;
     public $names, $last_name, $identification, $payroll_code, $department_id, $regional_id, $occupation_id, $is_active;
     protected $casts = ['is_active' => 'boolean',];
 
@@ -223,12 +222,6 @@ public function toggleStatus($collaboratorId)
 
     public function render()
     {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        $this->canManage = $user?->hasAnyRole(['Superadmin', 'Manage', 'Viewer']) ?? false;
-
-        return view('livewire.collaborators.collaborator-index', [
-            'canManage'=> $this->canManage,
-        ]);
+        return view('livewire.collaborators.collaborator-index');
     }
 }

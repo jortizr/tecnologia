@@ -21,7 +21,7 @@
                         <x-wireui-button
                             label="Nuevo dispositivo"
                             icon="plus"
-                            wire:click="create" {{-- Mejor llamar al método create del controlador --}}
+                            wire:click="create"
                             primary
                             class="w-full sm:w-auto sm:px-6 sm:ml-2"
                         />
@@ -77,7 +77,7 @@
                 @endforeach
                 @if($this->devices->isEmpty())
                 <tr>
-                    <td colspan="5" class="py-12">
+                    <td colspan="10" class="py-11">
                         <div class="flex flex-col items-center justify-center text-secondary-500">
                             <x-wireui-icon name="face-frown" class="w-12 h-12 mb-2 outline-none" />
                             <p class="text-lg font-semibold">No se encontraron dispositivos
@@ -110,7 +110,7 @@
 
                 <x-wireui-select label="Seleccionar estado fisico" placeholder="Busca estado fisico del dispositivo" wire:model="physicalStateId" :options="$this->physicalStates" option-label="name" option-value="id" />
 
-                <x-datetime-picker wire:model="adquisitionDate" label="Feche adquisición" placeholder="seleccione la fecha de adquisición"/>
+                <x-wireui-datetime-picker wire:model="adquisitionDate" label="Feche adquisición" placeholder="seleccione la fecha de adquisición"/>
             </div>
 
             <x-slot name="footer" class="flex justify-end gap-x-4">
