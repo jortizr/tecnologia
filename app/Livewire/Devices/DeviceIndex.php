@@ -21,7 +21,7 @@ class DeviceIndex extends Component
     public bool $deviceModal = false;
     public bool $isEditing = false;
     public ?Device $device;
-    public $serial_number, $imei, $acquisition_date;
+    public $serial_number, $imei, $acquisition_date, $deviceTypeId, $deviceModelId, $locationId, $operationalStateId, $physicalStateId;
 
     #[Locked]
     public $deviceId;
