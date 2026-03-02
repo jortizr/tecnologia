@@ -3,8 +3,9 @@
 namespace App\Livewire\Devices;
 
 use App\Models\Device;
-use App\Models\DeviceModel;
+use App\Models\Brand;
 use App\Models\DeviceType;
+use App\Models\DeviceModel;
 use App\Models\Location;
 use App\Models\OperationalState;
 use App\Models\PhysicalState;
@@ -21,7 +22,7 @@ class DeviceIndex extends Component
     public bool $deviceModal = false;
     public bool $isEditing = false;
     public ?Device $device;
-    public $serial_number, $imei, $acquisition_date, $deviceTypeId, $deviceModelId, $locationId, $operationalStateId, $physicalStateId;
+    public $serial_number, $imei, $acquisitionDate, $deviceTypeId, $deviceModelId, $locationId, $operationalStateId, $physicalStateId, $brandId;
 
     #[Locked]
     public $deviceId;
@@ -33,11 +34,12 @@ class DeviceIndex extends Component
 
     #[Computed]
     public function devices(){
-        return Device::query()->with(['deviceModel:id,name', 'deviceType:id,name', 'location:id,name', 'operationalState:id,name', 'physicalState:id,name','creator:id,name', 'updater:id,name'])
-        ->when($this->search, function($query){
-            $query->wheere('serial', 'like', "%{$this->search}%");
-        })
-        ->latest()->paginate(10);
+        return Device::query()
+            ->with(['deviceModel.brand','deviceModel.deviceType', 'location:id,name', 'operationalState:id,name', 'physicalState:id,name'])
+            ->when($this->search, function($query){
+                $query->where('serial_number', 'like', "%{$this->search}%")
+                    ->orWhere('imei', 'like', "%{$this->search}%");
+            })->latest()->paginate(10);
     }
 
     #[Computed]
@@ -46,8 +48,21 @@ class DeviceIndex extends Component
     }
 
     #[Computed]
-    public function deviceModels(){
-        return DeviceModel::select('id', 'name')->orderBy('name', 'asc')->get();
+    public function brands(){
+       if(!$this->deviceTypeId) return [];
+       return Brand::whereHas('deviceModels', function($q){
+            $q->where('device_type_id', $this->deviceTypeId);
+       })->select('id', 'name')->get();
+    }
+
+    #[Computed]
+    public function filterModels(){
+        if(!$this->brandId || !$this->deviceTypeId) return [];
+
+        return DeviceModel::where('brand_id', $this->brandId)
+            ->where('device_type_id', $this->deviceTypeId)
+            ->select('id', 'name')
+            ->get();
     }
 
     #[Computed]
@@ -65,8 +80,20 @@ class DeviceIndex extends Component
         return PhysicalState::select('id','name')->orderBy('name')->get();
     }
 
+    public function updatedDeviceTypeId()
+    {
+        $this->brandId = null;
+        $this->deviceModelId = null;
+    }
+
+    public function updatedBrandId()
+    {
+        $this->deviceModelId = null;
+    }
+
     public function create(){
-        $this->reset('serial_number', 'imei', 'acquisition_date', 'isEditing');
+        $this->reset('serial_number', 'imei', 'acquisitionDate', 'isEditing', 'deviceTypeId', 'brandId','deviceModelId', 'locationId', 'operationalStateId', 'physicalStateId');
+        $this->deviceModal = true;
     }
 
     public function render()

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasAuditColumns;
 class DeviceModel extends Model
 {
@@ -13,6 +14,7 @@ class DeviceModel extends Model
     protected $fillable =[
         'name',
         'brand_id',
+        'device_type_id',
         'created_by',
         'updated_by',
     ];
@@ -24,8 +26,14 @@ class DeviceModel extends Model
         );
     }
 
-    public function brand(){
+    public function brand(): BelongsTo
+    {
         return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    public function deviceType(): BelongsTo
+    {
+        return $this->belongsTo(DeviceType::class, 'device_type_id');
     }
 
     public function creator(){

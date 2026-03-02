@@ -48,14 +48,14 @@
             <x-slot name="dataTBody" lazy>
                 @foreach($this->devices as $device)
                 <tr class="border-b border-gray-700" wire:key="model-{{ $devices->id }}">
-                    <td class="px-4 py-2">{{ $device->device_type?->name ?? 'sin tipo de dispositivo' }}</td>
-                    <td class="px-4 py-2">{{ $device->device_model?->name ?? 'sin modelo' }}</td>
+                    <td class="px-4 py-2">{{ $device->deviceModel->deviceType->name ?? 'N/A' }}</td>
+                    <td class="px-4 py-2">{{ $device->deviceModel->name ?? 'N/A' }}</td>
                     <td class="px-4 py-2">{{ $device->serial_number ?? 'sin numero de serie'}}</td>
                     <td class="px-4 py-2">{{ $device->imei ?? 'sin imei' }}</td>
                     <td class="px-4 py-2">{{ $device->location?->name ?? 'sin ubicación' }}</td>
                     <td class="px-4 py-2">{{ $device->operational_state?->name ?? 'sin estado operativo' }}</td>
                     <td class="px-4 py-2">{{ $device->physical_state?->name ?? 'sin estado fisico' }}</td>
-                    <td class="px-4 py-2">{{ $device->acquisition_date ?? 'sin fecha de adquisición' }}</td>
+                    <td class="px-4 py-2">{{ $device->acquisitionDate ?? 'sin fecha de adquisición' }}</td>
                     <td class="px-4 py-2 text-center">{{ $device->creator?->name ?? 'sin movimiento' }}</td>
                     <td class="px-4 py-2 text-center">{{ $device->updater?->name ?? 'sin actualizacion' }}</td>
                     @can('dashboard.devices.update')
@@ -94,9 +94,31 @@
         <x-wireui-modal-card title="{{ $isEditing ? 'Editar Dispositivo' : 'Nuevo Dispositivo' }}" name="deviceModal"
             wire:model.defer="deviceModal">
             <div class="grid grid-cols-1 gap-4">
-                <x-wireui-select label="Seleccionar tipo de dispositivo" placeholder="Busca tipo de dispositivo" wire:model="deviceTypeId" :options="$this->deviceTypes" option-label="name" option-value="id" />
+                <x-wireui-select label="Tipo"
+                    placeholder="Buscar..."
+                    wire:model.live="deviceTypeId"
+                    :options="$this->deviceTypes"
+                    option-label="name"
+                    option-value="id"
+                />
 
-                <x-wireui-select label="Seleccionar el modelo del dispositivo" placeholder="Busca modelo del dispositivo" wire:model="deviceModelId" :options="$this->deviceModels" option-label="name" option-value="id" />
+                <x-wireui-select label="Marca"
+                    placeholder="Buscar..."
+                    wire:model.live="brandId"
+                    :options="$this->brands"
+                    option-label="name"
+                    option-value="id"
+                    :disabled="!$deviceTypeId"
+                />
+
+                <x-wireui-select label="Modelo"
+                    placeholder="Buscar..."
+                    wire:model="deviceModelId"
+                    :options="$this->filterModels"
+                    option-label="name"
+                    option-value="id"
+                    :disabled="!$brandId"
+                />
 
                 <x-wireui-input label="Serial" placeholder="ingrese el serial..." wire:model="serialNumber"
                     class="uppercase" />

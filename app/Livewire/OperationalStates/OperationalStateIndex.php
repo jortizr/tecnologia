@@ -53,7 +53,7 @@ class OperationalStateIndex extends Component
         $this->validate([
             'name' => ['required', 'min:3', 'max:50',
             Rule::unique('operational_states', 'name')->ignore($this->isEditing ? $this->operationalStateId : null)],
-            'description' => ['required', 'min:10', 'max:50']
+            'description' => ['required', 'min:10', 'max:80']
         ]);
 
         if($this->isEditing){
