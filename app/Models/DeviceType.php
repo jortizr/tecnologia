@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAuditColumns;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DeviceType extends Model
 {
@@ -16,8 +17,9 @@ class DeviceType extends Model
     ];
 
 
-    public function device(){
-        return $this->hasMany(Device::class);
+    public function deviceModels(): HasMany
+    {
+        return $this->hasMany(DeviceModel::class, 'device_type_id');
     }
 
     public function create(){

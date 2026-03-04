@@ -4,8 +4,8 @@ namespace App\Livewire\Devices;
 
 use Livewire\Component;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
 use App\Models\DeviceModel;
+use App\Models\DeviceType;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
 use Livewire\Attributes\{Locked, Computed};
@@ -21,6 +21,7 @@ class ModelIndex extends Component
     public $name;
 
     public $brandId;
+    public $deviceTypeId;
 
     #[Locked]
     public $deviceModelId;
@@ -33,7 +34,7 @@ class ModelIndex extends Component
     public function deviceModels()
     {
         // La consulta se queda aquí para ser eficiente
-        return DeviceModel::query()->with(['brand:id,name','creator:id,name', 'updater:id,name'])
+        return DeviceModel::query()->with(['brand:id,name','deviceType:id,name','creator:id,name', 'updater:id,name'])
         ->when($this->search, function($query){
             $query->where(function($q){ //agrupacion del OR
                 $q->where('name', 'like', "%{$this->search}%")
@@ -49,13 +50,19 @@ class ModelIndex extends Component
         return Brand::select('id', 'name')->orderBy('name', 'asc')->get();
     }
 
+    #[Computed]
+    public function deviceTypes(){
+        return DeviceType::select('id', 'name')->orderBy('name', 'asc')->get();
+    }
+
+
     public function render()
     {
         return view('livewire.devices.model-index');
     }
 
     public function create(){
-        $this->reset(['name', 'brandId', 'isEditing']);
+        $this->reset(['name', 'brandId', 'deviceTypeId', 'isEditing']);
         $this->deviceModelModal = true;
     }
 
@@ -73,6 +80,7 @@ class ModelIndex extends Component
         $this->validate([
             'name' => 'required|min:3|max:50|unique:device_models,name,' . ($this->isEditing ? $this->deviceModelId : 'NULL'),
             'brandId' => 'required|exists:brands,id',
+            'deviceTypeId' => 'required|exists:device_types,id',
         ]);
 
         if ($this->isEditing) {
@@ -81,14 +89,17 @@ class ModelIndex extends Component
 
             $deviceModel->update([
                     'name' => $this->name,
-                    'brand_id' => $this->brandId
+                    'brand_id' => $this->brandId,
+                    'device_type_id' => $this->deviceTypeId
+
             ]);
             $this->notification()->success( 'Actualizado.', 'Modelo actualizado con éxito');
         } else {
             $this->authorize('create', DeviceModel::class);
             DeviceModel::create([
                 'name' => $this->name,
-                'brand_id' => $this->brandId
+                'brand_id' => $this->brandId,
+                'device_type_id' => $this->deviceTypeId
             ]);
             $this->notification()->success('Modelo creado.', 'Nuevo modelo registrado');
         }

@@ -13,7 +13,6 @@ class Device extends Model
     use HasFactory, HasAuditColumns;
     protected $fillable = [
         'device_model_id',
-        'device_type_id',
         'serial_number',
         'imei',
         'location_id',
@@ -25,11 +24,7 @@ class Device extends Model
     ];
 
     public function deviceModel():BelongsTo{
-        return $this->belongsTo(DeviceModel::class);
-    }
-
-    public function deviceType():BelongsTo{
-        return $this->belongsTo(DeviceType::class);
+        return $this->belongsTo(DeviceModel::class, 'device_model_id');
     }
 
     public function location():BelongsTo{

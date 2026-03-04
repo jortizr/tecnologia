@@ -32,6 +32,7 @@
                 <tr class="text-custom-dark-bg dark:text-gray-200 uppercase text-xs tracking-wider">
                     <th class="px-6 py-4">Modelo</th>
                     <th class="px-6 py-4">Marca</th>
+                    <th class="px-6 py-4">Tipo Dispositivo</th>
                     <th class="px-6 py-4">Creado por</th>
                     <th class="px-6 py-4">Actualizado por</th>
                     @can('dashboard.devicemodels.update')
@@ -44,6 +45,7 @@
                 <tr class="border-b border-gray-700" wire:key="model-{{ $deviceModel->id }}">
                     <td class="px-4 py-2">{{ $deviceModel->name}}</td>
                     <td class="px-4 py-2">{{ $deviceModel->brand?->name ?? 'sin marca' }}</td>
+                    <td class="px-4 py-2">{{ $deviceModel->deviceType?->name ?? 'sin marca' }}</td>
                     <td class="px-4 py-2 text-center">{{ $deviceModel->creator?->name ?? 'sin movimiento' }}</td>
                     <td class="px-4 py-2 text-center">{{ $deviceModel->updater?->name ?? 'sin actualizacion' }}</td>
                     @can('dashboard.devicemodels.update')
@@ -87,6 +89,8 @@
 
                 <x-wireui-select label="Seleccionar Marca" placeholder="Busca la marca" wire:model.defer="brandId"
                     :options="$this->brands" option-label="name" option-value="id" />
+                <x-wireui-select label="Tipo Dispositivo" placeholder="Buscar tipo de dispositivo" wire:model.defer="deviceTypeId"
+                    :options="$this->deviceTypes" option-label="name" option-value="id" />
             </div>
 
             <x-slot name="footer" class="flex justify-end gap-x-4">
