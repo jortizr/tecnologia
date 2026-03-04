@@ -96,6 +96,20 @@ class DeviceIndex extends Component
         $this->deviceModal = true;
     }
 
+    public function edit($id){
+        $device = Device::findOrFail($id);
+        $this->deviceId = $id;
+        $this->deviceTypeId = $device->deviceType_id;
+        $this->brandId = $device->brand_id;
+        $this->deviceModelId = $device->device_model_id;
+        $this->serial_number= $device->serial_number;
+        $this->imei = $device->imei;
+        $this->acquisitionDate = $device->acquisitionDate;
+
+        $this->isEditing = true;
+        $this->deviceModal= true;
+    }
+
     public function render()
     {
         return view('livewire.devices.device-index');
