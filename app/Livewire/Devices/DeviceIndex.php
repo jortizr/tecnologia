@@ -97,17 +97,103 @@ class DeviceIndex extends Component
     }
 
     public function edit($id){
-        $device = Device::findOrFail($id);
+        $device = Device::with('deviceModel')->findOrFail($id);
         $this->deviceId = $id;
-        $this->deviceTypeId = $device->deviceType_id;
-        $this->brandId = $device->brand_id;
+        $this->deviceTypeId  = $device->deviceModel->device_type_id ?? null;
+        $this->brandId       = $device->deviceModel->brand_id ?? null;
+        $this->locationId = $device->location_id;
+        $this->operationalStateId = $device->operational_state_id;
+        $this->physicalStateId = $device->physical_state_id;
         $this->deviceModelId = $device->device_model_id;
+
         $this->serial_number= $device->serial_number;
         $this->imei = $device->imei;
-        $this->acquisitionDate = $device->acquisitionDate;
 
+        $this->acquisitionDate = $device->acquisition_date;
         $this->isEditing = true;
         $this->deviceModal= true;
+    }
+
+    public function save(){
+        $this->validate([
+            'serial_number' => 'required|min:3|max:50|unique:devices,serial_number,' . ($this->isEditing ? $this->deviceId : 'NULL'),
+            'imei' => 'required|min:10|max:16|unique:devices,imei,' . ($this->isEditing ? $this->deviceId : 'NULL'),
+            'acquisitionDate' => 'required',
+            'deviceTypeId' => 'required|exists:device_types,id',
+            'brandId' => 'required|exists:brands,id',
+            'deviceModelId' => 'required|exists:device_models,id',
+            'locationId' => 'required|exists:locations,id',
+            'operationalStateId' => 'required|exists:operational_states,id',
+            'physicalStateId' => 'required|exists:physical_states,id',
+        ]);
+
+        if ($this->isEditing){
+            $device = Device::findOrFail($this->deviceId);
+            $this->authorize('update', $device);
+
+            $device->update([
+                'serial_number' => $this->serial_number,
+                'imei' => $this->imei,
+                'acquisition_date' => $this->acquisitionDate,
+                'device_type_id' => $this->deviceTypeId,
+                'brand_id' => $this->brandId,
+                'device_model_id' => $this->deviceModelId,
+                'location_id' => $this->locationId,
+                'operational_state_id' => $this->operationalStateId,
+                'physical_state_id' => $this->physicalStateId
+            ]);
+            $this->notification()->success( 'Actualizado.', 'Dispositivo actualizado con éxito');
+
+        } else {
+            $this->authorize('create', Device::class);
+            Device::create([
+                'serial_number' => $this->serial_number,
+                'imei' => $this->imei,
+                'acquisition_date' => $this->acquisitionDate,
+                'device_type_id' => $this->deviceTypeId,
+                'brand_id' => $this->brandId,
+                'device_model_id' => $this->deviceModelId,
+                'location_id' => $this->locationId,
+                'operational_state_id' => $this->operationalStateId,
+                'physical_state_id' => $this->physicalStateId
+            ]);
+            $this->notification()->success('Dispositivo creado.', 'Nuevo dispositivo registrado');
+        }
+
+        $this->deviceModal = false;
+        unset($this->devices);
+        $this->dispatch('nodel-updated');
+    }
+
+    public function confirmDelete($deviceId)
+    {
+        $this->dialog()->confirm([
+            'title'       => '¿Eliminar dispositivo?',
+            'description' => 'Esta acción no se puede deshacer.',
+            'icon'        => 'error',
+            'accept'      => [
+                'label'  => 'Eliminar',
+                'method' => 'delete', // Llama a tu función delete existente
+                'params' => $deviceId,
+            ],
+            'reject' => [
+                'label'  => 'Cancelar',
+            ],
+        ]);
+    }
+
+    public function delete($deviceId)
+    {
+        try {
+            $device = Device::findOrFail($deviceId);
+            $this->authorize('delete', $device);
+            $device->delete();
+            $this->notification()->success( 'Notificacion', 'Dispositivo eliminado con éxito');
+            unset($this->devices);
+
+        } catch (\Exception $e) {
+            $this->notification()->error('Error', 'Ocurrió un error inesperado.');
+        }
     }
 
     public function render()

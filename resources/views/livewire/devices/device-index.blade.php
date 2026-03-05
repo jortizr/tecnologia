@@ -47,7 +47,7 @@
             </x-slot>
             <x-slot name="dataTBody" lazy>
                 @foreach($this->devices as $device)
-                <tr class="border-b border-gray-700" wire:key="model-{{ $devices->id }}">
+                <tr class="border-b border-gray-700" wire:key="model-{{ $device->id }}">
                     <td class="px-4 py-2">{{ $device->deviceModel->deviceType->name ?? 'N/A' }}</td>
                     <td class="px-4 py-2">{{ $device->deviceModel->name ?? 'N/A' }}</td>
                     <td class="px-4 py-2">{{ $device->serial_number ?? 'sin numero de serie'}}</td>
@@ -120,7 +120,7 @@
                     :disabled="!$brandId"
                 />
 
-                <x-wireui-input label="Serial" placeholder="ingrese el serial..." wire:model="serialNumber"
+                <x-wireui-input label="Serial" placeholder="ingrese el serial..." wire:model="serial_number"
                     class="uppercase" />
 
                 <x-wireui-input label="Imei" placeholder="ingrese el Imei..." wire:model="imei"
@@ -132,7 +132,7 @@
 
                 <x-wireui-select label="Seleccionar estado fisico" placeholder="Busca estado fisico del dispositivo" wire:model="physicalStateId" :options="$this->physicalStates" option-label="name" option-value="id" />
 
-                <x-wireui-datetime-picker wire:model="adquisitionDate" label="Feche adquisición" placeholder="seleccione la fecha de adquisición"/>
+                <x-wireui-datetime-picker wire:model="acquisitionDate" label="Feche adquisición" placeholder="seleccione la fecha de adquisición"/>
             </div>
 
             <x-slot name="footer" class="flex justify-end gap-x-4">
