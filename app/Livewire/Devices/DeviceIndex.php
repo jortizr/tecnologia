@@ -98,6 +98,7 @@ class DeviceIndex extends Component
 
     public function edit($id){
         $device = Device::with('deviceModel')->findOrFail($id);
+        dd($device);
         $this->deviceId = $id;
         $this->deviceTypeId  = $device->deviceModel->device_type_id ?? null;
         $this->brandId       = $device->deviceModel->brand_id ?? null;

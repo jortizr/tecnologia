@@ -21,9 +21,12 @@ return new class extends Migration
             }
         });
 
-        // Limpiamos la tabla devices 
+        // Limpiamos la tabla devices
         Schema::table('devices', function (Blueprint $table) {
+
+
             if (Schema::hasColumn('devices', 'device_type_id')) {
+                dump("creando el campo en devices");
                 $table->dropForeign(['device_type_id']);
                 $table->dropColumn('device_type_id');
             }
