@@ -55,7 +55,7 @@
                     <td class="px-4 py-2">{{ $device->location?->name ?? 'sin ubicación' }}</td>
                     <td class="px-4 py-2">{{ $device->operational_state?->name ?? 'sin estado operativo' }}</td>
                     <td class="px-4 py-2">{{ $device->physical_state?->name ?? 'sin estado fisico' }}</td>
-                    <td class="px-4 py-2">{{ $device->acquisitionDate ?? 'sin fecha de adquisición' }}</td>
+                    <td class="px-4 py-2">{{ $device->acquisition_date ?? 'sin fecha de adquisición' }}</td>
                     <td class="px-4 py-2 text-center">{{ $device->creator?->name ?? 'sin movimiento' }}</td>
                     <td class="px-4 py-2 text-center">{{ $device->updater?->name ?? 'sin actualizacion' }}</td>
                     @can('dashboard.devices.update')
@@ -132,7 +132,14 @@
 
                 <x-wireui-select label="Seleccionar estado fisico" placeholder="Busca estado fisico del dispositivo" wire:model="physicalStateId" :options="$this->physicalStates" option-label="name" option-value="id" />
 
-                <x-wireui-datetime-picker wire:model="acquisitionDate" label="Feche adquisición" placeholder="seleccione la fecha de adquisición"/>
+                <x-wireui-datetime-picker
+                    wire:model="acquisitionDate"
+                    label="Feche adquisición"
+                    placeholder="seleccione la fecha de adquisición"
+                    without-time
+                    parse-format="YYYY-MM-DD"
+                    display-format="YYYY-MM-DD"
+                />
             </div>
 
             <x-slot name="footer" class="flex justify-end gap-x-4">

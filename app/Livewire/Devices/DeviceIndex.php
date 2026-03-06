@@ -98,7 +98,6 @@ class DeviceIndex extends Component
 
     public function edit($id){
         $device = Device::with('deviceModel')->findOrFail($id);
-        dd($device);
         $this->deviceId = $id;
         $this->deviceTypeId  = $device->deviceModel->device_type_id ?? null;
         $this->brandId       = $device->deviceModel->brand_id ?? null;
@@ -110,7 +109,7 @@ class DeviceIndex extends Component
         $this->serial_number= $device->serial_number;
         $this->imei = $device->imei;
 
-        $this->acquisitionDate = $device->acquisition_date;
+        $this->acquisitionDate = $device->acquisition_date ? \Carbon\Carbon::parse($device->acquisition_date)->format('Y-m-d') : null;
         $this->isEditing = true;
         $this->deviceModal= true;
     }
@@ -120,44 +119,32 @@ class DeviceIndex extends Component
             'serial_number' => 'required|min:3|max:50|unique:devices,serial_number,' . ($this->isEditing ? $this->deviceId : 'NULL'),
             'imei' => 'required|min:10|max:16|unique:devices,imei,' . ($this->isEditing ? $this->deviceId : 'NULL'),
             'acquisitionDate' => 'required',
-            'deviceTypeId' => 'required|exists:device_types,id',
-            'brandId' => 'required|exists:brands,id',
             'deviceModelId' => 'required|exists:device_models,id',
             'locationId' => 'required|exists:locations,id',
             'operationalStateId' => 'required|exists:operational_states,id',
             'physicalStateId' => 'required|exists:physical_states,id',
         ]);
 
+        $data = [
+            'serial_number'        => $this->serial_number,
+            'imei'                 => $this->imei,
+            'acquisition_date'     => $this->acquisitionDate,
+            'device_model_id'      => $this->deviceModelId, // El ID clave
+            'location_id'          => $this->locationId,
+            'operational_state_id' => $this->operationalStateId,
+            'physical_state_id'    => $this->physicalStateId,
+        ];
+
         if ($this->isEditing){
             $device = Device::findOrFail($this->deviceId);
             $this->authorize('update', $device);
 
-            $device->update([
-                'serial_number' => $this->serial_number,
-                'imei' => $this->imei,
-                'acquisition_date' => $this->acquisitionDate,
-                'device_type_id' => $this->deviceTypeId,
-                'brand_id' => $this->brandId,
-                'device_model_id' => $this->deviceModelId,
-                'location_id' => $this->locationId,
-                'operational_state_id' => $this->operationalStateId,
-                'physical_state_id' => $this->physicalStateId
-            ]);
+            $device->update($data);
             $this->notification()->success( 'Actualizado.', 'Dispositivo actualizado con éxito');
 
         } else {
             $this->authorize('create', Device::class);
-            Device::create([
-                'serial_number' => $this->serial_number,
-                'imei' => $this->imei,
-                'acquisition_date' => $this->acquisitionDate,
-                'device_type_id' => $this->deviceTypeId,
-                'brand_id' => $this->brandId,
-                'device_model_id' => $this->deviceModelId,
-                'location_id' => $this->locationId,
-                'operational_state_id' => $this->operationalStateId,
-                'physical_state_id' => $this->physicalStateId
-            ]);
+            Device::create($data);
             $this->notification()->success('Dispositivo creado.', 'Nuevo dispositivo registrado');
         }
 

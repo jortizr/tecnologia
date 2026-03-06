@@ -13,8 +13,6 @@ class Device extends Model
     use HasFactory, HasAuditColumns;
     protected $fillable = [
         'device_model_id',
-        'brand_id',
-        'device_type_id',
         'serial_number',
         'imei',
         'location_id',
