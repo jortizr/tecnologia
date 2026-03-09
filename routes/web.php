@@ -32,6 +32,10 @@ Route::middleware([
     Route::get('dashboard/users/show', UserIndex::class)
         ->middleware('permission:dashboard.users.show')
         ->name('dashboard.users.show');
+        
+    Route::get('dashboard/roles/show', RoleIndex::class)
+        ->middleware('permission:dashboard.roles.show')
+        ->name('dashboard.roles.show');
 
     Route::get('dashboard/collaborators/show',CollaboratorIndex::class )
         ->middleware('permission:dashboard.collaborators.show')
@@ -49,9 +53,6 @@ Route::middleware([
         ->middleware('permission:dashboard.devicemodels.show')
         ->name('dashboard.devicemodels.show');
 
-    Route::get('dashboard/roles/show', RoleIndex::class)
-        ->middleware('permission:dashboard.roles.show')
-        ->name('dashboard.roles.show');
     Route::get('dashboard/departments/show', DepartmentIndex::class)
     ->middleware('permission:dashboard.departments.show')
         ->name('dashboard.departments.show');

@@ -87,7 +87,6 @@ class RoleIndex extends Component
 
         $this->validate([
                 'name' => 'required|min:3|max:50|unique:roles,name,' . ($this->isEditing ? $this->roleId : 'NULL'),
-                'description' => 'nullable|string|max:255',
         ]);
 
         if ($this->isEditing) {
