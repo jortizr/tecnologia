@@ -87,19 +87,27 @@
             @can('dashboard.physicalstates.show')
             <li>
                 <x-nav-link href="{{ route('dashboard.physicalstates.show') }}" :active="request()->routeIs('dashboard.physicalstates.show')">
-                    <x-wireui-icon name="device-tablet" class="w-5 h-5 shrink-0"/>
-                    <span class="ms-3">{{ __('Estado fisico') }}</span>
+                    <x-wireui-icon name="wrench-screwdriver" class="w-5 h-5 shrink-0"/>
+                    <span class="ms-3">{{ __('Estados fisicos') }}</span>
                 </x-nav-link>
             </li>
              @endcan
             @can('dashboard.operationalstates.show')
             <li>
                 <x-nav-link href="{{ route('dashboard.operationalstates.show') }}" :active="request()->routeIs('dashboard.operationalstates.show')">
-                    <x-wireui-icon name="device-tablet" class="w-5 h-5 shrink-0"/>
-                    <span class="ms-3">{{ __('Estado operacional') }}</span>
+                    <x-wireui-icon name="list-bullet" class="w-5 h-5 shrink-0"/>
+                    <span class="ms-3">{{ __('Estados operacionales') }}</span>
                 </x-nav-link>
             </li>
              @endcan
+            @can('dashboard.devicetypes.show')
+            <li>
+                <x-nav-link href="{{ route('dashboard.devicetypes.show') }}" :active="request()->routeIs('Dispositivos.*')">
+                    <x-heroicon-o-circle-stack class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
+                    <span class="ms-3">{{ __('Tipos de dispositivo') }}</span>
+                </x-nav-link>
+            </li>
+            @endcan
             @can('dashboard.devices.show')
             <li>
                 <x-nav-link href="{{ route('dashboard.devices.show') }}" :active="request()->routeIs('Dispositivos.*')">

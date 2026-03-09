@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAuditColumns;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Location extends Model
 {
@@ -12,7 +13,15 @@ class Location extends Model
     use HasFactory, HasAuditColumns;
     protected $fillable =[
         'name',
+        'created_by',
+        'updated_by'
     ];
+
+    protected function name(): Attribute{
+        return Attribute::make(
+            set: fn (string $value) => strtoupper(trim($value)),
+        );
+    }
 
     public function device(){
         return $this->hasMany(Location::class);
