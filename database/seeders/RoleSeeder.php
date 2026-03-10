@@ -37,6 +37,7 @@ class RoleSeeder extends Seeder
         'operationalstates' => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
         'devices'            => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
         'devicetypes'        => ['admins' => [$superadmin], 'viewers' => [$manager]],
+        'locations'        => ['admins' => [$superadmin], 'viewers' => [$manager]],
 
         'clausules'           => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],
         'accesories'         => ['admins' => [$superadmin], 'viewers' => [$manager, $viewer]],

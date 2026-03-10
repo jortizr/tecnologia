@@ -9,6 +9,7 @@ use App\Models\Department;
 use App\Models\Device;
 use App\Models\DeviceModel;
 use App\Models\DeviceType;
+use App\Models\Location;
 use App\Models\OperationalState;
 use App\Models\PhysicalState;
 use App\Models\User;
@@ -19,6 +20,7 @@ use App\Policies\DepartmentPolicy;
 use App\Policies\DeviceModelPolicy;
 use App\Policies\DevicePolicy;
 use App\Policies\DeviceTypePolicy;
+use App\Policies\LocationPolicy;
 use App\Policies\OccupationPolicy;
 use App\Policies\OperationalStatePolicy;
 use App\Policies\PhysicalStatePolicy;
@@ -46,6 +48,7 @@ class AuthServiceProvider extends ServiceProvider
         OperationalState::class => OperationalStatePolicy::class,
         Device::class => DevicePolicy::class,
         DeviceType::class => DeviceTypePolicy::class,
+        Location::class => LocationPolicy::class,
     ];
 
     /**

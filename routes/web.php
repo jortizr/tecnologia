@@ -12,6 +12,7 @@ use App\Livewire\Departments\DepartmentIndex;
 use App\Livewire\Devices\DeviceIndex;
 use App\Livewire\Regionals\RegionalIndex;
 use App\Livewire\Devices\DeviceTypeIndex;
+use App\Livewire\Locations\LocationIndex;
 use App\Livewire\Occupations\OccupationIndex;
 use App\Livewire\PhysicalStates\PhysicalStateIndex;
 
@@ -32,7 +33,7 @@ Route::middleware([
     Route::get('dashboard/users/show', UserIndex::class)
         ->middleware('permission:dashboard.users.show')
         ->name('dashboard.users.show');
-        
+
     Route::get('dashboard/roles/show', RoleIndex::class)
         ->middleware('permission:dashboard.roles.show')
         ->name('dashboard.roles.show');
@@ -80,4 +81,8 @@ Route::middleware([
     Route::get('dashboard/devicetypes/show', DeviceTypeIndex::class)
         ->middleware('permission:dashboard.devicetypes.show')
         ->name('dashboard.devicetypes.show');
+
+    Route::get('dashboard/locations/show', LocationIndex::class)
+        ->middleware('permission:dashboard.locations.show')
+        ->name('dashboard.locations.show');
 });
