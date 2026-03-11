@@ -61,12 +61,12 @@
                     @endcan
                 </tr>
                 @endforeach
-                @if($this->deviceModels->isEmpty())
+                @if($this->locations->isEmpty())
                 <tr>
                     <td colspan="5" class="py-12">
                         <div class="flex flex-col items-center justify-center text-secondary-500">
                             <x-wireui-icon name="face-frown" class="w-12 h-12 mb-2 outline-none" />
-                            <p class="text-lg font-semibold">No se encontraron modelos
+                            <p class="text-lg font-semibold">No se encontraron datos
                             <p>
                             <p class="text-sm">Intenta con otros términos de búsqueda.
                             <p>
@@ -76,24 +76,19 @@
                 @endif
             </x-slot>
         </x-data-table>
-        @can('dashboard.devicemodels.create')
-        <x-wireui-modal-card title="{{ $isEditing ? 'Editar Modelo' : 'Nuevo Modelo' }}" name="deviceModelModal"
-            wire:model.defer="deviceModelModal">
+        @if(auth()->user()->can('dashboard.locations.create') || auth()->user()->can('dashboard.locations.update'))
+        <x-wireui-modal-card title="{{ $isEditing ? 'Editar Ubicacion' : 'Nueva Ubicacion' }}" name="locationModal"
+            wire:model.defer="locationModal">
             <div class="grid grid-cols-1 gap-4">
-                <x-wireui-input label="Nombre del Modelo" placeholder="Ej. Samsung, Apple..." wire:model.defer="name"
+                <x-wireui-input label="Ubicacion" placeholder="Ej. administracion, tecnologia..." wire:model.defer="name"
                     class="uppercase" />
-
-                <x-wireui-select label="Seleccionar Marca" placeholder="Busca la marca" wire:model.defer="brandId"
-                    :options="$this->brands" option-label="name" option-value="id" />
-                <x-wireui-select label="Tipo Dispositivo" placeholder="Buscar tipo de dispositivo" wire:model.defer="deviceTypeId"
-                    :options="$this->deviceTypes" option-label="name" option-value="id" />
             </div>
 
             <x-slot name="footer" class="flex justify-end gap-x-4">
-                <x-wireui-button flat label="Cancelar" x-on:click="$wire.deviceModelModal = false" />
+                <x-wireui-button flat label="Cancelar" x-on:click="$wire.locationModal = false" />
                 <x-wireui-button primary label="Guardar" wire:click="save" wire:loading.attr="disabled" />
             </x-slot>
         </x-wireui-modal-card>
-        @endcan
+        @endif
     </div>
 </div>

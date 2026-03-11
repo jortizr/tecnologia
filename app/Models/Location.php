@@ -23,11 +23,11 @@ class Location extends Model
         );
     }
 
-    public function device(){
-        return $this->hasMany(Location::class);
+    public function devices(){
+        return $this->hasMany(Device::class);
     }
 
-    public function create(){
+    public function creator(){
         return $this->belongsTo(User::class, 'created_by');
     }
 

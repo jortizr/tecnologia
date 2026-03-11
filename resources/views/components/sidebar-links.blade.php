@@ -8,7 +8,6 @@
     @can('dashboard.users.show')
     <hr class="my-2 border-gray-200 dark:border-gray-700">
     <li>
-
         <x-nav-link href="{{ route('dashboard.users.show') }}" :active="request()->routeIs('dashboard.users.show')">
             <x-heroicon-s-users class="w-5 h-5 shrink-0"/>
             <span class="ms-3">{{ __('Usuarios') }}</span>
@@ -117,6 +116,12 @@
             </li>
             @endcan
         </x-nav-dropdown>
+    </li>
+    <li>
+        <x-nav-link href="{{ route('dashboard.locations.show') }}" :active="request()->routeIs('dashboard.locations.show')">
+            <x-heroicon-s-map-pin class="w-5 h-5 shrink-0"/>
+            <span class="ms-3">{{ __('Ubicaciones') }}</span>
+        </x-nav-link>
     </li>
 
 </ul>
