@@ -20,7 +20,11 @@ class Department extends Model
         );
     }
 
-    public function collaborator(){
+    public function costCenters(){
+        return $this->hasMany(CostCenter::class);
+    }
+
+    public function collaborators(){
         return $this->hasMany(Collaborator::class);
     }
 

@@ -4,24 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAuditColumns;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Models\User;
 
-class SimCardStatus extends Model
+class CostCenter extends Model
 {
     use HasAuditColumns;
+
     protected $fillable = [
-        'name',
-        'color',
+        'codigo',
+        'department_id',
         'created_by',
         'updated_by'
     ];
 
-
-    protected function name(): Attribute{
-        return Attribute::make(
-            set: fn (string $value) => strtoupper(trim($value)),
-        );
+    public function department():BelongsTo{
+        return $this->belongsTo(Department::class);
     }
 
     public function creator():BelongsTo{

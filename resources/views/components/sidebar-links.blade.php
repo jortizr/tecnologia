@@ -62,7 +62,7 @@
     <li>
         <x-nav-dropdown
             title="Catálogo Dispositivos"
-            :active="request()->routeIs(['dashboard.brands.*', 'dashboard.devicemodels.*', 'dashboard.physicalstates.*', 'dashboard.operationalstates.*', 'dashboard.devices.*'])">
+            :active="request()->routeIs(['dashboard.brands.*', 'dashboard.devicemodels.*', 'dashboard.physicalstates.*', 'dashboard.operationalstates.*', 'dashboard.devices.*', 'dashboard.devicetypes.*'])">
 
             <x-slot name="icon">
                 <x-heroicon-o-cog-6-tooth class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white "/>
@@ -101,7 +101,7 @@
              @endcan
             @can('dashboard.devicetypes.show')
             <li>
-                <x-nav-link href="{{ route('dashboard.devicetypes.show') }}" :active="request()->routeIs('Dispositivos.*')">
+                <x-nav-link href="{{ route('dashboard.devicetypes.show') }}" :active="request()->routeIs('dashboard.devicetypes.show')">
                     <x-heroicon-o-circle-stack class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
                     <span class="ms-3">{{ __('Tipos de dispositivo') }}</span>
                 </x-nav-link>
@@ -109,7 +109,7 @@
             @endcan
             @can('dashboard.devices.show')
             <li>
-                <x-nav-link href="{{ route('dashboard.devices.show') }}" :active="request()->routeIs('Dispositivos.*')">
+                <x-nav-link href="{{ route('dashboard.devices.show') }}" :active="request()->routeIs('dashboard.devices.show')">
                     <x-heroicon-o-device-phone-mobile class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"/>
                     <span class="ms-3">{{ __('Dispositivos') }}</span>
                 </x-nav-link>

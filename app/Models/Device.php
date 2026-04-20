@@ -32,7 +32,7 @@ class Device extends Model
     }
 
     public function operationalState():BelongsTo{
-        return $this->belongsTo(OperationalState::class);
+        return $this->belongsTo(OperationalState::class); 
     }
 
     public function physicalState():BelongsTo {

@@ -12,13 +12,16 @@ class Clause extends Model
 {
     use HasAuditColumns;
     protected $fillable = [
-        'names',
-        //falta
+        'device_id',
+        'people_id',
+        'assignment_date',
+        'return_date',
+        'is_active',
+        'cost_center_id',
+        'observation',
         'created_by',
         'updated_by'
     ];
-
-
 
     public function creator():BelongsTo{
         return $this->belongsTo(User::class, 'created_by');
