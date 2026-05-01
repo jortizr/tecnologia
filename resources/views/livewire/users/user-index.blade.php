@@ -14,7 +14,7 @@
                     <x-wireui-input
                         wire:model.live.debounce.500ms="search"
                         icon="magnifying-glass"
-                        placeholder="Buscar usuario o rol..."
+                        placeholder="Buscar..."
                         autocomplete="off"
                         class="bg-white dark:bg-custom-dark-header border-gray-300 dark:border-gray-600"
                     />
