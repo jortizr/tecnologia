@@ -120,3 +120,39 @@ En caso de ejecutar el proyecto en local y/o produccion y se ponga lento para ej
 ```
 php artisan optimize
 ```
+#
+### 11. Uso de Docker en el entorno de desarrollo
+
+para el uso de contenedores usar la herramienta Laravel Sail con el siguiente comando:
+```
+composer require laravel/sail --dev
+```
+luego para crear el archivo de configuracion para Docker se ejecuta el comando:
+```
+php artisan sail:install
+```
+seguir las instrucciones de la consola para la configuracion del contenedor y verificar las variables de entorno (.env)
+
+```
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=tecnologia
+DB_USERNAME=sail
+DB_PASSWORD=password
+FORWARD_DB_PORT=3306
+```
+
+#### Levantar los contenedores:
+para encer el entorno de Docker se ejecuta el comando:
+```
+./vendor/bin/sail up -d
+```
+el parametro `-d` sirve para ejecutar el contenedor en segundo plano.
+
+`Nota:` para evitar escribir la ruta `./vendor/bin/sail` para ejecutar los comandos habituales, se crea un alias en la terminal:
+
+```
+alias sail=".vendor/bin/sail"
+```
+ahora solo se ejecuta con el alias `sail artisan migrate`, `sail up` etc. 
