@@ -153,6 +153,6 @@ el parametro `-d` sirve para ejecutar el contenedor en segundo plano.
 `Nota:` para evitar escribir la ruta `./vendor/bin/sail` para ejecutar los comandos habituales, se crea un alias en la terminal:
 
 ```
-alias sail=".vendor/bin/sail"
+alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 ```
 ahora solo se ejecuta con el alias `sail artisan migrate`, `sail up` etc. 
